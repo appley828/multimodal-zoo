@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自然語言處理 NLP — iPAS AI應用規劃師中級考試</title>
+<style>
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--panel2:#21253A;
+  --border:#2E3250;--text:#E8EAF6;--muted:#8892B0;
+  --accent:#00D4FF;--accent2:#00FFB2;--accent3:#7C6FFF;
+  --blue:#00D4FF;--purple:#9B5DE5;--yellow:#FFD166;--orange:#FF9B42;--pink:#FF6B9D;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,17,23,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px 24px;}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.9rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#fff;}
+.nav-title{font-size:1.05rem;}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent3));padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;color:#fff;}
+
+.hero{padding:60px 20px 40px;background:linear-gradient(160deg,#0F1117,#0a1a1f,#0F1117);text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,212,255,.12),transparent);}
+.hero-badge{display:inline-block;margin-bottom:16px;padding:5px 18px;border-radius:999px;background:rgba(0,212,255,.12);border:1px solid var(--accent);font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.hero-title{font-size:clamp(1.8rem,5vw,3.2rem);background:linear-gradient(135deg,var(--accent),var(--accent3),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:600px;margin:0 auto 24px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+.wrap{max-width:980px;margin:0 auto;padding:16px 20px 80px;}
+
+.sec-title{font-size:1.5rem;color:var(--text);margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;background:linear-gradient(var(--accent),var(--yellow));}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;}
+.panel-title{font-weight:900;font-size:1rem;color:var(--accent2);margin-bottom:12px;}
+
+.formula{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--accent2);line-height:2;overflow-x:auto;}
+.formula .comment{color:var(--muted);font-style:italic;}
+.formula .hl{color:var(--yellow);}
+.formula .fn{color:var(--blue);}
+.formula .vr{color:var(--pink);}
+
+.arch-wrap{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0;overflow-x:auto;}
+.arch-wrap svg{display:block;margin:0 auto;}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:var(--panel2);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);color:var(--accent2);font-weight:900;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--muted);}
+td:first-child{color:var(--text);font-weight:700;}
+tr:hover td{background:rgba(0,212,255,.04);}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:900;}
+
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0;}
+.kp-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:3px solid var(--accent);transition:transform .18s,border-color .18s;}
+.kp-card:hover{transform:translateY(-4px);border-left-color:var(--accent2);}
+.kp-card .kp-title{font-weight:900;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.kp-card .kp-body{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.kp-card .kp-tag{font-size:.7rem;font-weight:900;color:var(--accent);margin-top:8px;}
+
+.warn-box{background:rgba(255,209,102,.07);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin:10px 0;}
+.info-box{background:rgba(0,212,255,.07);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--accent);margin:10px 0;}
+
+/* Word2Vec demo tabs */
+.w2v-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.w2vtab{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);font-size:.83rem;font-weight:900;cursor:pointer;color:var(--muted);background:transparent;transition:all .18s;}
+.w2vtab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.1);}
+.w2v-box{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px;font-size:.88rem;line-height:1.8;color:var(--muted);}
+.w2v-box .hl{color:var(--accent);}
+.w2v-box .hl2{color:var(--yellow);}
+.w2v-box .hl3{color:var(--accent2);}
+
+/* 3D canvas */
+.c3d-wrap{background:#0a0c14;border:1px solid var(--border);border-radius:var(--r);position:relative;overflow:hidden;margin:12px 0;}
+.c3d{display:block;width:100%;height:380px;cursor:grab;}
+.c3d:active{cursor:grabbing;}
+.c3d-lbl{position:absolute;top:10px;left:12px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:900;color:var(--accent);border:1px solid rgba(0,212,255,.4);}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;padding:10px 12px;background:rgba(0,0,0,.3);}
+.ctrl button{padding:5px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);font-size:.72rem;font-weight:900;color:rgba(255,255,255,.6);background:transparent;cursor:pointer;transition:all .18s;}
+.ctrl button:hover,.ctrl button.on{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.15);}
+
+/* quiz */
+.progress-bar{height:6px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--yellow));transition:width .5s;}
+.q-item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+.q-num{font-size:.75rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.q-stem{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:12px;line-height:1.6;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--border);font-size:.88rem;color:var(--muted);transition:all .18s;display:flex;align-items:flex-start;gap:8px;}
+.q-opt:hover{border-color:var(--accent);color:var(--text);background:rgba(0,212,255,.07);}
+.q-opt.correct{border-color:var(--accent2);background:rgba(0,255,178,.07);color:var(--accent2);}
+.q-opt.wrong{border-color:var(--pink);background:rgba(255,107,157,.07);color:var(--pink);}
+.q-opt .opt-label{font-weight:900;min-width:18px;}
+.q-explain{margin-top:12px;padding:10px 14px;background:rgba(0,212,255,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:.84rem;color:var(--blue);display:none;line-height:1.65;}
+.q-explain.show{display:block;}
+
+#score-banner{position:fixed;bottom:20px;right:20px;z-index:300;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-weight:900;font-size:.9rem;color:var(--accent);box-shadow:0 4px 20px rgba(0,212,255,.3);}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+footer{text-align:center;padding:28px;font-size:.75rem;color:rgba(232,234,246,.2);}
+</style>
+</head>
+<body>
+
+<div id="score-banner">⭐ 答題得分：<span id="score">0</span> / <span id="total">0</span></div>
+
+<nav class="nav">
+  <a href="index.html">← 返回</a>
+  <span class="nav-title">自然語言處理（NLP）</span>
+  <span class="nav-tag">iPAS 中級 · 科目一 L21101</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">NLP · L21101 · AI 相關技術應用</div>
+  <div class="hero-title">自然語言處理（NLP）</div>
+  <div class="hero-sub">詞嵌入演進、Word2Vec 3D向量視覺化、BERT雙向預訓練、NER命名實體辨識、BLEU分數，對應 iPAS 中級科目一高頻考點</div>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--accent);border-color:var(--accent)">Word2Vec 3D</span>
+    <span class="tag" style="color:var(--accent3);border-color:var(--accent3)">BERT</span>
+    <span class="tag" style="color:var(--yellow);border-color:var(--yellow)">TF-IDF</span>
+    <span class="tag" style="color:var(--accent2);border-color:var(--accent2)">NER</span>
+    <span class="tag" style="color:var(--pink);border-color:var(--pink)">BLEU Score</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. 詞嵌入演進 ══ -->
+<div class="sec-title reveal">📊 詞表示方式演進（Word Representation）</div>
+<div class="panel reveal">
+  <div class="panel-title">從稀疏表示到密集語義向量的四代演進</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    NLP 核心挑戰：如何將「文字」轉換成機器能計算的「數字」。從最早的 Bag-of-Words 到當代的 BERT 上下文嵌入，每一代都大幅提升語義理解能力。
+  </p>
+  <div class="arch-wrap">
+    <svg width="640" height="180" viewBox="0 0 640 180">
+      <defs>
+        <marker id="ev" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#00D4FF"/>
+        </marker>
+      </defs>
+      <!-- BoW -->
+      <rect x="10" y="30" width="120" height="110" rx="10" fill="#21253A" stroke="#8892B0" stroke-width="1.5"/>
+      <text x="70" y="54" text-anchor="middle" fill="#8892B0" font-size="11" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Bag-of-Words</text>
+      <text x="70" y="72" text-anchor="middle" fill="#555" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">稀疏 One-Hot</text>
+      <text x="70" y="88" text-anchor="middle" fill="#555" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">不含語義</text>
+      <text x="70" y="104" text-anchor="middle" fill="#555" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">高維稀疏向量</text>
+      <text x="70" y="130" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">[0,1,0,0,1,0...]</text>
+      <line x1="131" y1="85" x2="154" y2="85" stroke="#00D4FF" stroke-width="1.5" marker-end="url(#ev)"/>
+      <!-- TF-IDF -->
+      <rect x="155" y="30" width="120" height="110" rx="10" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="215" y="54" text-anchor="middle" fill="#FFD166" font-size="11" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">TF-IDF</text>
+      <text x="215" y="72" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">加權詞頻</text>
+      <text x="215" y="88" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">考慮文件稀有度</text>
+      <text x="215" y="104" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">仍為稀疏向量</text>
+      <text x="215" y="130" text-anchor="middle" fill="#FFD166" font-size="10" font-family="JetBrains Mono,monospace">TF × IDF</text>
+      <line x1="276" y1="85" x2="299" y2="85" stroke="#00D4FF" stroke-width="1.5" marker-end="url(#ev)"/>
+      <!-- Word2Vec -->
+      <rect x="300" y="20" width="140" height="130" rx="10" fill="#21253A" stroke="#00D4FF" stroke-width="2"/>
+      <text x="370" y="48" text-anchor="middle" fill="#00D4FF" font-size="12" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Word2Vec</text>
+      <text x="370" y="64" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">密集語義向量</text>
+      <text x="370" y="80" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">CBOW / Skip-gram</text>
+      <text x="370" y="96" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">相似詞 → 近似向量</text>
+      <text x="370" y="112" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="JetBrains Mono,monospace">king-man≈queen-woman</text>
+      <text x="370" y="138" text-anchor="middle" fill="#555" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">靜態嵌入（固定）</text>
+      <line x1="441" y1="85" x2="462" y2="85" stroke="#00D4FF" stroke-width="1.5" marker-end="url(#ev)"/>
+      <!-- BERT -->
+      <rect x="463" y="15" width="160" height="140" rx="10" fill="#21253A" stroke="#00FFB2" stroke-width="2.5"/>
+      <text x="543" y="44" text-anchor="middle" fill="#00FFB2" font-size="13" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">BERT / GPT</text>
+      <text x="543" y="62" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">上下文動態嵌入</text>
+      <text x="543" y="78" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">同詞不同語境 → 不同向量</text>
+      <text x="543" y="94" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">MLM / 自迴歸預訓練</text>
+      <text x="543" y="110" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Transformer Attention</text>
+      <text x="543" y="128" text-anchor="middle" fill="#555" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">動態嵌入（隨上下文變化）</text>
+      <text x="543" y="144" text-anchor="middle" fill="#9B5DE5" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">◀ 當代最強表示方式</text>
+    </svg>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:#8892B0">
+      <div class="kp-title">Bag-of-Words（詞袋模型）</div>
+      <div class="kp-body">每個詞對應一個 One-Hot 向量（僅對應位置為1）。缺點：詞彙表有10萬詞就要10萬維，且完全無法捕捉語義關係（cat ≠ kitten）。</div>
+      <div class="kp-tag">▶ 考點：稀疏高維 / 無語義資訊</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--yellow)">
+      <div class="kp-title">TF-IDF（詞頻-逆文件頻率）</div>
+      <div class="kp-body">在 BoW 基礎上加權：常見詞（the/是/的）權重低，稀有詞權重高。廣泛用於關鍵詞提取、文件相似度。仍為稀疏向量，無法捕捉語義相似性。</div>
+      <div class="kp-tag">▶ 考點：TF-IDF = 詞頻 × 逆文件頻率</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent)">
+      <div class="kp-title">Word2Vec（密集嵌入）</div>
+      <div class="kp-body">將詞映射到低維密集向量（100-300維）。語義相近的詞向量距離近。支持向量運算：king - man + woman ≈ queen。靜態嵌入（每詞固定一個向量）。</div>
+      <div class="kp-tag">▶ 考點：Word2Vec將詞轉向量 / 向量運算</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent2)">
+      <div class="kp-title">BERT（上下文動態嵌入）</div>
+      <div class="kp-body">「bank」在「river bank」和「bank account」中有不同的向量表示（動態嵌入）。透過 Transformer Attention 感知整個句子上下文，語義理解能力大幅超越靜態嵌入。</div>
+      <div class="kp-tag">▶ 考點：動態嵌入 / 雙向上下文</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. TF-IDF 公式 ══ -->
+<div class="sec-title reveal">📐 TF-IDF 公式詳解</div>
+<div class="panel reveal">
+  <div class="panel-title">TF（詞頻）× IDF（逆文件頻率）= 詞對文件的重要性</div>
+  <div class="formula">
+    <span class="comment">// TF-IDF 完整公式</span><br>
+    <span class="hl">TF</span>(t, d) = (詞 t 在文件 d 中出現的次數) / (文件 d 的總詞數)<br><br>
+    <span class="vr">IDF</span>(t, D) = <span class="fn">log</span>( N / df(t) )<br>
+    <span class="comment">// N = 語料庫總文件數；df(t) = 包含詞 t 的文件數</span><br><br>
+    <span class="fn">TF-IDF</span>(t, d, D) = <span class="hl">TF</span>(t, d) × <span class="vr">IDF</span>(t, D)<br><br>
+    <span class="comment">// 「的」「是」出現在每篇文件 → IDF ≈ 0（幾乎無資訊量）</span><br>
+    <span class="comment">// 「量子糾纏」罕見 → IDF 高（對少數文件很重要）</span>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>詞語</th><th>TF（出現頻率）</th><th>IDF（逆文件頻率）</th><th>TF-IDF</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>的、是</td><td>高（0.08）</td><td>低（≈0）</td><td>≈ 0</td><td>停用詞，IDF 近乎為零</td></tr>
+        <tr><td>機器學習</td><td>中（0.03）</td><td>中（2.1）</td><td>0.063</td><td>技術詞，有一定辨識度</td></tr>
+        <tr><td>量子糾纏</td><td>低（0.01）</td><td>高（5.2）</td><td>0.052</td><td>稀有詞，TF 低但 IDF 極高</td></tr>
+        <tr><td>iPAS</td><td>低（0.005）</td><td>極高（7.8）</td><td>0.039</td><td>特定文件關鍵詞</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>TF-IDF = <strong>詞頻 × 逆文件頻率</strong>。IDF 的作用是「懲罰」常見詞（的、是），給予稀有詞更高權重。常用於搜尋引擎關鍵詞提取、文件相似度計算。</div>
+</div>
+
+<!-- ══ 3. Word2Vec ══ -->
+<div class="sec-title reveal">🧠 Word2Vec：CBOW vs Skip-gram</div>
+<div class="panel reveal">
+  <div class="panel-title">兩種訓練策略：從上下文預測詞 vs 從詞預測上下文</div>
+  <div class="w2v-tabs">
+    <button class="w2vtab active" onclick="showW2V(this,'cbow')">CBOW（連續詞袋）</button>
+    <button class="w2vtab" onclick="showW2V(this,'skip')">Skip-gram</button>
+    <button class="w2vtab" onclick="showW2V(this,'analogy')">向量運算（類比推理）</button>
+  </div>
+  <div class="w2v-box" id="w2v-display"></div>
+
+  <div class="arch-wrap" style="margin-top:14px;">
+    <svg width="600" height="160" viewBox="0 0 600 160">
+      <defs>
+        <marker id="wa" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0,6 2,0 4" fill="#00D4FF"/></marker>
+        <marker id="wa2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0,6 2,0 4" fill="#FF9B42"/></marker>
+      </defs>
+      <!-- CBOW -->
+      <text x="135" y="18" text-anchor="middle" fill="#00D4FF" font-size="12" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">CBOW</text>
+      <rect x="10" y="25" width="70" height="25" rx="5" fill="#21253A" stroke="#00D4FF" stroke-width="1"/>
+      <text x="45" y="41" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">貓</text>
+      <rect x="10" y="58" width="70" height="25" rx="5" fill="#21253A" stroke="#00D4FF" stroke-width="1"/>
+      <text x="45" y="74" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">在</text>
+      <rect x="10" y="91" width="70" height="25" rx="5" fill="#21253A" stroke="#00D4FF" stroke-width="1"/>
+      <text x="45" y="107" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">地板</text>
+      <rect x="10" y="124" width="70" height="25" rx="5" fill="#21253A" stroke="#00D4FF" stroke-width="1"/>
+      <text x="45" y="140" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">上</text>
+      <rect x="110" y="65" width="60" height="30" rx="6" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="140" y="83" text-anchor="middle" fill="#FFD166" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Hidden</text>
+      <line x1="81" y1="37" x2="109" y2="75" stroke="#00D4FF" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="81" y1="71" x2="109" y2="80" stroke="#00D4FF" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="81" y1="104" x2="109" y2="80" stroke="#00D4FF" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="81" y1="137" x2="109" y2="79" stroke="#00D4FF" stroke-width="1" marker-end="url(#wa)"/>
+      <rect x="192" y="65" width="60" height="30" rx="5" fill="#21253A" stroke="#00FFB2" stroke-width="1.5"/>
+      <text x="222" y="83" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">→ 坐</text>
+      <line x1="170" y1="80" x2="191" y2="80" stroke="#FFD166" stroke-width="1.2" marker-end="url(#wa)"/>
+      <text x="135" y="150" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">上下文詞 → 預測中心詞</text>
+
+      <!-- Skip-gram -->
+      <text x="435" y="18" text-anchor="middle" fill="#FF9B42" font-size="12" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Skip-gram</text>
+      <rect x="310" y="65" width="60" height="30" rx="5" fill="#21253A" stroke="#FF9B42" stroke-width="1.5"/>
+      <text x="340" y="83" text-anchor="middle" fill="#FF9B42" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">坐（輸入）</text>
+      <rect x="395" y="65" width="60" height="30" rx="6" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="425" y="83" text-anchor="middle" fill="#FFD166" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Hidden</text>
+      <line x1="370" y1="80" x2="394" y2="80" stroke="#FF9B42" stroke-width="1.2" marker-end="url(#wa2)"/>
+      <rect x="480" y="25" width="60" height="25" rx="5" fill="#21253A" stroke="#00FFB2" stroke-width="1"/>
+      <text x="510" y="41" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">→ 貓</text>
+      <rect x="480" y="58" width="60" height="25" rx="5" fill="#21253A" stroke="#00FFB2" stroke-width="1"/>
+      <text x="510" y="74" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">→ 在</text>
+      <rect x="480" y="91" width="60" height="25" rx="5" fill="#21253A" stroke="#00FFB2" stroke-width="1"/>
+      <text x="510" y="107" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">→ 地板</text>
+      <rect x="480" y="124" width="60" height="25" rx="5" fill="#21253A" stroke="#00FFB2" stroke-width="1"/>
+      <text x="510" y="140" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">→ 上</text>
+      <line x1="456" y1="75" x2="479" y2="37" stroke="#00FFB2" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="456" y1="79" x2="479" y2="71" stroke="#00FFB2" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="456" y1="80" x2="479" y2="104" stroke="#00FFB2" stroke-width="1" marker-end="url(#wa)"/>
+      <line x1="456" y1="79" x2="479" y2="137" stroke="#00FFB2" stroke-width="1" marker-end="url(#wa)"/>
+      <text x="435" y="150" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">中心詞 → 預測上下文詞</text>
+    </svg>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>模型</th><th>訓練方式</th><th>適合場景</th><th>特點</th></tr></thead>
+      <tbody>
+        <tr><td>CBOW</td><td>上下文詞 → 預測中心詞</td><td>常見詞、大語料庫</td><td>訓練速度快，常見詞表示好</td></tr>
+        <tr><td>Skip-gram</td><td>中心詞 → 預測上下文詞</td><td>稀有詞、小語料庫</td><td>稀有詞效果更好，訓練較慢</td></tr>
+        <tr><td>GloVe</td><td>全局共現矩陣分解</td><td>大規模語料統計</td><td>結合全局統計與局部上下文</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>Word2Vec 兩種訓練方式 — CBOW（上下文→中心詞）適合大語料常見詞；Skip-gram（中心詞→上下文）對稀有詞效果更好。GloVe 使用<strong>全局共現矩陣</strong>，結合全局統計信息。</div>
+</div>
+
+<!-- ══ 4. GloVe ══ -->
+<div class="sec-title reveal">🔢 GloVe — 全局向量詞嵌入</div>
+<div class="panel reveal">
+  <div class="panel-title">GloVe (Global Vectors)：利用整個語料庫的詞共現統計</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    GloVe 建立<strong style="color:var(--text)">共現矩陣 X</strong>：X_ij 表示詞 i 和詞 j 在一定視窗內共同出現的次數。透過因式分解共現矩陣訓練出詞向量，使得：
+  </p>
+  <div class="formula">
+    <span class="comment">// GloVe 目標函數（最小化）</span><br>
+    J = Σ_ij <span class="hl">f</span>(X_ij) · ( <span class="fn">wᵢᵀ</span>·<span class="vr">w̃ⱼ</span> + bᵢ + b̃ⱼ - <span class="fn">log</span>(X_ij) )²<br><br>
+    <span class="comment">// f(X_ij) = 加權函數（降低超頻詞的影響）</span><br>
+    <span class="comment">// wᵢ = 中心詞向量；w̃ⱼ = 上下文詞向量</span><br>
+    <span class="comment">// 最終向量 = wᵢ + w̃ⱼ（兩者相加）</span>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">共現矩陣（Co-occurrence Matrix）</div>
+      <div class="kp-body">統計整個語料庫中每對詞在視窗內共現的次數。「冰」和「固體」共現多 → 關係密切。「冰」和「蒸氣」共現少但各自與「水」共現多 → 間接關聯。</div>
+      <div class="kp-tag">▶ 考點：GloVe 使用全局共現矩陣</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--yellow)">
+      <div class="kp-title">GloVe vs Word2Vec 差異</div>
+      <div class="kp-body">Word2Vec 基於局部上下文視窗（Local Context Window）；GloVe 利用全局共現統計（Global Co-occurrence），通常在大語料庫上表現更穩定。兩者都產生靜態詞向量。</div>
+      <div class="kp-tag">▶ 考點：GloVe=全局統計 / Word2Vec=局部視窗</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent2)">
+      <div class="kp-title">靜態 vs 動態嵌入</div>
+      <div class="kp-body">Word2Vec 和 GloVe 都是靜態嵌入：每個詞固定對應一個向量，無論上下文。BERT 是動態嵌入：同一個詞在不同句子中有不同向量（解決一詞多義）。</div>
+      <div class="kp-tag">▶ 考點：靜態嵌入無法解決一詞多義</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. BERT MLM ══ -->
+<div class="sec-title reveal">🤖 BERT — 雙向 Encoder 預訓練</div>
+<div class="panel reveal">
+  <div class="panel-title">Masked Language Model（MLM）+ Next Sentence Prediction（NSP）</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    BERT（Bidirectional Encoder Representations from Transformers）使用 Transformer <strong style="color:var(--text)">Encoder</strong> 堆疊，同時關注句子左右兩側的上下文，透過兩個預訓練任務學習深層語言表示。
+  </p>
+  <div class="arch-wrap">
+    <svg width="580" height="160" viewBox="0 0 580 160">
+      <defs>
+        <marker id="ba" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0,6 2,0 4" fill="#00FFB2"/></marker>
+      </defs>
+      <!-- Tokens row -->
+      <text x="10" y="25" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">[CLS]</text>
+      <text x="65" y="25" fill="#FF6B9D" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">[MASK]</text>
+      <text x="120" y="25" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">在</text>
+      <text x="150" y="25" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">地板</text>
+      <text x="205" y="25" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">上</text>
+      <text x="235" y="25" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">[SEP]</text>
+      <!-- Arrows down -->
+      <line x1="18" y1="30" x2="18" y2="48" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <line x1="78" y1="30" x2="78" y2="48" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#ba)"/>
+      <line x1="128" y1="30" x2="128" y2="48" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <line x1="165" y1="30" x2="165" y2="48" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <line x1="213" y1="30" x2="213" y2="48" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <line x1="248" y1="30" x2="248" y2="48" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <!-- BERT block -->
+      <rect x="5" y="50" width="295" height="50" rx="8" fill="#21253A" stroke="#9B5DE5" stroke-width="2"/>
+      <text x="152" y="71" text-anchor="middle" fill="#9B5DE5" font-size="11" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">BERT Encoder × 12層</text>
+      <text x="152" y="88" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">雙向 Multi-Head Self-Attention（←→ 同時看左右）</text>
+      <!-- Arrows up to output -->
+      <line x1="18" y1="101" x2="18" y2="120" stroke="#8892B0" stroke-width="1" marker-end="url(#ba)"/>
+      <line x1="78" y1="101" x2="78" y2="120" stroke="#FF6B9D" stroke-width="1.5" marker-end="url(#ba)"/>
+      <!-- Output -->
+      <rect x="5" y="122" width="55" height="28" rx="5" fill="#21253A" stroke="#00D4FF" stroke-width="1"/>
+      <text x="33" y="140" text-anchor="middle" fill="#00D4FF" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">分類向量</text>
+      <rect x="55" y="122" width="80" height="28" rx="5" fill="#21253A" stroke="#FF6B9D" stroke-width="1.5"/>
+      <text x="95" y="133" text-anchor="middle" fill="#FF6B9D" font-size="9" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">預測原始詞</text>
+      <text x="95" y="146" text-anchor="middle" fill="#FF6B9D" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">（MLM任務）</text>
+      <!-- Right side: GPT -->
+      <text x="350" y="25" fill="#FFD166" font-size="11" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">對比：GPT（Decoder Only）</text>
+      <rect x="340" y="35" width="220" height="90" rx="8" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="450" y="58" text-anchor="middle" fill="#FFD166" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Masked Self-Attention（→ 只看左側）</text>
+      <text x="450" y="78" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">自迴歸：每次預測下一個 token</text>
+      <text x="450" y="96" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">The → cat → sat → on → ...</text>
+      <text x="450" y="142" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">適合文本生成（ChatGPT、GPT-4）</text>
+    </svg>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">MLM（遮蔽語言模型）</div>
+      <div class="kp-body">隨機遮蔽 15% 的 token，讓模型根據左右兩側上下文預測被遮蔽的詞。這使 BERT 能學到雙向語義關係，完成後不再需要語言模型，只保留 Encoder 表示。</div>
+      <div class="kp-tag">▶ 考點：MLM = 雙向預測遮蔽詞</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent2)">
+      <div class="kp-title">NSP（下一句預測）</div>
+      <div class="kp-body">給定兩個句子 A, B，判斷 B 是否為 A 的下一句（50%是/50%否）。訓練模型理解句子間的邏輯關係，對問答（QA）和推理任務有幫助。</div>
+      <div class="kp-tag">▶ 考點：NSP = 句子關係理解</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--yellow)">
+      <div class="kp-title">BERT Fine-tuning 下游任務</div>
+      <div class="kp-body">預訓練 BERT 後，加上任務頭（Task Head）並微調：文本分類（[CLS]向量）、NER（每個 token 的輸出）、問答（抽取答案位置）、語義相似度等。</div>
+      <div class="kp-tag">▶ 考點：預訓練+微調 = Transfer Learning</div>
+    </div>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>BERT 雙向（←→）使用 MLM 預訓練，適合理解任務（分類/NER/QA）；GPT 單向（→）自迴歸，適合生成任務。「哪個模型能理解句子語義？」→ BERT。</div>
+</div>
+
+<!-- ══ 6. NER / 情感分析 / BLEU ══ -->
+<div class="sec-title reveal">🏷️ NLP 下游任務：NER / 情感分析 / 機器翻譯</div>
+<div class="panel reveal">
+  <div class="panel-title">iPAS 高頻考題：三大 NLP 應用任務</div>
+
+  <p style="color:var(--text);font-weight:700;margin-bottom:8px;">① NER — 命名實體辨識（Named Entity Recognition）</p>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px;">
+    從文本中自動識別並分類具有特定意義的實體，是資訊抽取的基礎任務。
+  </p>
+  <div class="arch-wrap">
+    <svg width="540" height="70" viewBox="0 0 540 70">
+      <text x="10" y="30" fill="#E8EAF6" font-size="13" font-family="Calibri,'Microsoft JhengHei',sans-serif">蘋果公司的</text>
+      <rect x="90" y="14" width="64" height="24" rx="4" fill="rgba(0,212,255,.15)" stroke="#00D4FF" stroke-width="1.2"/>
+      <text x="122" y="30" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">提姆．庫克</text>
+      <text x="122" y="52" text-anchor="middle" fill="#00D4FF" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">PER（人名）</text>
+      <text x="165" y="30" fill="#E8EAF6" font-size="13" font-family="Calibri,'Microsoft JhengHei',sans-serif">在</text>
+      <rect x="180" y="14" width="42" height="24" rx="4" fill="rgba(255,209,102,.12)" stroke="#FFD166" stroke-width="1.2"/>
+      <text x="201" y="30" text-anchor="middle" fill="#FFD166" font-size="13" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">矽谷</text>
+      <text x="201" y="52" text-anchor="middle" fill="#FFD166" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">LOC（地名）</text>
+      <text x="228" y="30" fill="#E8EAF6" font-size="13" font-family="Calibri,'Microsoft JhengHei',sans-serif">宣布</text>
+      <rect x="268" y="14" width="64" height="24" rx="4" fill="rgba(0,255,178,.12)" stroke="#00FFB2" stroke-width="1.2"/>
+      <text x="300" y="30" text-anchor="middle" fill="#00FFB2" font-size="13" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">iPhone 17</text>
+      <text x="300" y="52" text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">PROD（產品名）</text>
+      <text x="340" y="30" fill="#E8EAF6" font-size="13" font-family="Calibri,'Microsoft JhengHei',sans-serif">正式發布</text>
+    </svg>
+  </div>
+  <div class="info-box">NER 輸出類型：<strong>PER</strong>（人名）、<strong>ORG</strong>（組織）、<strong>LOC</strong>（地名）、<strong>DATE</strong>（日期）、<strong>PRODUCT</strong>（產品）。常用技術：CRF（條件隨機場）、BERT-NER（token 分類）。</div>
+
+  <p style="color:var(--text);font-weight:700;margin:16px 0 8px;">② 情感分析（Sentiment Analysis）</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>類型</th><th>輸出</th><th>模型方法</th><th>應用場景</th></tr></thead>
+      <tbody>
+        <tr><td>二分類情感</td><td>正面 / 負面</td><td>BERT Fine-tuning、LSTM</td><td>產品評論分析、輿情監控</td></tr>
+        <tr><td>多分類情感</td><td>1-5 星評分</td><td>多標籤分類 BERT</td><td>電商平台星級預測</td></tr>
+        <tr><td>面向情感分析（ABSA）</td><td>特定面向的情感</td><td>Aspect-based Models</td><td>「服務好但食物差」→ 分別分析</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="color:var(--text);font-weight:700;margin:16px 0 8px;">③ 機器翻譯 BLEU Score（評估指標）</p>
+  <div class="formula">
+    <span class="comment">// BLEU (Bilingual Evaluation Understudy) — 機器翻譯品質評估</span><br>
+    <span class="fn">BLEU</span> = <span class="hl">BP</span> × <span class="fn">exp</span>( Σ_n <span class="vr">wₙ</span> · <span class="fn">log</span>(<span class="hl">pₙ</span>) )<br><br>
+    <span class="comment">// BP（Brevity Penalty）= 懲罰太短的翻譯</span><br>
+    <span class="comment">// pₙ = n-gram 精確率（1-gram/2-gram/3-gram/4-gram）</span><br>
+    <span class="comment">// BLEU 值域 0～1，越高越好（與人工翻譯越接近）</span>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--accent)">
+      <div class="kp-title">BLEU = n-gram 重疊率</div>
+      <div class="kp-body">計算機器翻譯輸出與參考翻譯之間 n-gram 的重疊程度。BLEU-1（詞）、BLEU-4（4連詞）。BLEU &gt; 0.6 通常認為達到人工翻譯水準。</div>
+      <div class="kp-tag">▶ 考點：BLEU 越高 = 翻譯品質越好</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">Seq2Seq + Attention</div>
+      <div class="kp-body">機器翻譯主流架構：Encoder 讀取原文 → Attention 機制讓 Decoder 關注輸入的不同部分 → Decoder 逐詞生成譯文。Transformer 取代了 LSTM 版本，效果更佳。</div>
+      <div class="kp-tag">▶ 考點：Transformer = 機器翻譯 SOTA</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--yellow)">
+      <div class="kp-title">NLP 評估指標整理</div>
+      <div class="kp-body">BLEU → 機器翻譯；ROUGE → 文本摘要（召回率導向）；F1-Score → NER/分類；Perplexity（困惑度）→ 語言模型品質（越低越好）。</div>
+      <div class="kp-tag">▶ 考點：不同任務的評估指標不同</div>
+    </div>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>NER 識別<strong>人名(PER)/地名(LOC)/組織(ORG)</strong>；BLEU 分數評估機器翻譯品質（n-gram重疊）；Perplexity 評估語言模型（越低越好）。</div>
+</div>
+
+<!-- ══ 7. 3D Word Embedding ══ -->
+<div class="sec-title reveal">🎮 3D 互動視覺化：Word Embedding 向量空間</div>
+<div class="panel reveal">
+  <div class="panel-title">Word2Vec king - man + woman ≈ queen 類比推理 3D展示（可旋轉拖曳）</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:10px;">
+    每個球體代表一個詞的向量位置。紫色箭頭表示「皇室」語義向量（king→queen），青色箭頭表示「性別」語義向量（man→woman）。兩個向量在高維空間中近似平行，體現詞向量的類比推理能力。
+  </p>
+  <div class="c3d-wrap">
+    <canvas class="c3d" id="embed3d"></canvas>
+    <div class="c3d-lbl">Word Embedding 3D Space · 拖曳旋轉</div>
+    <div class="ctrl">
+      <button id="btn-play" class="on" onclick="togglePlay()">⏸ 暫停自轉</button>
+      <button onclick="resetView()">🔄 重置視角</button>
+      <button id="btn-vec" onclick="toggleVectors()">🔀 切換向量顯示</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 8. 考試重點整理 ══ -->
+<div class="sec-title reveal">📋 考試重點整理</div>
+<div class="kp-grid reveal">
+  <div class="kp-card">
+    <div class="kp-title">TF-IDF 公式</div>
+    <div class="kp-body">TF（詞在文件中的頻率）× IDF（log 總文件數/含該詞文件數）。常見詞的 IDF 趨近 0，稀有詞的 IDF 高。</div>
+    <div class="kp-tag">▶ 必背公式</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">Word2Vec 訓練方式</div>
+    <div class="kp-body">CBOW：上下文→預測中心詞（快）；Skip-gram：中心詞→預測上下文（稀有詞好）。GloVe：全局共現矩陣分解。</div>
+    <div class="kp-tag">▶ 高頻選擇題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">BERT vs GPT</div>
+    <div class="kp-body">BERT 雙向 Encoder + MLM 預訓練，適合理解（NER/分類/QA）；GPT 單向 Decoder，適合生成。</div>
+    <div class="kp-tag">▶ 必考比較題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">NER 識別類型</div>
+    <div class="kp-body">PER（人名）/ ORG（組織）/ LOC（地名）/ DATE（日期）/ PRODUCT（產品）。BERT-NER：token 級別序列標注任務。</div>
+    <div class="kp-tag">▶ 應用情境題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">BLEU Score</div>
+    <div class="kp-body">機器翻譯評估指標。計算機器輸出與參考翻譯的 n-gram 重疊率（加 Brevity Penalty 懲罰過短輸出）。0～1，越高越好。</div>
+    <div class="kp-tag">▶ 評估指標題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">靜態 vs 動態嵌入</div>
+    <div class="kp-body">Word2Vec/GloVe = 靜態（每詞固定向量，無法解決一詞多義）；BERT = 動態（同詞不同語境 → 不同向量）。</div>
+    <div class="kp-tag">▶ 概念理解題</div>
+  </div>
+</div>
+
+<!-- ══ 9. 仿真考題 ══ -->
+<div class="sec-title reveal">🎯 仿真考題（8 題）</div>
+<div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+<div id="quiz" class="reveal"></div>
+
+</div><!-- /wrap -->
+
+<footer>iPAS AI 應用規劃師中級考試學習站 · 自然語言處理（NLP）· 內容依據官方評鑑範圍整理</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// Reveal animation
+// ═══════════════════════════════════════
+const obs = new IntersectionObserver(e => e.forEach(x => x.isIntersecting && x.target.classList.add('vis')), { threshold: .08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ═══════════════════════════════════════
+// Word2Vec demo
+// ═══════════════════════════════════════
+const w2vData = {
+  cbow: `<span class="hl">CBOW（Continuous Bag-of-Words）</span>\n\n訓練目標：給定<span class="hl2">上下文詞</span>，預測<span class="hl3">中心詞</span>\n\n範例句子：「貓坐在地板上」\n\n視窗大小 = 2（前後各2個詞）：\n  上下文：[貓, 在, 地板, 上]\n  中心詞：<span class="hl3">坐</span>（待預測）\n\n特點：\n  ✓ 訓練速度快（所有上下文詞求平均）\n  ✓ 常見詞表示效果好\n  ✗ 對稀有詞效果稍差（因為求平均）`,
+  skip: `<span class="hl">Skip-gram</span>\n\n訓練目標：給定<span class="hl3">中心詞</span>，預測<span class="hl2">上下文詞</span>\n\n範例句子：「貓坐在地板上」\n\n中心詞：<span class="hl3">坐</span>\n  預測上下文：[貓, 在, 地板, 上]\n\n特點：\n  ✓ 對稀有詞效果更好（每對詞單獨訓練）\n  ✓ 小語料庫表現優異\n  ✗ 訓練較慢（需處理 K×C 個訓練樣本對）\n\n負採樣技巧（Negative Sampling）：隨機採樣不相關詞作為負例，大幅提升訓練效率`,
+  analogy: `<span class="hl">詞向量類比推理（Vector Analogy）</span>\n\nWord2Vec 神奇特性：詞向量支持算術運算\n\n<span class="hl2">king</span> - <span class="hl2">man</span> + <span class="hl2">woman</span> ≈ <span class="hl3">queen</span>\n  → 捕捉到「皇室」語義方向 + 「性別」語義方向\n\n<span class="hl2">Paris</span> - <span class="hl2">France</span> + <span class="hl2">Japan</span> ≈ <span class="hl3">Tokyo</span>\n  → 捕捉到「首都」語義關係\n\n<span class="hl2">bigger</span> - <span class="hl2">big</span> + <span class="hl2">small</span> ≈ <span class="hl3">smaller</span>\n  → 捕捉到比較級語法關係\n\n相似度計算：<span class="hl">餘弦相似度</span> = (A·B) / (|A|×|B|)`
+};
+
+function showW2V(el, key) {
+  document.querySelectorAll('.w2vtab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('w2v-display').innerHTML = w2vData[key].replace(/\n/g,'<br>');
+}
+showW2V(document.querySelector('.w2vtab'), 'cbow');
+
+// ═══════════════════════════════════════
+// Quiz
+// ═══════════════════════════════════════
+let score = 0;
+const answered = new Set();
+const QS = [
+  {
+    stem: 'TF-IDF 中，IDF（逆文件頻率）的主要目的是什麼？',
+    opts: ['A. 增加在單一文件中出現頻率高的詞的權重', 'B. 降低在許多文件中都出現的常見詞（如「的」「是」）的權重', 'C. 計算文件中所有詞的平均出現次數', 'D. 衡量詞語的語義相似度'],
+    ans: 1,
+    explain: 'IDF（逆文件頻率）= log(N / df(t))，其中 N 是總文件數，df(t) 是包含詞 t 的文件數。常見詞如「的」出現在幾乎所有文件中，df(t) ≈ N，所以 IDF ≈ 0，有效降低這些詞的影響力，突出稀有的、有鑑別性的詞。'
+  },
+  {
+    stem: 'Word2Vec 的 Skip-gram 模型與 CBOW 模型的主要差異為何？',
+    opts: ['A. Skip-gram 使用上下文詞預測中心詞；CBOW 使用中心詞預測上下文詞', 'B. Skip-gram 使用中心詞預測上下文詞；CBOW 使用上下文詞預測中心詞', 'C. Skip-gram 訓練速度比 CBOW 快，適合大語料庫', 'D. CBOW 使用全局共現矩陣，Skip-gram 使用局部視窗'],
+    ans: 1,
+    explain: 'Skip-gram：給定中心詞 → 預測上下文詞（對稀有詞效果好）；CBOW（Continuous Bag-of-Words）：給定上下文詞 → 預測中心詞（訓練速度快，適合大語料庫和常見詞）。GloVe 才是使用全局共現矩陣。'
+  },
+  {
+    stem: 'BERT 使用 MLM（Masked Language Model）進行預訓練，其做法為何？',
+    opts: ['A. 從左到右逐詞預測下一個詞（自迴歸）', 'B. 隨機遮蔽 15% 的 token，讓模型根據左右兩側上下文預測被遮蔽的詞', 'C. 給定兩個句子，判斷哪個句子更通順', 'D. 將句子翻譯成另一種語言後再翻譯回來'],
+    ans: 1,
+    explain: 'BERT 的 MLM 預訓練：隨機遮蔽輸入中 15% 的 token（替換為 [MASK]），讓模型利用雙向上下文（左側 + 右側）預測原始詞。這使 BERT 能學到深層雙向語義關係，與只能看左側的 GPT 形成對比。'
+  },
+  {
+    stem: 'NER（命名實體辨識）的主要任務是什麼？下列哪個選項最正確？',
+    opts: ['A. 分析句子的情感傾向（正面/負面）', 'B. 識別文本中的人名、地名、組織名等具有特定意義的實體', 'C. 計算兩個文本的相似度分數', 'D. 將文本自動翻譯成另一種語言'],
+    ans: 1,
+    explain: 'NER（Named Entity Recognition）命名實體辨識：從文本中識別並分類具有特定意義的名詞，包括 PER（人名）、ORG（組織）、LOC（地名）、DATE（日期）、PRODUCT（產品名）等。是資訊抽取的基礎任務，廣泛應用於問答系統、知識圖譜建構。'
+  },
+  {
+    stem: '在評估機器翻譯品質時，BLEU 分數是如何計算的？',
+    opts: ['A. 計算翻譯結果與參考譯文的餘弦相似度', 'B. 計算機器翻譯輸出與參考翻譯之間 n-gram 的重疊程度（精確率）', 'C. 請人工評分員對翻譯品質評分（1-5分）', 'D. 計算翻譯結果的困惑度（Perplexity）'],
+    ans: 1,
+    explain: 'BLEU（Bilingual Evaluation Understudy）分數：計算機器翻譯輸出與一個或多個參考翻譯之間 n-gram（1-gram 到 4-gram）的重疊精確率，再加上 BP（Brevity Penalty，懲罰過短翻譯）。BLEU 值域 0～1，越接近 1 表示翻譯品質越好。'
+  },
+  {
+    stem: 'Word2Vec（靜態嵌入）和 BERT（動態嵌入）的最主要差異為何？',
+    opts: ['A. Word2Vec 生成的向量維度比 BERT 高', 'B. Word2Vec 每個詞只有一個固定向量，無法處理一詞多義；BERT 根據上下文生成不同向量', 'C. BERT 只能處理英文，Word2Vec 可以處理中文', 'D. Word2Vec 訓練需要更多計算資源'],
+    ans: 1,
+    explain: '靜態嵌入（Word2Vec/GloVe）：每個詞對應唯一固定向量，「bank」在「river bank」和「bank account」中向量相同，無法區分。動態嵌入（BERT）：透過 Transformer Attention 感知整個句子，同一個詞在不同語境下有不同向量，能解決一詞多義問題。'
+  },
+  {
+    stem: 'GloVe（Global Vectors）詞嵌入與 Word2Vec 的主要差異是什麼？',
+    opts: ['A. GloVe 使用深度神經網路，Word2Vec 使用淺層網路', 'B. GloVe 利用整個語料庫的全局共現矩陣統計；Word2Vec 基於局部上下文視窗', 'C. GloVe 只支持英文，Word2Vec 支持多語言', 'D. GloVe 生成動態嵌入，Word2Vec 生成靜態嵌入'],
+    ans: 1,
+    explain: 'GloVe 的核心差異：利用整個語料庫的全局共現矩陣（Global Co-occurrence Matrix）進行因式分解，結合全局統計信息。Word2Vec（CBOW/Skip-gram）基於局部滑動視窗，只利用局部上下文。兩者都生成靜態詞向量。'
+  },
+  {
+    stem: '某企業要建立一個客服系統，需要從客戶投訴文本中自動抽取出「客戶姓名」和「購買產品名稱」，最適合使用哪種 NLP 技術？',
+    opts: ['A. 情感分析（Sentiment Analysis）', 'B. 機器翻譯（Machine Translation）', 'C. 命名實體辨識（NER）', 'D. 文本摘要（Text Summarization）'],
+    ans: 2,
+    explain: '從文本中識別特定實體（人名 PER、產品名 PRODUCT）是 NER（命名實體辨識）的核心應用場景。NER 能自動標記文中的人名、組織、地名、產品名等，適合資訊抽取場景如客服系統、合約分析、醫療記錄處理等。'
+  }
+];
+
+const total = QS.length;
+document.getElementById('total').textContent = total;
+
+function buildQuiz() {
+  const wrap = document.getElementById('quiz');
+  QS.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.innerHTML = `
+      <div class="q-num">第 ${qi+1} 題 / 共 ${total} 題　｜　仿 iPAS 中級科目一單選題</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="q-opts" id="opts-${qi}">
+        ${q.opts.map((o, oi) => `
+          <div class="q-opt" onclick="answer(${qi},${oi})">
+            <span class="opt-label">${['A','B','C','D'][oi]}.</span>
+            <span>${o.slice(3)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="q-explain" id="exp-${qi}">💡 解析：${q.explain}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function answer(qi, oi) {
+  if (answered.has(qi)) return;
+  answered.add(qi);
+  const opts = document.querySelectorAll(`#opts-${qi} .q-opt`);
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  const q = QS[qi];
+  opts[q.ans].classList.add('correct');
+  if (oi !== q.ans) opts[oi].classList.add('wrong');
+  document.getElementById('exp-'+qi).classList.add('show');
+  if (oi === q.ans) score++;
+  document.getElementById('score').textContent = score;
+  document.getElementById('total').textContent = total;
+  document.getElementById('pbar').style.width = (answered.size / total * 100) + '%';
+}
+
+buildQuiz();
+
+// ═══════════════════════════════════════
+// THREE.JS — Word Embedding 3D Vector Space
+// ═══════════════════════════════════════
+(function () {
+  const canvas = document.getElementById('embed3d');
+  const wrapper = canvas.parentElement;
+
+  let W = wrapper.clientWidth || 600;
+  let H = 380;
+  canvas.width = W; canvas.height = H;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x0a0c14, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dirL = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirL.position.set(5, 8, 6);
+  scene.add(dirL);
+  const dirL2 = new THREE.DirectionalLight(0x00D4FF, 0.5);
+  dirL2.position.set(-4, 2, -4);
+  scene.add(dirL2);
+
+  // Drag rotation
+  const rot = { x: 0.3, y: 0.5 };
+  let dragging = false, prevMouse = { x: 0, y: 0 };
+
+  canvas.addEventListener('mousedown', e => { dragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('mouseup', () => dragging = false);
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    rot.y += (e.clientX - prevMouse.x) * 0.012;
+    rot.x += (e.clientY - prevMouse.y) * 0.008;
+    rot.x = Math.max(-1.1, Math.min(1.1, rot.x));
+    prevMouse = { x: e.clientX, y: e.clientY };
+  });
+  canvas.addEventListener('touchstart', e => { dragging = true; prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY }; e.preventDefault(); }, { passive: false });
+  window.addEventListener('touchend', () => dragging = false);
+  window.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    rot.y += (e.touches[0].clientX - prevMouse.x) * 0.012;
+    rot.x += (e.touches[0].clientY - prevMouse.y) * 0.008;
+    rot.x = Math.max(-1.1, Math.min(1.1, rot.x));
+    prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+
+  function updateCamera() {
+    const r = 14;
+    camera.position.x = r * Math.sin(rot.y) * Math.cos(rot.x);
+    camera.position.y = r * Math.sin(rot.x) + 1;
+    camera.position.z = r * Math.cos(rot.y) * Math.cos(rot.x);
+    camera.lookAt(0, 0, 0);
+  }
+
+  // Word positions — arranged to show king-man+woman=queen analogy
+  // Royalty axis: x direction. Gender axis: y direction. Semantic noise: z
+  const words = [
+    { label: 'man',    pos: [-2.0,  0.0,  0.2], color: 0x00D4FF, size: 0.22 },
+    { label: 'king',   pos: [ 2.0,  0.0, -0.1], color: 0x7C6FFF, size: 0.28 },
+    { label: 'woman',  pos: [-2.0,  2.2,  0.3], color: 0xFF6B9D, size: 0.22 },
+    { label: 'queen',  pos: [ 2.0,  2.2,  0.1], color: 0x7C6FFF, size: 0.28 },
+    // Other semantic clusters
+    { label: 'dog',    pos: [-3.2, -2.0,  1.8], color: 0xFF9B42, size: 0.16 },
+    { label: 'cat',    pos: [-2.6, -2.2,  2.1], color: 0xFF9B42, size: 0.16 },
+    { label: 'fish',   pos: [-3.0, -2.8,  1.6], color: 0xFF9B42, size: 0.13 },
+    { label: 'France', pos: [ 0.4, -2.5, -2.2], color: 0x00FFB2, size: 0.18 },
+    { label: 'Paris',  pos: [ 2.2, -2.0, -2.4], color: 0x00FFB2, size: 0.18 },
+    { label: 'Japan',  pos: [ 0.2, -2.8, -3.6], color: 0x00FFB2, size: 0.15 },
+    { label: 'Tokyo',  pos: [ 2.0, -2.3, -3.8], color: 0x00FFB2, size: 0.15 },
+    { label: 'happy',  pos: [-1.0,  3.5, -1.5], color: 0xFFD166, size: 0.14 },
+    { label: 'sad',    pos: [-2.5,  3.2, -0.8], color: 0xFFD166, size: 0.14 },
+  ];
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Create word spheres
+  const sphereMeshes = [];
+  words.forEach(w => {
+    const geo = new THREE.SphereGeometry(w.size, 20, 20);
+    const mat = new THREE.MeshLambertMaterial({ color: w.color });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(...w.pos);
+    group.add(mesh);
+    sphereMeshes.push({ mesh, word: w });
+
+    // Glow ring for key words
+    if (['man','king','woman','queen'].includes(w.label)) {
+      const ringGeo = new THREE.RingGeometry(w.size + 0.08, w.size + 0.16, 24);
+      const ringMat = new THREE.MeshBasicMaterial({ color: w.color, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.set(...w.pos);
+      group.add(ring);
+    }
+  });
+
+  // Helper: create an arrow (cylinder + cone)
+  function makeArrow(from, to, color, opacity) {
+    const dir = new THREE.Vector3(...to).sub(new THREE.Vector3(...from));
+    const length = dir.length();
+    dir.normalize();
+
+    const arrowGroup = new THREE.Group();
+
+    // Cylinder body
+    const cylLen = length - 0.35;
+    const cylGeo = new THREE.CylinderGeometry(0.04, 0.04, cylLen, 8);
+    const cylMat = new THREE.MeshLambertMaterial({ color, transparent: true, opacity });
+    const cyl = new THREE.Mesh(cylGeo, cylMat);
+    cyl.position.set(0, cylLen / 2, 0);
+    arrowGroup.add(cyl);
+
+    // Cone tip
+    const coneGeo = new THREE.ConeGeometry(0.12, 0.3, 10);
+    const coneMat = new THREE.MeshLambertMaterial({ color, transparent: true, opacity });
+    const cone = new THREE.Mesh(coneGeo, coneMat);
+    cone.position.set(0, cylLen + 0.15, 0);
+    arrowGroup.add(cone);
+
+    // Orient arrow along direction
+    const quaternion = new THREE.Quaternion();
+    quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+    arrowGroup.setRotationFromQuaternion(quaternion);
+    arrowGroup.position.set(...from);
+
+    return arrowGroup;
+  }
+
+  // Royalty vectors (man→king, woman→queen) — purple
+  const royaltyArrow1 = makeArrow([-2.0, 0.0, 0.2], [2.0, 0.0, -0.1], 0x9B5DE5, 0.9);
+  const royaltyArrow2 = makeArrow([-2.0, 2.2, 0.3], [2.0, 2.2, 0.1], 0x9B5DE5, 0.9);
+
+  // Gender vectors (man→woman, king→queen) — cyan
+  const genderArrow1 = makeArrow([-2.0, 0.0, 0.2], [-2.0, 2.2, 0.3], 0x00D4FF, 0.85);
+  const genderArrow2 = makeArrow([2.0, 0.0, -0.1], [2.0, 2.2, 0.1], 0x00D4FF, 0.85);
+
+  // France→Paris, Japan→Tokyo (capital relationship) — green
+  const capitalArrow1 = makeArrow([0.4, -2.5, -2.2], [2.2, -2.0, -2.4], 0x00FFB2, 0.6);
+  const capitalArrow2 = makeArrow([0.2, -2.8, -3.6], [2.0, -2.3, -3.8], 0x00FFB2, 0.6);
+
+  const allArrows = [royaltyArrow1, royaltyArrow2, genderArrow1, genderArrow2, capitalArrow1, capitalArrow2];
+  allArrows.forEach(a => group.add(a));
+
+  // Light scatter points to fill space
+  const pointsGeo = new THREE.BufferGeometry();
+  const pts = [];
+  for (let i = 0; i < 60; i++) {
+    pts.push((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 10);
+  }
+  pointsGeo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  const pointsMat = new THREE.PointsMaterial({ color: 0x2E3250, size: 0.08 });
+  group.add(new THREE.Points(pointsGeo, pointsMat));
+
+  // Grid plane
+  const gridHelper = new THREE.GridHelper(12, 12, 0x1A1D27, 0x2E3250);
+  gridHelper.position.y = -3;
+  group.add(gridHelper);
+
+  let playing = true;
+  let showVectors = true;
+  let animT = 0;
+
+  window.togglePlay = function () {
+    playing = !playing;
+    document.getElementById('btn-play').textContent = playing ? '⏸ 暫停自轉' : '▶ 繼續自轉';
+    document.getElementById('btn-play').classList.toggle('on', playing);
+  };
+
+  window.resetView = function () {
+    rot.x = 0.3; rot.y = 0.5;
+  };
+
+  window.toggleVectors = function () {
+    showVectors = !showVectors;
+    allArrows.forEach(a => { a.visible = showVectors; });
+    document.getElementById('btn-vec').classList.toggle('on', showVectors);
+  };
+  document.getElementById('btn-vec').classList.add('on');
+
+  function animate() {
+    requestAnimationFrame(animate);
+    animT += 0.01;
+
+    if (playing) rot.y += 0.004;
+
+    // Pulsing glow for key word spheres
+    sphereMeshes.forEach(({ mesh, word }) => {
+      if (['man','king','woman','queen'].includes(word.label)) {
+        const pulse = 1 + Math.sin(animT * 2 + word.pos[0]) * 0.08;
+        mesh.scale.setScalar(pulse);
+      }
+    });
+
+    updateCamera();
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    W = wrapper.clientWidth || 600;
+    canvas.width = W; canvas.height = H;
+    renderer.setSize(W, H);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多模態模型 — iPAS AI應用規劃師中級考試</title>
+<style>
+/* ── 字型設定 ── */
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#0F1117; --panel:#1A1D27; --panel2:#21253A;
+  --border:#2E3250; --text:#E8EAF6; --muted:#8892B0;
+  --accent:#7C6FFF; --accent2:#00D4FF; --accent3:#FF6B9D;
+  --green:#00FFB2; --yellow:#FFD166; --orange:#FF9B42;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; overflow-x:hidden;
+  line-height:1.7;
+}
+
+/* ── NAV ── */
+.nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(15,17,23,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  padding:12px 24px;
+}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.9rem;
+  padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#fff;}
+.nav-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.05rem;color:var(--text);}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;color:#fff;}
+
+/* ── HERO ── */
+.hero{
+  padding:60px 20px 40px;
+  background:linear-gradient(160deg,#0F1117 0%,#131928 50%,#0F1117 100%);
+  text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(124,111,255,.15),transparent);
+}
+.hero-badge{
+  display:inline-block;margin-bottom:16px;
+  padding:5px 18px;border-radius:999px;
+  background:rgba(124,111,255,.15);border:1px solid var(--accent);
+  font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;
+}
+.hero-title{
+  font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;
+  font-size:clamp(1.8rem,5vw,3.2rem);
+  background:linear-gradient(135deg,var(--accent2),var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:12px;
+}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:600px;margin:0 auto 24px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+/* ── MAIN ── */
+.wrap{max-width:980px;margin:0 auto;padding:16px 20px 80px;}
+
+/* ── SECTION ── */
+.sec-title{
+  font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.5rem;
+  color:var(--text);margin:44px 0 16px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;
+  background:linear-gradient(var(--accent),var(--accent2));}
+
+/* ── PANEL ── */
+.panel{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;margin-bottom:20px;
+}
+.panel-title{font-weight:900;font-size:1rem;color:var(--accent2);margin-bottom:12px;}
+
+/* ── FORMULA BOX ── */
+.formula{
+  background:#0a0c14;border:1px solid var(--border);
+  border-radius:10px;padding:16px 20px;margin:12px 0;
+  font-family:'JetBrains Mono',monospace;font-size:.92rem;
+  color:var(--green);line-height:2;overflow-x:auto;
+}
+.formula .comment{color:var(--muted);font-style:italic;}
+.formula .highlight{color:var(--yellow);}
+.formula .func{color:var(--accent2);}
+.formula .var{color:var(--accent3);}
+
+/* ── SVG ARCH DIAGRAM ── */
+.arch-wrap{
+  background:#0a0c14;border:1px solid var(--border);
+  border-radius:10px;padding:12px;margin:12px 0;overflow-x:auto;
+}
+.arch-wrap svg{display:block;margin:0 auto;}
+
+/* ── COMPARE TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:var(--panel2);padding:10px 14px;text-align:left;
+  border-bottom:2px solid var(--border);color:var(--accent2);font-weight:900;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--muted);}
+td:first-child{color:var(--text);font-weight:700;}
+tr:hover td{background:rgba(124,111,255,.05);}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:900;}
+
+/* ── KEY POINT CARDS ── */
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0;}
+.kp-card{
+  background:var(--panel2);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+  border-left:3px solid var(--accent);
+  transition:transform .18s,border-color .18s;
+}
+.kp-card:hover{transform:translateY(-4px);border-left-color:var(--accent2);}
+.kp-card .kp-title{font-weight:900;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.kp-card .kp-body{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.kp-card .kp-tag{font-size:.7rem;font-weight:900;color:var(--accent);margin-top:8px;}
+
+/* ── EXAM QUIZ ── */
+.quiz-wrap{margin:12px 0;}
+.q-item{
+  background:var(--panel2);border:1px solid var(--border);
+  border-radius:12px;padding:20px;margin-bottom:14px;
+}
+.q-num{font-size:.75rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.q-stem{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:12px;line-height:1.6;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{
+  padding:10px 14px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--border);font-size:.88rem;
+  color:var(--muted);transition:all .18s;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.q-opt:hover{border-color:var(--accent);color:var(--text);background:rgba(124,111,255,.08);}
+.q-opt.correct{border-color:var(--green);background:rgba(0,255,178,.07);color:var(--green);}
+.q-opt.wrong{border-color:var(--accent3);background:rgba(255,107,157,.07);color:var(--accent3);}
+.q-opt .opt-label{font-weight:900;min-width:18px;}
+.q-explain{
+  margin-top:12px;padding:10px 14px;
+  background:rgba(0,212,255,.06);border-left:3px solid var(--accent2);
+  border-radius:0 8px 8px 0;font-size:.84rem;color:var(--accent2);
+  display:none;line-height:1.65;
+}
+.q-explain.show{display:block;}
+
+/* ── PROGRESS ── */
+.progress-bar{height:6px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s;}
+
+/* ── TABS ── */
+.tab-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tab{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);
+  font-size:.83rem;font-weight:900;cursor:pointer;color:var(--muted);transition:all .18s;}
+.tab.active,.tab:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.1);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+/* ── SCORE BANNER ── */
+#score-banner{
+  position:fixed;bottom:20px;right:20px;z-index:300;
+  background:var(--panel);border:1px solid var(--accent);
+  border-radius:12px;padding:10px 18px;
+  font-weight:900;font-size:.9rem;color:var(--accent);
+  box-shadow:0 4px 20px rgba(124,111,255,.3);
+  transition:transform .2s;
+}
+</style>
+</head>
+<body>
+
+<div id="score-banner">⭐ 答題得分：<span id="score">0</span> / <span id="total">0</span></div>
+
+<nav class="nav">
+  <a href="index.html">← 返回</a>
+  <span class="nav-title">多模態模型</span>
+  <span class="nav-tag">iPAS 中級 · 科目一/三</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">MULTIMODAL AI · L21 · L23</div>
+  <div class="hero-title">多模態模型完全攻略</div>
+  <div class="hero-sub">從融合策略到 CLIP / Transformer，對應 iPAS AI應用規劃師中級考試重點</div>
+  <div class="tag-row">
+    <span class="tag" style="color:#00D4FF;border-color:#00D4FF">Early Fusion</span>
+    <span class="tag" style="color:#7C6FFF;border-color:#7C6FFF">Late Fusion</span>
+    <span class="tag" style="color:#FF6B9D;border-color:#FF6B9D">CLIP</span>
+    <span class="tag" style="color:#00FFB2;border-color:#00FFB2">Transformer</span>
+    <span class="tag" style="color:#FFD166;border-color:#FFD166">Cross-Attention</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. 定義與考試定位 ══ -->
+<div class="sec-title reveal">📌 定義與考試定位</div>
+<div class="panel reveal">
+  <div class="panel-title">什麼是多模態模型？（考試必知）</div>
+  <p style="color:var(--muted);font-size:.93rem;margin-bottom:14px;">
+    多模態模型（Multimodal Model）能同時處理兩種以上的資料型態（模態），整合不同來源的資訊做出預測或生成輸出。
+  </p>
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">🖼️ 視覺（Vision）</div>
+      <div class="kp-body">圖片、影片、醫療影像、衛星圖像。CNN / ViT 負責特徵提取。</div>
+      <div class="kp-tag">▶ 考點：CNN 用於影像處理</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">📝 語言（Text/NLP）</div>
+      <div class="kp-body">文字、問答、摘要。Transformer / BERT 負責語意理解。</div>
+      <div class="kp-tag">▶ 考點：Word2Vec、詞嵌入</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">🔊 語音（Audio）</div>
+      <div class="kp-body">語音辨識（ASR）、說話者識別。Mel Spectrogram 轉圖後用 CNN。</div>
+      <div class="kp-tag">▶ 考點：語音轉文字流程</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">📊 結構化資料</div>
+      <div class="kp-body">表格、感測器數值。MLP 或 GBM 處理後與其他模態融合。</div>
+      <div class="kp-tag">▶ 考點：融合前的特徵工程</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. 融合策略（高頻考點）══ -->
+<div class="sec-title reveal">🔀 融合策略 — 高頻考點</div>
+<div class="panel reveal">
+  <div class="tab-row">
+    <div class="tab active" onclick="switchTab(this,'early')">Early Fusion（早期融合）</div>
+    <div class="tab" onclick="switchTab(this,'late')">Late Fusion（晚期融合）</div>
+    <div class="tab" onclick="switchTab(this,'hybrid')">Hybrid Fusion（混合融合）</div>
+  </div>
+
+  <div class="tab-content active" id="tab-early">
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:12px;">
+      在輸入端就把多種模態的特徵<strong style="color:var(--text)">直接串接（Concatenate）</strong>，然後一起送入模型。
+    </p>
+    <div class="arch-wrap">
+      <svg width="600" height="130" viewBox="0 0 600 130">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#7C6FFF"/>
+          </marker>
+        </defs>
+        <!-- Input boxes -->
+        <rect x="10" y="20" width="100" height="36" rx="8" fill="#1A1D27" stroke="#7C6FFF" stroke-width="1.5"/>
+        <text x="60" y="43" text-anchor="middle" fill="#00D4FF" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">圖片特徵</text>
+        <rect x="10" y="74" width="100" height="36" rx="8" fill="#1A1D27" stroke="#7C6FFF" stroke-width="1.5"/>
+        <text x="60" y="97" text-anchor="middle" fill="#FF6B9D" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">文字特徵</text>
+        <!-- Arrow to concat -->
+        <line x1="110" y1="38" x2="170" y2="64" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="110" y1="92" x2="170" y2="68" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Concat -->
+        <rect x="175" y="50" width="90" height="32" rx="8" fill="#21253A" stroke="#FFD166" stroke-width="2"/>
+        <text x="220" y="70" text-anchor="middle" fill="#FFD166" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Concat</text>
+        <!-- Arrow to model -->
+        <line x1="265" y1="66" x2="320" y2="66" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Model -->
+        <rect x="325" y="48" width="100" height="36" rx="8" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+        <text x="375" y="70" text-anchor="middle" fill="#00FFB2" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">共用模型</text>
+        <!-- Arrow to output -->
+        <line x1="425" y1="66" x2="480" y2="66" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Output -->
+        <rect x="485" y="50" width="90" height="36" rx="8" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="530" y="72" text-anchor="middle" fill="#00D4FF" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">輸出答案</text>
+      </svg>
+    </div>
+    <div class="kp-grid">
+      <div class="kp-card" style="border-left-color:var(--green)">
+        <div class="kp-title">✅ 優點</div>
+        <div class="kp-body">模態間互動強，可學習跨模態關聯；架構簡單，端到端訓練。</div>
+      </div>
+      <div class="kp-card" style="border-left-color:var(--accent3)">
+        <div class="kp-title">❌ 缺點</div>
+        <div class="kp-body">不同模態維度差異大，需對齊；一個模態資料缺失就影響整體。</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,209,102,.08);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin-top:10px;">
+      📌 <strong>考試重點：</strong>多模態資料整合採用 Transformer 架構屬於 Early Fusion 概念；CLIP 使用對比學習對齊圖文特徵也屬此類。
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-late">
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:12px;">
+      各模態<strong style="color:var(--text)">分別訓練各自的模型</strong>，最後在決策層（輸出端）融合結果（投票、加權平均等）。
+    </p>
+    <div class="arch-wrap">
+      <svg width="600" height="150" viewBox="0 0 600 150">
+        <defs>
+          <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#7C6FFF"/>
+          </marker>
+        </defs>
+        <rect x="10" y="15" width="90" height="30" rx="6" fill="#1A1D27" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="55" y="34" text-anchor="middle" fill="#00D4FF" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">圖片輸入</text>
+        <rect x="10" y="60" width="90" height="30" rx="6" fill="#1A1D27" stroke="#FF6B9D" stroke-width="1.5"/>
+        <text x="55" y="79" text-anchor="middle" fill="#FF6B9D" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">文字輸入</text>
+        <rect x="10" y="105" width="90" height="30" rx="6" fill="#1A1D27" stroke="#00FFB2" stroke-width="1.5"/>
+        <text x="55" y="124" text-anchor="middle" fill="#00FFB2" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">語音輸入</text>
+        <!-- Models -->
+        <line x1="100" y1="30" x2="145" y2="30" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="150" y="15" width="80" height="30" rx="6" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="190" y="34" text-anchor="middle" fill="#00D4FF" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">CNN 模型</text>
+        <line x1="100" y1="75" x2="145" y2="75" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="150" y="60" width="80" height="30" rx="6" fill="#21253A" stroke="#FF6B9D" stroke-width="1.5"/>
+        <text x="190" y="79" text-anchor="middle" fill="#FF6B9D" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">BERT 模型</text>
+        <line x1="100" y1="120" x2="145" y2="120" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="150" y="105" width="80" height="30" rx="6" fill="#21253A" stroke="#00FFB2" stroke-width="1.5"/>
+        <text x="190" y="124" text-anchor="middle" fill="#00FFB2" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">RNN 模型</text>
+        <!-- Fusion -->
+        <line x1="230" y1="30" x2="310" y2="72" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <line x1="230" y1="75" x2="310" y2="75" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <line x1="230" y1="120" x2="310" y2="78" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="315" y="58" width="100" height="34" rx="8" fill="#21253A" stroke="#FFD166" stroke-width="2"/>
+        <text x="365" y="79" text-anchor="middle" fill="#FFD166" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">加權融合</text>
+        <line x1="415" y1="75" x2="470" y2="75" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="475" y="58" width="90" height="34" rx="8" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="520" y="79" text-anchor="middle" fill="#00D4FF" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">最終輸出</text>
+      </svg>
+    </div>
+    <div class="kp-grid">
+      <div class="kp-card" style="border-left-color:var(--green)">
+        <div class="kp-title">✅ 優點</div>
+        <div class="kp-body">各模態模型可獨立訓練、替換；模態缺失影響較小（有備用）。</div>
+      </div>
+      <div class="kp-card" style="border-left-color:var(--accent3)">
+        <div class="kp-title">❌ 缺點</div>
+        <div class="kp-body">無法學習細粒度跨模態關聯；需多個模型，計算成本高。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-hybrid">
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:12px;">
+      結合 Early 和 Late Fusion，在<strong style="color:var(--text)">中間層交換資訊</strong>（Cross-Attention），現代大模型多採此策略。
+    </p>
+    <div class="arch-wrap">
+      <svg width="580" height="120" viewBox="0 0 580 120">
+        <defs>
+          <marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#7C6FFF"/>
+          </marker>
+        </defs>
+        <rect x="5" y="20" width="80" height="28" rx="6" fill="#1A1D27" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="45" y="38" text-anchor="middle" fill="#00D4FF" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">圖片編碼器</text>
+        <rect x="5" y="72" width="80" height="28" rx="6" fill="#1A1D27" stroke="#FF6B9D" stroke-width="1.5"/>
+        <text x="45" y="90" text-anchor="middle" fill="#FF6B9D" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">文字編碼器</text>
+        <line x1="85" y1="34" x2="130" y2="34" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <line x1="85" y1="86" x2="130" y2="86" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="135" y="20" width="90" height="80" rx="8" fill="#21253A" stroke="#FFD166" stroke-width="2"/>
+        <text x="180" y="58" text-anchor="middle" fill="#FFD166" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Cross</text>
+        <text x="180" y="73" text-anchor="middle" fill="#FFD166" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Attention</text>
+        <line x1="225" y1="60" x2="280" y2="60" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="285" y="44" width="90" height="32" rx="8" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+        <text x="330" y="64" text-anchor="middle" fill="#00FFB2" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">融合表示層</text>
+        <line x1="375" y1="60" x2="430" y2="60" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="435" y="44" width="80" height="32" rx="8" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+        <text x="475" y="63" text-anchor="middle" fill="#00D4FF" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">輸出層</text>
+      </svg>
+    </div>
+    <div style="background:rgba(255,209,102,.08);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin-top:10px;">
+      📌 <strong>考試重點：</strong>GPT-4V、Gemini、LLaVA 等現代多模態大模型均採 Hybrid Fusion + Cross-Attention 架構。
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. CLIP 模型 ══ -->
+<div class="sec-title reveal">🔗 CLIP 模型（考試必考）</div>
+<div class="panel reveal">
+  <div class="panel-title">CLIP — Contrastive Language-Image Pre-training</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    OpenAI 開發，使用<strong style="color:var(--text)">對比學習（Contrastive Learning）</strong>讓圖片與文字對齊到同一向量空間。
+  </p>
+  <div class="arch-wrap">
+    <svg width="560" height="160" viewBox="0 0 560 160">
+      <defs>
+        <marker id="arr4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#7C6FFF"/>
+        </marker>
+      </defs>
+      <!-- Image encoder -->
+      <rect x="10" y="30" width="110" height="40" rx="8" fill="#21253A" stroke="#00D4FF" stroke-width="2"/>
+      <text x="65" y="52" text-anchor="middle" fill="#00D4FF" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">圖片編碼器</text>
+      <text x="65" y="65" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">(ViT / ResNet)</text>
+      <!-- Text encoder -->
+      <rect x="10" y="95" width="110" height="40" rx="8" fill="#21253A" stroke="#FF6B9D" stroke-width="2"/>
+      <text x="65" y="117" text-anchor="middle" fill="#FF6B9D" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">文字編碼器</text>
+      <text x="65" y="130" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">(Transformer)</text>
+      <!-- Arrows -->
+      <line x1="120" y1="50" x2="175" y2="50" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <line x1="120" y1="115" x2="175" y2="115" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Embedding vectors -->
+      <rect x="180" y="36" width="90" height="28" rx="6" fill="#1A1D27" stroke="#00D4FF" stroke-width="1.5"/>
+      <text x="225" y="54" text-anchor="middle" fill="#00D4FF" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">圖片向量 I</text>
+      <rect x="180" y="100" width="90" height="28" rx="6" fill="#1A1D27" stroke="#FF6B9D" stroke-width="1.5"/>
+      <text x="225" y="118" text-anchor="middle" fill="#FF6B9D" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">文字向量 T</text>
+      <!-- Contrast -->
+      <line x1="270" y1="50" x2="320" y2="80" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <line x1="270" y1="115" x2="320" y2="83" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <rect x="325" y="66" width="100" height="36" rx="8" fill="#21253A" stroke="#FFD166" stroke-width="2"/>
+      <text x="375" y="87" text-anchor="middle" fill="#FFD166" font-size="12" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">對比損失</text>
+      <!-- result -->
+      <line x1="425" y1="84" x2="480" y2="84" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <rect x="485" y="68" width="65" height="32" rx="6" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+      <text x="517" y="85" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">相似度</text>
+      <text x="517" y="97" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">cos(I,T)</text>
+    </svg>
+  </div>
+  <div class="formula">
+    <span class="comment">// 對比損失公式（InfoNCE Loss）</span><br>
+    <span class="func">L</span> = -<span class="func">log</span>( <span class="func">exp</span>(<span class="var">sim</span>(I, T<sub>+</sub>) / τ) / Σ<span class="func">exp</span>(<span class="var">sim</span>(I, T<sub>j</sub>) / τ) )<br>
+    <span class="comment">// I = 圖片向量，T+ = 對應文字，τ = 溫度參數</span><br>
+    <span class="comment">// 讓配對的 (圖片,文字) 相似度最大，不配對的最小</span>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card"><div class="kp-title">零樣本分類</div><div class="kp-body">不需要額外訓練，直接用文字描述分類圖片。「這是一隻貓」vs「這是一隻狗」。</div><div class="kp-tag">▶ Zero-shot Classification</div></div>
+    <div class="kp-card"><div class="kp-title">圖文檢索</div><div class="kp-body">輸入文字找最相關的圖片，或輸入圖片找最相關的文字描述。</div><div class="kp-tag">▶ Cross-modal Retrieval</div></div>
+    <div class="kp-card"><div class="kp-title">多模態嵌入</div><div class="kp-body">圖片與文字投影到同一向量空間，cos 相似度越大代表語意越接近。</div><div class="kp-tag">▶ Shared Embedding Space</div></div>
+  </div>
+</div>
+
+<!-- ══ 4. 考試重點速查表 ══ -->
+<div class="sec-title reveal">📋 考試重點速查表</div>
+<div class="panel reveal">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>模型/技術</th><th>模態</th><th>核心功能</th><th>考試關鍵字</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CLIP</td><td>圖片 + 文字</td><td>對比學習對齊圖文</td><td><span class="pill" style="background:rgba(124,111,255,.2);color:var(--accent)">對比損失</span> <span class="pill" style="background:rgba(0,212,255,.2);color:var(--accent2)">零樣本</span></td></tr>
+        <tr><td>DALL-E / Stable Diffusion</td><td>文字 → 圖片</td><td>文生圖（生成式多模態）</td><td><span class="pill" style="background:rgba(255,107,157,.2);color:var(--accent3)">生成式AI</span></td></tr>
+        <tr><td>GPT-4V / Gemini</td><td>圖片 + 文字</td><td>視覺問答 (VQA)</td><td><span class="pill" style="background:rgba(0,255,178,.2);color:var(--green)">Hybrid Fusion</span></td></tr>
+        <tr><td>Whisper</td><td>語音 → 文字</td><td>語音辨識（ASR）</td><td><span class="pill" style="background:rgba(255,209,102,.2);color:var(--yellow)">Transformer</span></td></tr>
+        <tr><td>CNN</td><td>圖片</td><td>影像特徵提取</td><td><span class="pill" style="background:rgba(124,111,255,.2);color:var(--accent)">捲積</span> <span class="pill" style="background:rgba(0,212,255,.2);color:var(--accent2)">池化</span></td></tr>
+        <tr><td>Word2Vec / BERT</td><td>文字</td><td>詞嵌入 / 語意理解</td><td><span class="pill" style="background:rgba(255,107,157,.2);color:var(--accent3)">詞嵌入</span></td></tr>
+        <tr><td>YOLO</td><td>圖片/影片</td><td>即時物件偵測</td><td><span class="pill" style="background:rgba(0,255,178,.2);color:var(--green)">實時偵測</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 5. 應用場景（情境題） ══ -->
+<div class="sec-title reveal">🏭 應用場景（情境題常考）</div>
+<div class="kp-grid reveal">
+  <div class="kp-card" style="border-left-color:var(--accent2)">
+    <div class="kp-title">🏥 醫療影像 + 病歷</div>
+    <div class="kp-body">X光/CT影像（視覺）+ 病歷文字（NLP）→ 輔助診斷。Early Fusion 讓模型同時考量兩種資訊。</div>
+    <div class="kp-tag">▶ 情境題：選最適合的融合策略</div>
+  </div>
+  <div class="kp-card" style="border-left-color:var(--accent3)">
+    <div class="kp-title">🎬 影片字幕生成</div>
+    <div class="kp-body">影片幀（視覺）+ 語音（Audio）→ 自動生成字幕。需要多模態對齊時間戳。</div>
+    <div class="kp-tag">▶ 考點：多模態標註、時序對齊</div>
+  </div>
+  <div class="kp-card" style="border-left-color:var(--green)">
+    <div class="kp-title">🛒 電商搜尋</div>
+    <div class="kp-body">用戶上傳圖片搜尋商品（以圖搜圖）+ 文字描述細化。CLIP 向量相似度檢索。</div>
+    <div class="kp-tag">▶ 考點：向量資料庫、相似度搜尋</div>
+  </div>
+  <div class="kp-card" style="border-left-color:var(--yellow)">
+    <div class="kp-title">🚗 自動駕駛</div>
+    <div class="kp-body">攝影機（視覺）+ 雷達（結構化）+ 地圖資料 → 即時決策。Late Fusion 確保任一感測器故障時的容錯。</div>
+    <div class="kp-tag">▶ 考點：Late Fusion 容錯優點</div>
+  </div>
+</div>
+
+<!-- ══ 6. 模擬考題 ══ -->
+<div class="sec-title reveal">📝 模擬考題（仿 iPAS 中級題型）</div>
+<div class="progress-bar reveal"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="quiz-wrap reveal" id="quiz-wrap"></div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── TABS ──
+function switchTab(el, id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ── QUIZ DATA ──
+const QS=[
+  {
+    stem:'下列關於 Early Fusion（早期融合）的描述，何者正確？',
+    opts:['A. 各模態分別訓練獨立模型後在輸出端合併','B. 在輸入端將多模態特徵串接後送入共用模型','C. 只適用於文字與語音的融合','D. 不能與 Transformer 架構結合使用'],
+    ans:1,
+    explain:'Early Fusion 在輸入端將特徵串接（Concatenate）後送入共用模型，能學習細粒度的跨模態關聯。選項A是Late Fusion的描述。'
+  },
+  {
+    stem:'CLIP 模型使用下列哪種技術讓圖片和文字對齊到同一向量空間？',
+    opts:['A. 監督式分類損失（Cross-Entropy）','B. 對比學習（Contrastive Learning）','C. 強化學習（Reinforcement Learning）','D. 自編碼器（AutoEncoder）重建損失'],
+    ans:1,
+    explain:'CLIP 使用對比學習（InfoNCE Loss），讓配對的圖文相似度最大化、不配對的最小化，從而對齊兩種模態。'
+  },
+  {
+    stem:'某公司開發一套自動駕駛系統，同時使用攝影機和雷達感測器。若需要在單一感測器故障時系統仍能運作，應選擇哪種融合策略？',
+    opts:['A. Early Fusion，因為能學習更細的關聯','B. Late Fusion，因為各模態獨立決策，容錯性高','C. 不需要融合，單獨使用攝影機即可','D. 只能用 Hybrid Fusion'],
+    ans:1,
+    explain:'Late Fusion 各模態獨立運作，最後在決策層合併。當一個感測器故障時，其他感測器的模型仍可輸出結果，容錯性高，適合安全關鍵系統。'
+  },
+  {
+    stem:'卷積神經網路（CNN）最主要應用在哪一種模態的特徵提取？',
+    opts:['A. 語音訊號','B. 結構化表格資料','C. 圖片與影像','D. 自然語言文字'],
+    ans:2,
+    explain:'CNN 透過捲積核（Kernel）在圖片上滑動提取局部特徵（邊緣、紋理等），是影像分析的核心架構。'
+  },
+  {
+    stem:'Word2Vec 屬於自然語言處理中的哪一類技術？',
+    opts:['A. 物件偵測','B. 圖像分割','C. 詞嵌入（Word Embedding）','D. 語音合成'],
+    ans:2,
+    explain:'Word2Vec 將詞語轉換為稠密向量（詞嵌入），語意相近的詞在向量空間中距離較近，是 NLP 的重要基礎技術。'
+  },
+  {
+    stem:'YOLO 模型最適合用於哪類任務？',
+    opts:['A. 情感分析','B. 自動摘要','C. 實時物件偵測','D. 語音辨識'],
+    ans:2,
+    explain:'YOLO（You Only Look Once）是一種即時物件偵測模型，一次前向傳播就能偵測圖片中所有物件的位置與類別，適合需要低延遲的場景。'
+  },
+  {
+    stem:'下列哪個模型主要用於「圖片→文字」的視覺問答（VQA）任務？',
+    opts:['A. Word2Vec','B. YOLO','C. GPT-4V（含視覺功能的大語言模型）','D. Stable Diffusion'],
+    ans:2,
+    explain:'GPT-4V 是結合視覺理解的多模態大語言模型，能根據圖片內容回答問題（VQA）。Stable Diffusion 是文生圖模型，方向相反。'
+  },
+  {
+    stem:'多模態模型中的 Cross-Attention 機制主要作用為何？',
+    opts:['A. 加速模型訓練速度','B. 讓一個模態的表示去關注另一個模態的相關資訊','C. 減少模型參數量','D. 處理結構化資料的特徵縮放'],
+    ans:1,
+    explain:'Cross-Attention 讓模型在處理一個模態時，能動態關注另一個模態的相關部分。例如生成圖片描述時，文字解碼器透過 Cross-Attention 關注圖片的相關區域。'
+  },
+];
+
+let score=0, answered=0;
+const total=QS.length;
+document.getElementById('total').textContent=total;
+
+function buildQuiz(){
+  const wrap=document.getElementById('quiz-wrap');
+  QS.forEach((q,qi)=>{
+    const div=document.createElement('div'); div.className='q-item';
+    div.innerHTML=`
+      <div class="q-num">第 ${qi+1} 題 / 共 ${total} 題　｜　仿 iPAS 中級單選題</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="q-opts" id="opts-${qi}">
+        ${q.opts.map((o,oi)=>`
+          <div class="q-opt" onclick="answer(${qi},${oi})">
+            <span class="opt-label">${['A','B','C','D'][oi]}.</span>
+            <span>${o.slice(3)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="q-explain" id="exp-${qi}">💡 解析：${q.explain}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function answer(qi,oi){
+  const opts=document.querySelectorAll(`#opts-${qi} .q-opt`);
+  opts.forEach(o=>o.style.pointerEvents='none');
+  const q=QS[qi];
+  opts[q.ans].classList.add('correct');
+  if(oi!==q.ans) opts[oi].classList.add('wrong');
+  document.getElementById('exp-'+qi).classList.add('show');
+  if(oi===q.ans) score++;
+  answered++;
+  document.getElementById('score').textContent=score;
+  document.getElementById('prog').style.width=(answered/total*100)+'%';
+}
+
+buildQuiz();
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('vis'),60);});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
+
+<!-- ═══════════════════════════════════════════
+     3D 互動視覺化教學區塊
+═══════════════════════════════════════════ -->
+<style>
+/* ── 字型設定 ── */
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+.viz-section{max-width:980px;margin:0 auto;padding:0 20px 80px;}
+.viz-sec-title{
+  font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.5rem;color:var(--text);
+  margin:44px 0 16px;display:flex;align-items:center;gap:10px;
+}
+.viz-sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;
+  background:linear-gradient(var(--accent),var(--accent2));}
+
+/* Scene selector */
+.scene-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.scene-tab{
+  padding:8px 18px;border-radius:999px;
+  border:1.5px solid var(--border);font-size:.83rem;font-weight:900;
+  cursor:pointer;color:var(--muted);background:transparent;transition:all .2s;
+}
+.scene-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.12);}
+
+/* Split panel */
+.split-panel{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  min-height:460px;
+}
+@media(max-width:640px){.split-panel{grid-template-columns:1fr;}}
+
+/* Left: teaching panel */
+.teach-panel{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;
+  display:flex;flex-direction:column;gap:14px;
+  overflow-y:auto;max-height:520px;
+}
+.tp-badge{display:inline-block;padding:3px 12px;border-radius:999px;
+  font-size:.72rem;font-weight:900;margin-bottom:2px;}
+.tp-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.25rem;color:var(--text);}
+.tp-body{font-size:.87rem;color:var(--muted);line-height:1.7;}
+.tp-formula{
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;
+  background:#0a0c14;border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;color:#00FFB2;line-height:1.8;
+}
+.tp-keypoints{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.tp-kp{
+  background:var(--panel2);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:8px 12px;
+  font-size:.83rem;color:var(--muted);
+}
+.tp-kp strong{color:var(--text);}
+.tp-exam{
+  background:rgba(255,209,102,.07);border:1px solid var(--yellow);
+  border-radius:8px;padding:10px 12px;font-size:.82rem;color:var(--yellow);
+}
+
+/* Right: 3D canvas panel */
+.canvas-panel{
+  background:#0a0c14;border:1px solid var(--border);
+  border-radius:var(--r);position:relative;overflow:hidden;
+  min-height:420px;
+}
+.viz-canvas{display:block;width:100%;height:100%;min-height:420px;}
+.canvas-overlay{
+  position:absolute;bottom:10px;left:0;right:0;
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 10px;
+}
+.ov-btn{
+  padding:5px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);
+  font-size:.72rem;font-weight:900;color:rgba(255,255,255,.6);
+  background:rgba(0,0,0,.5);cursor:pointer;transition:all .18s;backdrop-filter:blur(4px);
+}
+.ov-btn:hover,.ov-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.15);}
+.canvas-label{
+  position:absolute;top:12px;left:12px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  padding:4px 12px;border-radius:999px;
+  font-size:.72rem;font-weight:900;color:var(--accent2);
+  border:1px solid rgba(0,212,255,.3);
+}
+</style>
+
+<div class="viz-section">
+  <div class="viz-sec-title">🎮 3D 互動視覺化教學</div>
+
+  <!-- Scene selector -->
+  <div class="scene-tabs">
+    <button class="scene-tab active" onclick="switchScene(this,0)">① Fusion 策略流動</button>
+    <button class="scene-tab" onclick="switchScene(this,1)">② CLIP 圖文對齊</button>
+    <button class="scene-tab" onclick="switchScene(this,2)">③ 模態資料流動</button>
+  </div>
+
+  <!-- Split panel -->
+  <div class="split-panel">
+    <!-- LEFT: Teaching -->
+    <div class="teach-panel" id="teach-panel"><!-- filled by JS --></div>
+
+    <!-- RIGHT: 3D -->
+    <div class="canvas-panel">
+      <div class="canvas-label" id="canvas-label">Three.js 即時渲染</div>
+      <canvas class="viz-canvas" id="viz-canvas"></canvas>
+      <div class="canvas-overlay">
+        <button class="ov-btn active" id="ov-play" onclick="toggleAnim()">⏸ 暫停</button>
+        <button class="ov-btn" onclick="resetCam()">🔄 重置視角</button>
+        <button class="ov-btn" id="ov-speed" onclick="toggleSpeed()">🐢 慢速</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+//  MULTIMODAL 3D VIZ ENGINE
+// ═══════════════════════════════════════
+const VIZ = (() => {
+  const canvas = document.getElementById('viz-canvas');
+  const panel  = canvas.parentElement;
+  let W = panel.clientWidth, H = Math.max(panel.clientHeight, 420);
+  canvas.width = W; canvas.height = H;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+  camera.position.set(0, 2, 10);
+  camera.lookAt(0, 0, 0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dir = new THREE.DirectionalLight(0xfff0cc, 1.2);
+  dir.position.set(5, 8, 5); scene.add(dir);
+  const fill = new THREE.DirectionalLight(0xccf0ff, 0.4);
+  fill.position.set(-5, 3, -3); scene.add(fill);
+
+  // Orbit
+  let drag = false, prev = { x: 0, y: 0 };
+  let sph  = { theta: 0, phi: Math.PI / 3.5, r: 10 };
+  canvas.addEventListener('mousedown', e => { drag = true; prev = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('mouseup', () => drag = false);
+  window.addEventListener('mousemove', e => {
+    if (!drag) return;
+    sph.theta -= (e.clientX - prev.x) * 0.01;
+    sph.phi = Math.max(0.3, Math.min(1.4, sph.phi + (e.clientY - prev.y) * 0.007));
+    prev = { x: e.clientX, y: e.clientY };
+  });
+  canvas.addEventListener('wheel', e => { sph.r = Math.max(5, Math.min(18, sph.r + e.deltaY * 0.02)); });
+  let lt = null;
+  canvas.addEventListener('touchstart', e => { lt = e.touches[0]; });
+  canvas.addEventListener('touchmove', e => {
+    if (!lt) return;
+    sph.theta -= (e.touches[0].clientX - lt.clientX) * 0.012;
+    lt = e.touches[0]; e.preventDefault();
+  }, { passive: false });
+
+  let objects = [], particles = [], animT = 0, playing = true, speedMult = 1;
+  let currentScene = 0;
+
+  function clearScene() {
+    [...objects, ...particles].forEach(o => scene.remove(o));
+    objects = []; particles = [];
+  }
+
+  // ── helpers ──
+  function box(w, h, d, col, wire = false) {
+    const g = new THREE.BoxGeometry(w, h, d);
+    const m = wire
+      ? new THREE.MeshBasicMaterial({ color: col, wireframe: true })
+      : new THREE.MeshLambertMaterial({ color: col });
+    return new THREE.Mesh(g, m);
+  }
+  function sphere(r, col, opacity = 1) {
+    const m = new THREE.MeshLambertMaterial({ color: col, transparent: opacity < 1, opacity });
+    return new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), m);
+  }
+  function makeLine(p1, p2, col, opacity = 1) {
+    const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...p1), new THREE.Vector3(...p2)]);
+    const m = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity });
+    return new THREE.Line(g, m);
+  }
+  function addObj(o) { scene.add(o); objects.push(o); return o; }
+
+  // ══════════════════════════════════════
+  //  SCENE 0: Fusion Strategy
+  // ══════════════════════════════════════
+  const fusionModes = ['early', 'late', 'hybrid'];
+  let fusionMode = 0;
+  const FUSION_COLORS = { img: 0x00D4FF, txt: 0xFF6B9D, aud: 0x00FFB2, model: 0x9B5DE5, out: 0xFFD166 };
+
+  function buildFusionScene() {
+    clearScene();
+    const mode = fusionModes[fusionMode];
+
+    if (mode === 'early') {
+      // 3 inputs → concat → model → output
+      const positions = [[-4, 1.5, 0], [-4, 0, 0], [-4, -1.5, 0]];
+      const cols = [FUSION_COLORS.img, FUSION_COLORS.txt, FUSION_COLORS.aud];
+      const labels = ['圖片', '文字', '語音'];
+      positions.forEach(([x, y, z], i) => {
+        const b = box(1.2, 0.7, 0.7, cols[i]);
+        b.position.set(x, y, z); addObj(b);
+        b.userData = { baseY: y, phase: i * 1.2 };
+      });
+      const concat = box(1.4, 2.2, 0.7, 0xFFD166);
+      concat.position.set(-1, 0, 0); addObj(concat);
+      const model = box(1.6, 1.6, 0.7, FUSION_COLORS.model);
+      model.position.set(2, 0, 0); addObj(model);
+      const out = sphere(0.55, FUSION_COLORS.out);
+      out.position.set(4.5, 0, 0); addObj(out);
+      [[-3.4, 1.5, 0], [-3.4, 0, 0], [-3.4, -1.5, 0]].forEach(([x, y, z], i) => {
+        addObj(makeLine([x, y, z], [-1.7, 0, 0], cols[i], 0.7));
+      });
+      addObj(makeLine([-0.3, 0, 0], [1.2, 0, 0], 0xffffff, 0.6));
+      addObj(makeLine([2.8, 0, 0], [4.0, 0, 0], 0xffffff, 0.6));
+    }
+
+    if (mode === 'late') {
+      const cols = [FUSION_COLORS.img, FUSION_COLORS.txt, FUSION_COLORS.aud];
+      [1.8, 0, -1.8].forEach((y, i) => {
+        const inp = box(1.0, 0.6, 0.6, cols[i]);
+        inp.position.set(-4.5, y, 0); addObj(inp);
+        const mod = box(1.2, 0.6, 0.6, cols[i]);
+        mod.position.set(-1.5, y, 0); addObj(mod);
+        addObj(makeLine([-4, y, 0], [-2.1, y, 0], cols[i], 0.7));
+        addObj(makeLine([-0.9, y, 0], [1.5, 0, 0], cols[i], 0.5));
+      });
+      const fuse = box(1.4, 1.4, 0.7, 0xFFD166);
+      fuse.position.set(2, 0, 0); addObj(fuse);
+      const out = sphere(0.55, FUSION_COLORS.out);
+      out.position.set(4.5, 0, 0); addObj(out);
+      addObj(makeLine([2.7, 0, 0], [4.0, 0, 0], 0xffffff, 0.6));
+    }
+
+    if (mode === 'hybrid') {
+      [1.5, -1.5].forEach((y, i) => {
+        const inp = box(1.0, 0.6, 0.6, i === 0 ? FUSION_COLORS.img : FUSION_COLORS.txt);
+        inp.position.set(-4.5, y, 0); addObj(inp);
+        const enc = box(1.1, 0.6, 0.6, i === 0 ? 0x5588ff : 0xff5588);
+        enc.position.set(-2, y, 0); addObj(enc);
+        addObj(makeLine([-4, y, 0], [-2.55, y, 0], 0xaaaaff, 0.6));
+      });
+      const cross = box(1.5, 2.0, 0.8, FUSION_COLORS.model);
+      cross.position.set(0.5, 0, 0); addObj(cross);
+      [-2, -2].forEach((x, i) => {
+        const y = i === 0 ? 1.5 : -1.5;
+        addObj(makeLine([-1.45, y, 0], [-0.25, 0, 0], 0xaaaaff, 0.5));
+      });
+      const fuse = box(1.2, 0.8, 0.7, 0xFFD166);
+      fuse.position.set(2.8, 0, 0); addObj(fuse);
+      const out = sphere(0.55, FUSION_COLORS.out);
+      out.position.set(4.5, 0, 0); addObj(out);
+      addObj(makeLine([1.25, 0, 0], [2.2, 0, 0], 0xffffff, 0.6));
+      addObj(makeLine([3.4, 0, 0], [4.0, 0, 0], 0xffffff, 0.6));
+    }
+
+    // Animated signal particles
+    spawnSignalParticles(mode);
+    document.getElementById('canvas-label').textContent =
+      ['Early Fusion — 輸入端串接', 'Late Fusion — 決策端融合', 'Hybrid Fusion — Cross-Attention'][fusionMode];
+  }
+
+  function spawnSignalParticles(mode) {
+    particles.forEach(p => scene.remove(p));
+    particles = [];
+    const cols = [0x00D4FF, 0xFF6B9D, 0x00FFB2];
+    const count = mode === 'early' ? 3 : mode === 'late' ? 3 : 2;
+    for (let i = 0; i < count; i++) {
+      for (let k = 0; k < 3; k++) {
+        const p = sphere(0.12, cols[i]);
+        p.userData = {
+          mode, track: i,
+          progress: (k / 3) + i * 0.15,
+          speed: 0.004 + Math.random() * 0.002
+        };
+        scene.add(p); particles.push(p);
+      }
+    }
+  }
+
+  function animFusion(t) {
+    const mode = fusionModes[fusionMode];
+    objects.forEach((o, i) => {
+      if (o.userData.baseY !== undefined) {
+        o.position.y = o.userData.baseY + Math.sin(t * 1.2 + o.userData.phase) * 0.08;
+      }
+    });
+    particles.forEach(p => {
+      p.userData.progress += p.userData.speed * speedMult;
+      if (p.userData.progress > 1) p.userData.progress -= 1;
+      const prog = p.userData.progress;
+      const tr = p.userData.track;
+      const ys = [1.8, 0, -1.8];
+      const y = mode === 'early' ? [1.5, 0, -1.5][tr] : mode === 'late' ? ys[tr] : [1.5, -1.5][tr];
+
+      if (mode === 'early') {
+        if (prog < 0.35) { p.position.set(-4 + prog * 8.6, y + (0 - y) * (prog / 0.35), 0); }
+        else if (prog < 0.65) { p.position.set(-1 + (prog - 0.35) * 10, (prog - 0.35) * 0.5, 0); }
+        else { p.position.set(2.5 + (prog - 0.65) * 5.7, 0, 0); }
+      } else if (mode === 'late') {
+        if (prog < 0.35) { p.position.set(-4.5 + prog * 8.6, y, 0); }
+        else if (prog < 0.65) { p.position.set(-0.9 + (prog - 0.35) * 13, y * (1 - (prog - 0.35) / 0.3), 0); }
+        else { p.position.set(2.5 + (prog - 0.65) * 5.7, 0, 0); }
+      } else {
+        if (prog < 0.3) { p.position.set(-4.5 + prog * 8, y, 0); }
+        else if (prog < 0.6) { p.position.set(-2 + (prog - 0.3) * 8.3, y * (1 - (prog - 0.3) / 0.3), 0); }
+        else { p.position.set(0.5 + (prog - 0.6) * 11.5, 0, 0); }
+      }
+    });
+  }
+
+  // ══════════════════════════════════════
+  //  SCENE 1: CLIP Contrastive Learning
+  // ══════════════════════════════════════
+  function buildCLIPScene() {
+    clearScene();
+    // Image tower
+    const imgTower = box(1.4, 1.4, 1.4, 0x1a3a6a);
+    imgTower.position.set(-3.5, 0, 0); addObj(imgTower);
+    const imgGlow = sphere(1.1, 0x00D4FF, 0.15);
+    imgGlow.position.set(-3.5, 0, 0); addObj(imgGlow);
+    // Text tower
+    const txtTower = box(1.4, 1.4, 1.4, 0x6a1a3a);
+    txtTower.position.set(3.5, 0, 0); addObj(txtTower);
+    const txtGlow = sphere(1.1, 0xFF6B9D, 0.15);
+    txtGlow.position.set(3.5, 0, 0); addObj(txtGlow);
+    // Shared embedding space (ring)
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(2.2, 0.06, 8, 48),
+      new THREE.MeshLambertMaterial({ color: 0xFFD166 })
+    );
+    ring.rotation.x = Math.PI / 2; addObj(ring);
+    // Matched pairs (green lines)
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2;
+      const imgVec = sphere(0.2, 0x00D4FF);
+      imgVec.position.set(Math.cos(a) * 2.2, 0.6, Math.sin(a) * 2.2);
+      addObj(imgVec);
+      const txtVec = sphere(0.2, 0xFF6B9D);
+      txtVec.position.set(Math.cos(a + 0.2) * 2.2, -0.6, Math.sin(a + 0.2) * 2.2);
+      addObj(txtVec);
+      const line = makeLine(
+        [Math.cos(a) * 2.2, 0.6, Math.sin(a) * 2.2],
+        [Math.cos(a + 0.2) * 2.2, -0.6, Math.sin(a + 0.2) * 2.2],
+        0x00FFB2, 0.5
+      );
+      addObj(line);
+    }
+    document.getElementById('canvas-label').textContent = 'CLIP — 對比學習對齊圖文向量';
+  }
+
+  function animCLIP(t) {
+    objects.forEach((o, i) => {
+      if (o.geometry?.type === 'TorusGeometry') { o.rotation.y = t * 0.4; return; }
+      if (i < 4) return;
+      o.position.y += Math.sin(t * 1.5 + i) * 0.003;
+      o.rotation.y += 0.01;
+    });
+    // Shoot particles from towers to ring
+    particles.forEach(p => {
+      p.userData.progress += p.userData.speed * speedMult;
+      if (p.userData.progress > 1) p.userData.progress = 0;
+      const prog = p.userData.progress;
+      const side = p.userData.side;
+      const a    = p.userData.angle;
+      if (side === 0) {
+        p.position.set(
+          -3.5 + prog * (Math.cos(a) * 2.2 + 3.5),
+          0.6 * prog,
+          Math.sin(a) * 2.2 * prog
+        );
+      } else {
+        p.position.set(
+          3.5 - prog * (3.5 - Math.cos(a) * 2.2),
+          -0.6 * prog,
+          Math.sin(a) * 2.2 * prog
+        );
+      }
+    });
+  }
+
+  function spawnCLIPParticles() {
+    particles.forEach(p => scene.remove(p));
+    particles = [];
+    for (let i = 0; i < 12; i++) {
+      const side = i % 2;
+      const p = sphere(0.1, side === 0 ? 0x00D4FF : 0xFF6B9D);
+      p.userData = { progress: i / 12, speed: 0.005, side, angle: (i / 6) * Math.PI * 2 };
+      scene.add(p); particles.push(p);
+    }
+  }
+
+  // ══════════════════════════════════════
+  //  SCENE 2: Modal Data Flow
+  // ══════════════════════════════════════
+  function buildModalFlowScene() {
+    clearScene();
+    const COLS = [0x00D4FF, 0xFF6B9D, 0x00FFB2, 0xFFD166];
+    // 4 input modalities
+    [[-4, 2, 0], [-4, 0.6, 0], [-4, -0.7, 0], [-4, -2, 0]].forEach(([x, y, z], i) => {
+      const b = box(1.1, 0.65, 0.65, COLS[i]);
+      b.position.set(x, y, z);
+      b.userData = { baseY: y, phase: i * 0.8 };
+      addObj(b);
+    });
+    // Encoder blocks
+    [[-1.5, 2, 0], [-1.5, 0.6, 0], [-1.5, -0.7, 0], [-1.5, -2, 0]].forEach(([x, y, z], i) => {
+      const enc = box(1.0, 0.55, 0.55, 0x334466);
+      enc.position.set(x, y, z); addObj(enc);
+      addObj(makeLine([-3.45, [2, 0.6, -0.7, -2][i], 0], [-2, [2, 0.6, -0.7, -2][i], 0], COLS[i], 0.6));
+    });
+    // Fusion
+    const fuse = box(1.6, 3.2, 0.8, 0x332255);
+    fuse.position.set(1.5, 0, 0); addObj(fuse);
+    [2, 0.6, -0.7, -2].forEach((y, i) => addObj(makeLine([-1, y, 0], [0.7, 0, 0], COLS[i], 0.4)));
+    // Output
+    const out = sphere(0.75, 0x9B5DE5);
+    out.position.set(4.0, 0, 0); addObj(out);
+    addObj(makeLine([2.3, 0, 0], [3.3, 0, 0], 0xffffff, 0.6));
+    document.getElementById('canvas-label').textContent = '多模態資料流 — 圖片/文字/語音/結構化 → 模型';
+  }
+
+  function animModalFlow(t) {
+    objects.forEach(o => {
+      if (o.userData.baseY !== undefined) {
+        o.position.y = o.userData.baseY + Math.sin(t + o.userData.phase) * 0.09;
+      }
+    });
+    particles.forEach(p => {
+      p.userData.progress += p.userData.speed * speedMult;
+      if (p.userData.progress > 1) p.userData.progress = 0;
+      const prog = p.userData.progress;
+      const ys = [2, 0.6, -0.7, -2];
+      const tr = p.userData.track;
+      if (prog < 0.35) { p.position.set(-4 + prog * 7.3, ys[tr], 0); }
+      else if (prog < 0.65) { p.position.set(-1.5 + (prog - 0.35) * 10.3, ys[tr] * (1 - (prog - 0.35) / 0.3), 0); }
+      else { p.position.set(1.5 + (prog - 0.65) * 7.1, 0, 0); }
+    });
+  }
+
+  // ══════════════════════════════════════
+  //  SCENE MANAGEMENT
+  // ══════════════════════════════════════
+  const SCENES = [
+    { build: buildFusionScene,    anim: animFusion },
+    { build: () => { buildCLIPScene(); spawnCLIPParticles(); }, anim: animCLIP },
+    { build: () => {
+        buildModalFlowScene();
+        particles.forEach(p => scene.remove(p)); particles = [];
+        for (let i = 0; i < 16; i++) {
+          const COLS = [0x00D4FF, 0xFF6B9D, 0x00FFB2, 0xFFD166];
+          const tr = i % 4;
+          const p = sphere(0.1, COLS[tr]);
+          p.userData = { progress: i / 16, speed: 0.004, track: tr };
+          scene.add(p); particles.push(p);
+        }
+      }, anim: animModalFlow },
+  ];
+
+  function loadScene(idx) {
+    currentScene = idx;
+    SCENES[idx].build();
+  }
+
+  // ── Animate loop ──
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!playing) return;
+    animT += 0.016 * speedMult;
+    SCENES[currentScene].anim(animT);
+    camera.position.x = sph.r * Math.sin(sph.phi) * Math.sin(sph.theta);
+    camera.position.y = sph.r * Math.cos(sph.phi);
+    camera.position.z = sph.r * Math.sin(sph.phi) * Math.cos(sph.theta);
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  })();
+
+  window.addEventListener('resize', () => {
+    W = panel.clientWidth; H = Math.max(panel.clientHeight, 420);
+    renderer.setSize(W, H);
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+  });
+
+  loadScene(0);
+
+  return {
+    loadScene,
+    toggleAnim: () => playing = !playing,
+    resetCam:   () => { sph = { theta: 0, phi: Math.PI / 3.5, r: 10 }; },
+    toggleSpeed: () => { speedMult = speedMult === 1 ? 0.3 : 1; },
+    setFusion: (m) => { fusionMode = m; buildFusionScene(); },
+  };
+})();
+
+// ── Teaching panel content ──
+const TEACH = [
+  {
+    badge: 'Early / Late / Hybrid Fusion', badgeCol: '#7C6FFF',
+    title: '融合策略（Fusion Strategy）',
+    body: '多模態模型需要決定「何時、如何」把不同模態的資訊合併在一起。三種主要策略各有適用場景，是 iPAS 中級科目三的高頻考點。',
+    formula: `Early:  z = concat([fᵢₘg, fₜₓₜ, fₐᵤd])
+Late:   out = Σ wᵢ · modelᵢ(xᵢ)
+Hybrid: z = CrossAttn(fᵢₘg, fₜₓₜ)`,
+    kps: [
+      { title: 'Early Fusion', body: '輸入端串接特徵，模型一起學習跨模態關聯。CLIP 類架構採用此思路。' },
+      { title: 'Late Fusion',  body: '各模態獨立建模後在決策層合併。<strong>容錯性高</strong>，適合自動駕駛等安全場景。' },
+      { title: 'Hybrid Fusion',body: '中間層透過 Cross-Attention 交換資訊。GPT-4V、Gemini 採此策略。' },
+    ],
+    exam: '📌 考試考點：自動駕駛需要容錯 → 選 Late Fusion；多模態 Transformer → 選 Hybrid/Early Fusion',
+    controls: [
+      { label: 'Early', action: "VIZ.setFusion(0);document.querySelectorAll('.ctrl-tab').forEach(b=>b.classList.remove('active'));this.classList.add('active')" },
+      { label: 'Late',  action: "VIZ.setFusion(1);document.querySelectorAll('.ctrl-tab').forEach(b=>b.classList.remove('active'));this.classList.add('active')" },
+      { label: 'Hybrid',action: "VIZ.setFusion(2);document.querySelectorAll('.ctrl-tab').forEach(b=>b.classList.remove('active'));this.classList.add('active')" },
+    ]
+  },
+  {
+    badge: 'CLIP · 對比學習', badgeCol: '#00D4FF',
+    title: 'CLIP 圖文向量對齊',
+    body: 'CLIP 用大量（圖片, 說明文字）配對訓練，讓「貓的圖片」和「一隻貓」的文字向量在同一空間中靠近。這種技術稱為對比學習。',
+    formula: `L = -log( exp(sim(I,T⁺)/τ) / Σ exp(sim(I,Tⱼ)/τ) )
+sim(I,T) = cosine(Iᵥ, Tᵥ)  // 餘弦相似度
+τ = temperature parameter    // 溫度參數`,
+    kps: [
+      { title: '共享向量空間', body: '圖片向量與文字向量投影到同一空間，cos 相似度越高代表語意越接近。' },
+      { title: '零樣本分類', body: '不需額外訓練，直接用文字描述分類圖片。例：「這是一隻貓」vs「這是一隻狗」。' },
+      { title: '對比損失',    body: '配對的圖文相似度最大化，不配對的最小化。溫度參數 τ 控制分布的尖銳程度。' },
+    ],
+    exam: '📌 考試考點：CLIP 是 OpenAI 開發的多模態模型，能理解圖片＋文字對應，用對比學習對齊向量。',
+    controls: []
+  },
+  {
+    badge: '多模態資料流', badgeCol: '#00FFB2',
+    title: '模態資料流動全覽',
+    body: '多模態模型接收不同來源的資料（圖片、文字、語音、結構化），各自通過對應的編碼器（Encoder）提取特徵向量，再由融合模組整合輸出。',
+    formula: `Image  → CNN/ViT  Encoder → fᵢₘg ∈ ℝᵈ
+Text   → Transformer Enc  → fₜₓₜ ∈ ℝᵈ
+Audio  → CNN(Spectrogram)  → fₐᵤd ∈ ℝᵈ
+Table  → MLP Encoder       → fₜₐb ∈ ℝᵈ
+Fusion: z = f(fᵢₘg, fₜₓₜ, fₐᵤd, fₜₐb)`,
+    kps: [
+      { title: '各模態編碼器', body: '圖片用 CNN/ViT，文字用 Transformer，語音先轉 Mel Spectrogram 再用 CNN。' },
+      { title: '對齊維度',     body: '各編碼器輸出的向量需投影到相同維度 d，才能進行融合運算。' },
+      { title: '應用實例',     body: '醫療：X光圖片（視覺）+ 病歷（文字）→ 輔助診斷；電商：圖片 + 描述 → 商品搜尋。' },
+    ],
+    exam: '📌 考試考點：語音輸入通常先轉為 Mel Spectrogram（頻譜圖），再用 CNN 提取特徵。',
+    controls: []
+  },
+];
+
+function renderTeachPanel(idx) {
+  const d = TEACH[idx];
+  const ctrlHtml = d.controls.length ? `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${d.controls.map((c, i) => `<button class="ctrl-tab ov-btn${i===0?' active':''}" onclick="${c.action}">${c.label}</button>`).join('')}
+    </div>` : '';
+  document.getElementById('teach-panel').innerHTML = `
+    <div>
+      <span class="tp-badge" style="background:${d.badgeCol}22;border:1px solid ${d.badgeCol};color:${d.badgeCol}">${d.badge}</span>
+      <div class="tp-title" style="margin-top:6px">${d.title}</div>
+    </div>
+    <div class="tp-body">${d.body}</div>
+    <div class="tp-formula">${d.formula}</div>
+    <div class="tp-keypoints">
+      ${d.kps.map(k=>`<div class="tp-kp"><strong>${k.title}：</strong>${k.body}</div>`).join('')}
+    </div>
+    <div class="tp-exam">${d.exam}</div>
+    ${ctrlHtml}
+  `;
+}
+
+function switchScene(btn, idx) {
+  document.querySelectorAll('.scene-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  VIZ.loadScene(idx);
+  renderTeachPanel(idx);
+}
+
+function toggleAnim() {
+  VIZ.toggleAnim();
+  document.getElementById('ov-play').textContent =
+    document.getElementById('ov-play').textContent.includes('暫停') ? '▶ 播放' : '⏸ 暫停';
+}
+function resetCam()  { VIZ.resetCam(); }
+function toggleSpeed() {
+  VIZ.toggleSpeed();
+  const btn = document.getElementById('ov-speed');
+  btn.textContent = btn.textContent.includes('慢速') ? '🐇 快速' : '🐢 慢速';
+}
+
+renderTeachPanel(0);
+</script>
+</body>
+</html>

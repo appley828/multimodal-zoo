@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成式 AI 與 LLM — iPAS AI應用規劃師中級考試</title>
+<style>
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--panel2:#21253A;
+  --border:#2E3250;--text:#E8EAF6;--muted:#8892B0;
+  --accent:#7C6FFF;--accent2:#00FFB2;--accent3:#FF6B9D;
+  --blue:#00D4FF;--purple:#9B5DE5;--yellow:#FFD166;--orange:#FF9B42;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,17,23,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px 24px;}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.9rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#fff;}
+.nav-title{font-size:1.05rem;}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent3));padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;color:#fff;}
+
+.hero{padding:60px 20px 40px;background:linear-gradient(160deg,#0F1117,#130d1f,#0F1117);text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(124,111,255,.14),transparent);}
+.hero-badge{display:inline-block;margin-bottom:16px;padding:5px 18px;border-radius:999px;background:rgba(124,111,255,.12);border:1px solid var(--accent);font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.hero-title{font-size:clamp(1.8rem,5vw,3.2rem);background:linear-gradient(135deg,var(--blue),var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:600px;margin:0 auto 24px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+.wrap{max-width:980px;margin:0 auto;padding:16px 20px 80px;}
+
+.sec-title{font-size:1.5rem;color:var(--text);margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;background:linear-gradient(var(--accent),var(--yellow));}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;}
+.panel-title{font-weight:900;font-size:1rem;color:var(--accent2);margin-bottom:12px;}
+
+.formula{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--accent2);line-height:2;overflow-x:auto;}
+.formula .comment{color:var(--muted);font-style:italic;}
+.formula .hl{color:var(--yellow);}
+.formula .fn{color:var(--blue);}
+.formula .vr{color:var(--accent3);}
+
+.arch-wrap{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0;overflow-x:auto;}
+.arch-wrap svg{display:block;margin:0 auto;}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:var(--panel2);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);color:var(--accent2);font-weight:900;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--muted);}
+td:first-child{color:var(--text);font-weight:700;}
+tr:hover td{background:rgba(124,111,255,.04);}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:900;}
+
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0;}
+.kp-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:3px solid var(--accent);transition:transform .18s,border-color .18s;}
+.kp-card:hover{transform:translateY(-4px);border-left-color:var(--accent2);}
+.kp-card .kp-title{font-weight:900;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.kp-card .kp-body{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.kp-card .kp-tag{font-size:.7rem;font-weight:900;color:var(--accent);margin-top:8px;}
+
+.warn-box{background:rgba(255,209,102,.07);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin:10px 0;}
+.info-box{background:rgba(124,111,255,.07);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--accent);margin:10px 0;}
+
+/* 3D canvas */
+.c3d-wrap{background:#0a0c14;border:1px solid var(--border);border-radius:var(--r);position:relative;overflow:hidden;margin:12px 0;}
+.c3d{display:block;width:100%;height:380px;cursor:grab;}
+.c3d:active{cursor:grabbing;}
+.c3d-lbl{position:absolute;top:10px;left:12px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:900;color:var(--accent);border:1px solid rgba(124,111,255,.4);}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;padding:10px 12px;background:rgba(0,0,0,.3);}
+.ctrl button{padding:5px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);font-size:.72rem;font-weight:900;color:rgba(255,255,255,.6);background:transparent;cursor:pointer;transition:all .18s;}
+.ctrl button:hover,.ctrl button.on{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.15);}
+
+/* prompt demo */
+.prompt-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.ptab{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);font-size:.83rem;font-weight:900;cursor:pointer;color:var(--muted);background:transparent;transition:all .18s;}
+.ptab.active{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.1);}
+.prompt-box{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.83rem;line-height:1.8;color:var(--muted);}
+.prompt-box .usr{color:var(--accent2);}
+.prompt-box .sys{color:var(--yellow);}
+.prompt-box .ai{color:var(--accent3);}
+.prompt-box .cmt{color:var(--muted);font-style:italic;}
+
+/* quiz */
+.progress-bar{height:6px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--yellow));transition:width .5s;}
+.q-item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+.q-num{font-size:.75rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.q-stem{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:12px;line-height:1.6;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--border);font-size:.88rem;color:var(--muted);transition:all .18s;display:flex;align-items:flex-start;gap:8px;}
+.q-opt:hover{border-color:var(--accent);color:var(--text);background:rgba(124,111,255,.07);}
+.q-opt.correct{border-color:var(--accent2);background:rgba(0,255,178,.07);color:var(--accent2);}
+.q-opt.wrong{border-color:var(--accent3);background:rgba(255,107,157,.07);color:var(--accent3);}
+.q-opt .opt-label{font-weight:900;min-width:18px;}
+.q-explain{margin-top:12px;padding:10px 14px;background:rgba(0,212,255,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:.84rem;color:var(--blue);display:none;line-height:1.65;}
+.q-explain.show{display:block;}
+
+#score-banner{position:fixed;bottom:20px;right:20px;z-index:300;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-weight:900;font-size:.9rem;color:var(--accent);box-shadow:0 4px 20px rgba(124,111,255,.3);}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+footer{text-align:center;padding:28px;font-size:.75rem;color:rgba(232,234,246,.2);}
+</style>
+</head>
+<body>
+
+<div id="score-banner">⭐ 答題得分：<span id="score">0</span> / <span id="total">0</span></div>
+
+<nav class="nav">
+  <a href="index.html">← 返回</a>
+  <span class="nav-title">生成式 AI 與 LLM</span>
+  <span class="nav-tag">iPAS 中級 · 科目一 L21103</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">GENERATIVE AI · L21103 · AI 相關技術應用</div>
+  <div class="hero-title">生成式 AI 與大型語言模型</div>
+  <div class="hero-sub">Transformer 架構、Self-Attention 3D視覺化、RAG 檢索增強生成、Prompt Engineering 技巧，對應 iPAS 中級科目一高頻考點</div>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--accent);border-color:var(--accent)">Transformer</span>
+    <span class="tag" style="color:var(--blue);border-color:var(--blue)">Self-Attention 3D</span>
+    <span class="tag" style="color:var(--accent3);border-color:var(--accent3)">RAG</span>
+    <span class="tag" style="color:var(--yellow);border-color:var(--yellow)">Prompt Engineering</span>
+    <span class="tag" style="color:var(--accent2);border-color:var(--accent2)">LLM 幻覺</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. Transformer 架構 ══ -->
+<div class="sec-title reveal">🏗️ Transformer 架構（Encoder / Decoder）</div>
+<div class="panel reveal">
+  <div class="panel-title">現代 LLM 的基石：注意力機制取代 RNN 循環結構</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    Transformer 由 <strong style="color:var(--text)">Encoder（編碼器）</strong> 與 <strong style="color:var(--text)">Decoder（解碼器）</strong> 組成。
+    BERT 只用 Encoder（雙向理解），GPT 只用 Decoder（單向生成），T5 / ChatGPT 使用完整 Encoder-Decoder。
+  </p>
+  <div class="arch-wrap">
+    <svg width="640" height="200" viewBox="0 0 640 200">
+      <defs>
+        <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#7C6FFF"/>
+        </marker>
+      </defs>
+      <!-- Encoder block -->
+      <rect x="30" y="20" width="220" height="160" rx="10" fill="#21253A" stroke="#7C6FFF" stroke-width="2"/>
+      <text x="140" y="44" text-anchor="middle" fill="#7C6FFF" font-size="12" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Encoder（BERT）</text>
+      <rect x="50" y="54" width="180" height="30" rx="6" fill="#2E3250" stroke="#00D4FF" stroke-width="1.2"/>
+      <text x="140" y="73" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Multi-Head Self-Attention</text>
+      <rect x="50" y="92" width="180" height="26" rx="6" fill="#2E3250" stroke="#00FFB2" stroke-width="1.2"/>
+      <text x="140" y="109" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Add &amp; Norm</text>
+      <rect x="50" y="126" width="180" height="26" rx="6" fill="#2E3250" stroke="#FF9B42" stroke-width="1.2"/>
+      <text x="140" y="143" text-anchor="middle" fill="#FF9B42" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Feed-Forward Network</text>
+      <rect x="50" y="160" width="180" height="12" rx="4" fill="#2E3250" stroke="#00FFB2" stroke-width="1"/>
+      <text x="140" y="170" text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">Add &amp; Norm</text>
+      <text x="140" y="190" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">雙向上下文理解（←→）</text>
+
+      <!-- Arrow middle -->
+      <line x1="270" y1="100" x2="370" y2="100" stroke="#7C6FFF" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+      <text x="320" y="92" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">Context</text>
+      <text x="320" y="104" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">向量</text>
+
+      <!-- Decoder block -->
+      <rect x="380" y="20" width="230" height="160" rx="10" fill="#21253A" stroke="#FF6B9D" stroke-width="2"/>
+      <text x="495" y="44" text-anchor="middle" fill="#FF6B9D" font-size="12" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Decoder（GPT）</text>
+      <rect x="398" y="54" width="195" height="30" rx="6" fill="#2E3250" stroke="#FF6B9D" stroke-width="1.2"/>
+      <text x="495" y="68" text-anchor="middle" fill="#FF6B9D" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Masked Self-Attention</text>
+      <text x="495" y="80" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">（只看左側 token）</text>
+      <rect x="398" y="92" width="195" height="26" rx="6" fill="#2E3250" stroke="#7C6FFF" stroke-width="1.2"/>
+      <text x="495" y="109" text-anchor="middle" fill="#7C6FFF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Cross-Attention（with Encoder）</text>
+      <rect x="398" y="126" width="195" height="26" rx="6" fill="#2E3250" stroke="#FF9B42" stroke-width="1.2"/>
+      <text x="495" y="143" text-anchor="middle" fill="#FF9B42" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Feed-Forward Network</text>
+      <text x="495" y="190" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">單向自迴歸生成（→）</text>
+    </svg>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">BERT（只用 Encoder）</div>
+      <div class="kp-body">雙向（←→）閱讀整個句子，善於理解任務：文本分類、問答、NER命名實體辨識。預訓練任務：MLM（遮蔽語言模型）</div>
+      <div class="kp-tag">▶ 考點：雙向上下文 / MLM</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">GPT（只用 Decoder）</div>
+      <div class="kp-body">單向（→）自迴歸生成，每次預測下一個 token。善於生成任務：文本生成、對話、補全。</div>
+      <div class="kp-tag">▶ 考點：單向自迴歸 / 生成</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">T5 / ChatGPT（完整架構）</div>
+      <div class="kp-body">Encoder 理解輸入，Decoder 生成輸出，中間通過 Cross-Attention 傳遞語義。適合翻譯、摘要等 Seq2Seq 任務。</div>
+      <div class="kp-tag">▶ 考點：Cross-Attention / Seq2Seq</div>
+    </div>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點（必考）：</strong>BERT 雙向（MLM預訓練）→ 理解任務 ；GPT 單向自迴歸 → 生成任務。問「哪個模型適合文本理解？」→ BERT；「哪個模型適合文本生成？」→ GPT。</div>
+</div>
+
+<!-- ══ 2. Self-Attention ══ -->
+<div class="sec-title reveal">🎯 Self-Attention 機制（注意力計算）</div>
+<div class="panel reveal">
+  <div class="panel-title">Attention = Q · Kᵀ / √d_k → Softmax → × V</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    每個 token 分別映射成三個向量：<strong style="color:var(--yellow)">Query（Q）</strong>、<strong style="color:var(--accent)">Key（K）</strong>、<strong style="color:var(--accent2)">Value（V）</strong>。
+    Q 與所有 K 計算相似度得到「注意力分數」，Softmax 歸一化後加權 V 向量得到輸出。
+  </p>
+  <div class="formula">
+    <span class="comment">// Self-Attention 完整計算流程</span><br>
+    <span class="hl">Q</span> = X · <span class="hl">W_Q</span>,&nbsp; <span class="vr">K</span> = X · <span class="vr">W_K</span>,&nbsp; <span class="fn">V</span> = X · <span class="fn">W_V</span>&nbsp;&nbsp;<span class="comment">// 線性投影</span><br><br>
+    <span class="comment">// 縮放點積注意力（Scaled Dot-Product Attention）</span><br>
+    Attention(<span class="hl">Q</span>,<span class="vr">K</span>,<span class="fn">V</span>) = <span class="fn">Softmax</span>( <span class="hl">Q</span>·<span class="vr">K</span>ᵀ / √<span class="hl">d_k</span> ) · <span class="fn">V</span><br><br>
+    <span class="comment">// √d_k 縮放原因：防止點積過大導致 Softmax 梯度消失</span><br>
+    <span class="comment">// d_k = Key 向量維度（通常 64）</span>
+  </div>
+  <div class="arch-wrap">
+    <svg width="560" height="140" viewBox="0 0 560 140">
+      <!-- Q -->
+      <rect x="10" y="50" width="70" height="40" rx="6" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="45" y="74" text-anchor="middle" fill="#FFD166" font-size="12" font-weight="700" font-family="JetBrains Mono">Q</text>
+      <!-- K -->
+      <rect x="10" y="100" width="70" height="35" rx="6" fill="#21253A" stroke="#7C6FFF" stroke-width="1.5"/>
+      <text x="45" y="122" text-anchor="middle" fill="#7C6FFF" font-size="12" font-weight="700" font-family="JetBrains Mono">Kᵀ</text>
+      <!-- MatMul -->
+      <rect x="105" y="60" width="65" height="35" rx="6" fill="#21253A" stroke="#8892B0" stroke-width="1"/>
+      <text x="137" y="82" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">Q·Kᵀ</text>
+      <line x1="80" y1="70" x2="104" y2="78" stroke="#FFD166" stroke-width="1.2"/>
+      <line x1="80" y1="118" x2="104" y2="80" stroke="#7C6FFF" stroke-width="1.2"/>
+      <!-- Scale -->
+      <rect x="193" y="60" width="70" height="35" rx="6" fill="#21253A" stroke="#8892B0" stroke-width="1"/>
+      <text x="228" y="79" text-anchor="middle" fill="#8892B0" font-size="10" font-family="JetBrains Mono">÷ √d_k</text>
+      <line x1="170" y1="78" x2="192" y2="78" stroke="#8892B0" stroke-width="1.2" marker-end="url(#arr2)"/>
+      <!-- Softmax -->
+      <defs>
+        <marker id="arr2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+          <polygon points="0 0,6 2,0 4" fill="#8892B0"/>
+        </marker>
+        <marker id="arr3" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+          <polygon points="0 0,6 2,0 4" fill="#00FFB2"/>
+        </marker>
+      </defs>
+      <rect x="285" y="60" width="70" height="35" rx="6" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+      <text x="320" y="82" text-anchor="middle" fill="#00D4FF" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Softmax</text>
+      <line x1="263" y1="78" x2="284" y2="78" stroke="#8892B0" stroke-width="1.2" marker-end="url(#arr2)"/>
+      <!-- V -->
+      <rect x="10" y="10" width="70" height="35" rx="6" fill="#21253A" stroke="#00FFB2" stroke-width="1.5"/>
+      <text x="45" y="31" text-anchor="middle" fill="#00FFB2" font-size="12" font-weight="700" font-family="JetBrains Mono">V</text>
+      <!-- MatMul 2 -->
+      <rect x="380" y="55" width="70" height="40" rx="6" fill="#21253A" stroke="#8892B0" stroke-width="1"/>
+      <text x="415" y="79" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">× V</text>
+      <line x1="355" y1="78" x2="379" y2="78" stroke="#8892B0" stroke-width="1.2" marker-end="url(#arr2)"/>
+      <line x1="80" y1="28" x2="390" y2="55" stroke="#00FFB2" stroke-width="1.2"/>
+      <!-- Output -->
+      <rect x="472" y="55" width="75" height="40" rx="6" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+      <text x="510" y="74" text-anchor="middle" fill="#00FFB2" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Attention</text>
+      <text x="510" y="87" text-anchor="middle" fill="#00FFB2" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Output</text>
+      <line x1="450" y1="75" x2="471" y2="75" stroke="#00FFB2" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Labels -->
+      <text x="137" y="108" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">相似度分數</text>
+      <text x="228" y="108" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">縮放防梯度消失</text>
+      <text x="320" y="108" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">機率分佈（和=1）</text>
+      <text x="415" y="108" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">加權求和</text>
+    </svg>
+  </div>
+  <p style="color:var(--muted);font-size:.88rem;margin-top:8px;">
+    <strong style="color:var(--yellow)">Multi-Head Attention</strong>：同時用 h 個不同的 W_Q, W_K, W_V 做 Attention，最後 Concat 拼接再線性映射。
+    允許模型從多個子空間學習不同語義關係（句法/語義/共指）。GPT-3 使用 96 個 Attention Head。
+  </p>
+  <div class="formula">
+    <span class="comment">// Multi-Head Attention（h 個頭並行計算）</span><br>
+    MultiHead(<span class="hl">Q</span>,<span class="vr">K</span>,<span class="fn">V</span>) = <span class="fn">Concat</span>(head₁, head₂, ..., headₕ) · <span class="hl">W_O</span><br>
+    head_i = Attention(<span class="hl">Q</span>·<span class="hl">W_Q</span>ᵢ, <span class="vr">K</span>·<span class="vr">W_K</span>ᵢ, <span class="fn">V</span>·<span class="fn">W_V</span>ᵢ)
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>Attention 分數公式 = <strong>Q·Kᵀ / √d_k</strong>，除以 √d_k 是為了防止向量維度過高時點積過大導致 Softmax 梯度消失。</div>
+</div>
+
+<!-- ══ 3. RAG ══ -->
+<div class="sec-title reveal">🔍 RAG — 檢索增強生成（解決幻覺問題）</div>
+<div class="panel reveal">
+  <div class="panel-title">Retrieval-Augmented Generation：讓 LLM 查外部知識庫再回答</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    純 LLM 可能「幻覺（Hallucination）」——生成看似合理但錯誤的答案。RAG 在生成前先從向量資料庫<strong style="color:var(--text)">檢索</strong>相關文件，以真實資料作為 Prompt 的一部分，大幅降低幻覺率。
+  </p>
+  <div class="arch-wrap">
+    <svg width="600" height="130" viewBox="0 0 600 130">
+      <defs>
+        <marker id="ra" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#7C6FFF"/>
+        </marker>
+      </defs>
+      <!-- User Query -->
+      <rect x="5" y="45" width="80" height="40" rx="7" fill="#21253A" stroke="#7C6FFF" stroke-width="1.5"/>
+      <text x="45" y="63" text-anchor="middle" fill="#7C6FFF" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">使用者</text>
+      <text x="45" y="77" text-anchor="middle" fill="#7C6FFF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">查詢 Query</text>
+      <line x1="86" y1="65" x2="106" y2="65" stroke="#7C6FFF" stroke-width="1.5" marker-end="url(#ra)"/>
+      <!-- Embedding -->
+      <rect x="110" y="45" width="85" height="40" rx="7" fill="#21253A" stroke="#FFD166" stroke-width="1.5"/>
+      <text x="152" y="63" text-anchor="middle" fill="#FFD166" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Query</text>
+      <text x="152" y="77" text-anchor="middle" fill="#FFD166" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">向量化</text>
+      <line x1="196" y1="65" x2="216" y2="65" stroke="#FFD166" stroke-width="1.5" marker-end="url(#ra)"/>
+      <!-- Vector DB -->
+      <rect x="220" y="30" width="105" height="70" rx="7" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+      <text x="272" y="56" text-anchor="middle" fill="#00D4FF" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">向量資料庫</text>
+      <text x="272" y="70" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">相似度搜尋</text>
+      <text x="272" y="83" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">Top-K 文件</text>
+      <line x1="326" y1="65" x2="345" y2="65" stroke="#00D4FF" stroke-width="1.5" marker-end="url(#ra)"/>
+      <!-- Prompt -->
+      <rect x="348" y="30" width="110" height="70" rx="7" fill="#21253A" stroke="#FF9B42" stroke-width="1.5"/>
+      <text x="403" y="56" text-anchor="middle" fill="#FF9B42" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">Prompt 組裝</text>
+      <text x="403" y="70" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">Query +</text>
+      <text x="403" y="83" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">檢索文件</text>
+      <line x1="460" y1="65" x2="478" y2="65" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#ra)"/>
+      <!-- LLM -->
+      <rect x="480" y="45" width="80" height="40" rx="7" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+      <text x="520" y="63" text-anchor="middle" fill="#00FFB2" font-size="10" font-weight="700" font-family="Calibri,'Microsoft JhengHei',sans-serif">LLM</text>
+      <text x="520" y="77" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">生成答案</text>
+      <!-- Labels -->
+      <text x="152" y="105" text-anchor="middle" fill="#8892B0" font-size="8" font-family="Calibri,'Microsoft JhengHei',sans-serif">Embedding模型</text>
+      <text x="272" y="110" text-anchor="middle" fill="#8892B0" font-size="8" font-family="Calibri,'Microsoft JhengHei',sans-serif">Faiss / Pinecone</text>
+      <text x="403" y="110" text-anchor="middle" fill="#8892B0" font-size="8" font-family="Calibri,'Microsoft JhengHei',sans-serif">Context Injection</text>
+    </svg>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">LLM 幻覺問題</div>
+      <div class="kp-body">純 LLM 依靠訓練時的「記憶」作答，當問題超出訓練資料或需要即時資訊時，會生成「自信但錯誤」的答案，即幻覺（Hallucination）。</div>
+      <div class="kp-tag">▶ 考點：幻覺原因 / RAG 解決方案</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--blue)">
+      <div class="kp-title">向量資料庫（Vector DB）</div>
+      <div class="kp-body">文件先用 Embedding 模型轉為高維向量儲存。查詢時計算餘弦相似度（Cosine Similarity）找 Top-K 最相關文件。常見：Faiss、Pinecone、Chroma。</div>
+      <div class="kp-tag">▶ 考點：餘弦相似度 / Top-K 檢索</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent2)">
+      <div class="kp-title">RAG vs Fine-tuning</div>
+      <div class="kp-body">RAG 無需重新訓練模型，知識可即時更新，成本低；Fine-tuning 需重訓，知識固化在權重中。RAG 適合頻繁更新的知識庫場景。</div>
+      <div class="kp-tag">▶ 考點：RAG vs 微調選擇場景</div>
+    </div>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>RAG 解決 LLM 幻覺的核心機制是「<strong>先檢索後生成</strong>」——把外部知識注入 Prompt，讓模型基於真實文件回答而非憑空生成。</div>
+</div>
+
+<!-- ══ 4. Prompt Engineering ══ -->
+<div class="sec-title reveal">✏️ Prompt Engineering 技巧</div>
+<div class="panel reveal">
+  <div class="panel-title">Zero-Shot / Few-Shot / Chain-of-Thought（CoT）</div>
+  <div class="prompt-tabs">
+    <button class="ptab active" onclick="showPrompt(this,'zero')">Zero-Shot</button>
+    <button class="ptab" onclick="showPrompt(this,'few')">Few-Shot</button>
+    <button class="ptab" onclick="showPrompt(this,'cot')">Chain-of-Thought</button>
+    <button class="ptab" onclick="showPrompt(this,'sys')">System Prompt</button>
+  </div>
+  <div class="prompt-box" id="prompt-display"></div>
+  <div class="tbl-wrap" style="margin-top:14px;">
+    <table>
+      <thead><tr><th>技巧</th><th>做法</th><th>適用場景</th><th>效果</th></tr></thead>
+      <tbody>
+        <tr><td>Zero-Shot</td><td>直接提問，不給範例</td><td>通用任務，簡單指令</td><td>快速，可能不精準</td></tr>
+        <tr><td>Few-Shot</td><td>給 2-5 個輸入/輸出範例</td><td>特定格式輸出、分類</td><td>大幅提升準確率</td></tr>
+        <tr><td>CoT</td><td>要求「一步步思考」</td><td>數學、邏輯推理、複雜問題</td><td>複雜推理能力顯著提升</td></tr>
+        <tr><td>System Prompt</td><td>設定角色與行為規範</td><td>客服機器人、角色扮演</td><td>控制輸出風格/限制</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>Few-Shot 比 Zero-Shot 效果更好因為提供了「示例」；CoT（Chain-of-Thought）讓模型逐步推理，對數學/邏輯問題效果顯著。</div>
+</div>
+
+<!-- ══ 5. GAN/VAE/Diffusion ══ -->
+<div class="sec-title reveal">🎨 生成模型比較：GAN / VAE / Diffusion</div>
+<div class="panel reveal">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>模型</th><th>核心機制</th><th>優點</th><th>缺點</th><th>代表應用</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>GAN<br>生成對抗網路</td>
+          <td>Generator（生成器）vs Discriminator（鑑別器）相互博弈</td>
+          <td>生成品質高、輸出清晰</td>
+          <td>訓練不穩定（模式崩塌）、難以控制</td>
+          <td>StyleGAN（臉部生成）、DeepFake</td>
+        </tr>
+        <tr>
+          <td>VAE<br>變分自編碼器</td>
+          <td>Encoder→潛在空間（μ,σ）→Decoder，最大化 ELBO</td>
+          <td>潛在空間連續、可插值</td>
+          <td>生成圖像略模糊</td>
+          <td>圖像生成、異常偵測、資料增強</td>
+        </tr>
+        <tr>
+          <td>Diffusion<br>擴散模型</td>
+          <td>逐步加噪（Forward）→學習去噪（Reverse）</td>
+          <td>高品質多樣、訓練穩定</td>
+          <td>推論速度慢（多步去噪）</td>
+          <td>Stable Diffusion、DALL-E 3、Sora</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:#FF9B42">
+      <div class="kp-title">GAN 訓練目標</div>
+      <div class="kp-body">G 盡量讓 D 分不清真假；D 盡量識別假圖片。達到納什均衡時 G 生成完美樣本。問題：訓練崩塌（Generator 陷入局部最優）。</div>
+      <div class="kp-tag">▶ 考點：Generator vs Discriminator 目標相反</div>
+    </div>
+    <div class="kp-card" style="border-left-color:#9B5DE5">
+      <div class="kp-title">VAE 潛在空間</div>
+      <div class="kp-body">將輸入壓縮到均值μ和方差σ定義的分佈。通過重參數化技巧（Reparameterization）使梯度可傳播。潛在空間連續，可線性插值生成過渡樣本。</div>
+      <div class="kp-tag">▶ 考點：ELBO / 潛在空間插值</div>
+    </div>
+    <div class="kp-card" style="border-left-color:#00D4FF">
+      <div class="kp-title">Diffusion 核心思想</div>
+      <div class="kp-body">前向過程（T 步）：逐步加高斯噪聲直到純雜訊。反向過程：訓練 U-Net 預測每步的噪聲，逐步去噪還原圖像。可用文字條件（CLIP）控制生成內容。</div>
+      <div class="kp-tag">▶ 考點：加噪→去噪 / CLIP條件生成</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. Temperature & 幻覺 ══ -->
+<div class="sec-title reveal">🌡️ Temperature 參數與 LLM 幻覺</div>
+<div class="panel reveal">
+  <div class="panel-title">Temperature 控制輸出隨機性</div>
+  <div class="formula">
+    <span class="comment">// Softmax with Temperature</span><br>
+    P(token_i) = <span class="fn">exp</span>(<span class="vr">logit_i</span> / <span class="hl">T</span>) / Σ <span class="fn">exp</span>(<span class="vr">logit_j</span> / <span class="hl">T</span>)<br><br>
+    <span class="hl">T → 0</span>&nbsp;&nbsp;<span class="comment">// 確定性：永遠選機率最高的 token（貪婪解碼）</span><br>
+    <span class="hl">T = 1</span>&nbsp;&nbsp;<span class="comment">// 標準：按原始機率分佈採樣</span><br>
+    <span class="hl">T &gt; 1</span>&nbsp;&nbsp;<span class="comment">// 創意性：機率分佈更平均，輸出多樣但可能不準確</span>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Temperature</th><th>機率分佈</th><th>輸出特性</th><th>適用場景</th></tr></thead>
+      <tbody>
+        <tr><td>T ≈ 0</td><td>極尖銳（幾乎確定）</td><td>重複、確定、保守</td><td>程式碼生成、數學計算</td></tr>
+        <tr><td>T = 0.7</td><td>適中</td><td>平衡質量與多樣性</td><td>聊天機器人（推薦值）</td></tr>
+        <tr><td>T = 1.0</td><td>原始分佈</td><td>正常採樣</td><td>一般文字生成</td></tr>
+        <tr><td>T &gt; 1.5</td><td>平坦（接近均勻）</td><td>高度多樣、可能胡言亂語</td><td>創意寫作、腦力激盪</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">LLM 幻覺的根本原因</div>
+      <div class="kp-body">LLM 是「機率統計模型」，預測「最可能」的下一個 token，並非「查找事實」。當訓練資料不足或問題超出分佈，模型仍會生成高信心但錯誤的答案。</div>
+      <div class="kp-tag">▶ 考點：幻覺 = 統計預測而非事實查找</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--blue)">
+      <div class="kp-title">解決幻覺的方法</div>
+      <div class="kp-body">① RAG：注入外部事實 ② RLHF：人類反饋強化學習對齊 ③ 降低 Temperature ④ Grounding：要求引用來源 ⑤ 知識圖譜輔助。</div>
+      <div class="kp-tag">▶ 考點：RAG / RLHF / Temperature</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--yellow)">
+      <div class="kp-title">RLHF（人類反饋強化學習）</div>
+      <div class="kp-body">ChatGPT 的關鍵訓練技術。人類標註者對模型輸出排名，訓練「獎勵模型（Reward Model）」，再用 PPO 強化學習讓 LLM 生成更受人類偏好的回應。</div>
+      <div class="kp-tag">▶ 考點：RLHF = 人類標注 + 獎勵模型 + PPO</div>
+    </div>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>Temperature 高 → 創意性高但準確率低；Temperature 低 → 確定性強適合程式碼/計算。RAG 是解決 LLM 幻覺最直接的工業界方法。</div>
+</div>
+
+<!-- ══ 7. 3D Attention Matrix ══ -->
+<div class="sec-title reveal">🎮 3D 互動視覺化：Attention 權重矩陣</div>
+<div class="panel reveal">
+  <div class="panel-title">Self-Attention 權重熱力圖 → 3D 長條圖（可旋轉拖曳）</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:10px;">
+    每根柱子代表一個 token pair 的 Attention 權重。柱子越高，表示兩個 token 互相「注意」程度越強。拖曳旋轉觀察不同視角。
+  </p>
+  <div class="c3d-wrap">
+    <canvas class="c3d" id="attn3d"></canvas>
+    <div class="c3d-lbl">Attention Weight Matrix 3D · 拖曳旋轉</div>
+    <div class="ctrl">
+      <button id="btn-play" class="on" onclick="togglePlay()">⏸ 暫停自轉</button>
+      <button onclick="resetView()">🔄 重置視角</button>
+      <button id="btn-head" onclick="cycleHead()">🔀 切換 Head</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 8. 考試重點整理 ══ -->
+<div class="sec-title reveal">📋 考試重點整理</div>
+<div class="kp-grid reveal">
+  <div class="kp-card">
+    <div class="kp-title">Attention 公式</div>
+    <div class="kp-body">Softmax(Q·Kᵀ / √d_k) · V。除以 √d_k 是為防止高維度下點積過大導致 Softmax 梯度消失。</div>
+    <div class="kp-tag">▶ 必背公式</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">BERT vs GPT</div>
+    <div class="kp-body">BERT = 雙向 Encoder，MLM 預訓練，適合理解任務。GPT = 單向 Decoder，自迴歸預測，適合生成任務。</div>
+    <div class="kp-tag">▶ 高頻選擇題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">RAG 核心流程</div>
+    <div class="kp-body">Query 向量化 → 向量資料庫相似度搜尋 → Top-K 文件注入 Prompt → LLM 生成。解決幻覺問題。</div>
+    <div class="kp-tag">▶ 情境題必考</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">Temperature 參數</div>
+    <div class="kp-body">T 高 → 創意/多樣（腦力激盪）；T 低 → 確定/保守（程式碼）。Temperature 影響 Softmax 機率分佈的尖銳程度。</div>
+    <div class="kp-tag">▶ 應用情境題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">Diffusion > GAN</div>
+    <div class="kp-body">Diffusion 模型訓練更穩定（無模式崩塌問題）、生成品質更高、多樣性更好，已成為影像生成的主流技術（Stable Diffusion）。</div>
+    <div class="kp-tag">▶ 模型比較題</div>
+  </div>
+  <div class="kp-card">
+    <div class="kp-title">Few-Shot &gt; Zero-Shot</div>
+    <div class="kp-body">提供 2-5 個範例讓模型「學習格式」，顯著提升特定格式輸出準確率。CoT（一步步思考）對複雜推理效果最佳。</div>
+    <div class="kp-tag">▶ Prompt Engineering</div>
+  </div>
+</div>
+
+<!-- ══ 9. 仿真考題 ══ -->
+<div class="sec-title reveal">🎯 仿真考題（8 題）</div>
+<div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+<div id="quiz" class="reveal"></div>
+
+</div><!-- /wrap -->
+
+<footer>iPAS AI 應用規劃師中級考試學習站 · 生成式 AI 與 LLM · 內容依據官方評鑑範圍整理</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// Reveal animation
+// ═══════════════════════════════════════
+const obs = new IntersectionObserver(e => e.forEach(x => x.isIntersecting && x.target.classList.add('vis')), { threshold: .08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ═══════════════════════════════════════
+// Prompt Engineering demo
+// ═══════════════════════════════════════
+const promptData = {
+  zero: `<span class="cmt">// Zero-Shot：直接問，不給任何範例</span>\n<span class="usr">User:</span> 將以下句子翻譯成英文：「我喜歡機器學習」\n\n<span class="ai">AI:</span>  I like machine learning.\n\n<span class="cmt">// 特點：簡單直接，但複雜任務可能不準確</span>`,
+  few: `<span class="cmt">// Few-Shot：先給 2-3 個範例，再問目標問題</span>\n<span class="sys">System:</span> 你是情感分析助手\n\n<span class="usr">User:</span> 輸入：「這部電影太棒了！」→ 情感：正面\n       輸入：「服務很差，不會再來」→ 情感：負面\n       輸入：「食物還好，環境一般」→ 情感：\n\n<span class="ai">AI:</span>  中性\n\n<span class="cmt">// 特點：給範例後模型學到「格式」，準確率大幅提升</span>`,
+  cot: `<span class="cmt">// Chain-of-Thought（CoT）：要求一步步推理</span>\n<span class="usr">User:</span> 一個農場有雞和牛共 10 隻，腳共 28 條。\n       請問雞有幾隻？請一步步思考。\n\n<span class="ai">AI:</span>  步驟1：設雞有 x 隻，牛有 (10-x) 隻\n       步驟2：雞有 2 條腿，牛有 4 條腿\n       步驟3：2x + 4(10-x) = 28\n       步驟4：2x + 40 - 4x = 28 → -2x = -12\n       步驟5：x = 6，所以雞有 6 隻\n\n<span class="cmt">// 特點：對數學/邏輯推理效果顯著優於直接回答</span>`,
+  sys: `<span class="cmt">// System Prompt：設定角色與行為邊界</span>\n<span class="sys">System:</span> 你是 iPAS 考試助教，只回答 AI 相關考試問題。\n        回答時需引用具體概念和公式。\n        若問題與考試無關，請禮貌拒絕。\n\n<span class="usr">User:</span> 請問 Attention 機制的公式是什麼？\n\n<span class="ai">AI:</span>  Attention(Q,K,V) = Softmax(Q·Kᵀ/√d_k) · V\n       其中 Q=Query, K=Key, V=Value, d_k=Key維度...\n\n<span class="cmt">// 特點：控制模型角色、風格、回答範圍</span>`
+};
+
+function showPrompt(el, key) {
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('prompt-display').innerHTML = promptData[key];
+}
+showPrompt(document.querySelector('.ptab'), 'zero');
+
+// ═══════════════════════════════════════
+// Quiz
+// ═══════════════════════════════════════
+let score = 0;
+const answered = new Set();
+const QS = [
+  {
+    stem: '在 Transformer Self-Attention 機制中，縮放點積注意力（Scaled Dot-Product Attention）公式為何？',
+    opts: ['A. Softmax(Q·V / K)', 'B. Softmax(Q·Kᵀ / √d_k) · V', 'C. Sigmoid(Q+K) · V', 'D. Q·K / d_k + V'],
+    ans: 1,
+    explain: 'Self-Attention 公式：Attention(Q,K,V) = Softmax(Q·Kᵀ / √d_k) · V。其中除以 √d_k 是為了防止向量維度過高時點積過大導致 Softmax 梯度消失。這是 iPAS 中級的核心考點。'
+  },
+  {
+    stem: 'BERT 與 GPT 模型架構的最主要差異為何？',
+    opts: ['A. BERT 參數量較少，GPT 參數量較多', 'B. BERT 使用單向 Decoder，GPT 使用雙向 Encoder', 'C. BERT 使用雙向 Encoder（MLM），GPT 使用單向 Decoder（自迴歸）', 'D. BERT 只能做圖像任務，GPT 只能做文字任務'],
+    ans: 2,
+    explain: 'BERT 採用雙向 Encoder，透過 MLM（遮蔽語言模型）預訓練，可看到左右兩側上下文，擅長理解任務（分類、NER）。GPT 採用單向 Decoder，自迴歸生成（只看左側），擅長文本生成。'
+  },
+  {
+    stem: 'RAG（Retrieval-Augmented Generation）主要是為了解決大型語言模型的哪個問題？',
+    opts: ['A. 推論速度太慢', 'B. 模型參數量過大導致記憶體不足', 'C. LLM 幻覺（Hallucination）——生成看似合理但事實錯誤的答案', 'D. 模型無法處理多語言輸入'],
+    ans: 2,
+    explain: 'RAG 的核心目的是解決 LLM 幻覺問題。做法是：查詢時先從向量資料庫檢索相關文件（Top-K），將文件注入 Prompt，讓模型基於真實資料而非純粹統計記憶來回答，大幅降低幻覺率。'
+  },
+  {
+    stem: '在 Prompt Engineering 中，Few-Shot Prompting 相較於 Zero-Shot Prompting 的優勢為何？',
+    opts: ['A. Few-Shot 使用更少的 token，節省成本', 'B. Few-Shot 提供輸入/輸出範例，讓模型學習特定格式，顯著提升準確率', 'C. Few-Shot 不需要任何例子即可推理', 'D. Few-Shot 只適用於翻譯任務'],
+    ans: 1,
+    explain: 'Few-Shot Prompting 透過給予 2-5 個輸入/輸出範例，讓模型「學習」所需的輸出格式和任務規範，對特定格式輸出（如結構化分類、情感分析）準確率遠優於 Zero-Shot。'
+  },
+  {
+    stem: '下列關於 Temperature 參數的描述，哪一項最為正確？',
+    opts: ['A. Temperature 越高，模型越傾向選擇機率最高的 token，輸出越確定', 'B. Temperature 只影響訓練速度，不影響推論輸出', 'C. Temperature 越高，機率分佈越平坦，輸出越多樣（創意性更高）', 'D. Temperature 必須設定為整數'],
+    ans: 2,
+    explain: 'Temperature 控制 Softmax 的「尖銳程度」。T 越高（>1），機率分佈越平坦，模型選擇低機率 token 的可能性增加，輸出越多樣、創意性高但可能不準確。T 越低（→0），越接近貪婪解碼，輸出越確定保守。'
+  },
+  {
+    stem: '下列關於 GAN、VAE、Diffusion 三種生成模型的比較，哪一項描述最正確？',
+    opts: ['A. GAN 訓練最穩定，是目前主流的影像生成方法', 'B. Diffusion 模型透過逐步加噪再去噪的過程生成圖像，訓練穩定且品質高', 'C. VAE 生成的圖像品質最高，細節最豐富', 'D. 三種模型的推論速度相同'],
+    ans: 1,
+    explain: 'Diffusion 模型（如 Stable Diffusion）透過「前向加噪 → 反向去噪」的過程生成圖像，訓練比 GAN 更穩定（無模式崩塌問題），生成品質更高、多樣性更好，已取代 GAN 成為影像生成主流。'
+  },
+  {
+    stem: '企業希望建立一個能即時查詢公司最新法規文件的 AI 問答系統，且不想每次更新文件都需要重新訓練模型，最適合採用哪種技術架構？',
+    opts: ['A. 從頭訓練一個專屬語言模型', 'B. 對現有 LLM 進行 Fine-tuning（微調）', 'C. RAG（檢索增強生成）+ 向量資料庫', 'D. 提高 Temperature 讓模型自行猜測'],
+    ans: 2,
+    explain: 'RAG 是最適合此場景的架構：文件更新時只需重新建立向量資料庫索引，無需重新訓練模型（成本低、速度快）。查詢時檢索最相關文件注入 Prompt，確保答案基於最新資料，解決即時性問題。'
+  },
+  {
+    stem: 'Chain-of-Thought（CoT）Prompting 的主要作用為何？',
+    opts: ['A. 減少模型生成的 token 數量以節省成本', 'B. 讓模型逐步展示推理過程，顯著提升數學和邏輯推理任務的準確率', 'C. 強制模型只用英文回答', 'D. 讓模型記住更多歷史對話內容'],
+    ans: 1,
+    explain: 'CoT（Chain-of-Thought）透過在 Prompt 中要求模型「一步步思考」或給出推理步驟的範例，讓模型顯式化推理過程，對數學計算、邏輯推理、複雜問題求解效果顯著優於直接輸出答案。'
+  }
+];
+
+const total = QS.length;
+document.getElementById('total').textContent = total;
+
+function buildQuiz() {
+  const wrap = document.getElementById('quiz');
+  QS.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.innerHTML = `
+      <div class="q-num">第 ${qi+1} 題 / 共 ${total} 題　｜　仿 iPAS 中級科目一單選題</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="q-opts" id="opts-${qi}">
+        ${q.opts.map((o, oi) => `
+          <div class="q-opt" onclick="answer(${qi},${oi})">
+            <span class="opt-label">${['A','B','C','D'][oi]}.</span>
+            <span>${o.slice(3)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="q-explain" id="exp-${qi}">💡 解析：${q.explain}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function answer(qi, oi) {
+  if (answered.has(qi)) return;
+  answered.add(qi);
+  const opts = document.querySelectorAll(`#opts-${qi} .q-opt`);
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  const q = QS[qi];
+  opts[q.ans].classList.add('correct');
+  if (oi !== q.ans) opts[oi].classList.add('wrong');
+  document.getElementById('exp-'+qi).classList.add('show');
+  if (oi === q.ans) score++;
+  document.getElementById('score').textContent = score;
+  document.getElementById('total').textContent = total;
+  document.getElementById('pbar').style.width = (answered.size / total * 100) + '%';
+}
+
+buildQuiz();
+
+// ═══════════════════════════════════════
+// THREE.JS — Attention Weight 3D Bar Chart
+// ═══════════════════════════════════════
+(function () {
+  const canvas = document.getElementById('attn3d');
+  const wrapper = canvas.parentElement;
+
+  let W = wrapper.clientWidth || 600;
+  let H = 380;
+  canvas.width = W; canvas.height = H;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x0a0c14, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const dirL = new THREE.DirectionalLight(0xffffff, 1.0);
+  dirL.position.set(5, 10, 6);
+  scene.add(dirL);
+  const dirL2 = new THREE.DirectionalLight(0x7C6FFF, 0.6);
+  dirL2.position.set(-5, 3, -4);
+  scene.add(dirL2);
+
+  // Drag rotation
+  const rot = { x: 0.4, y: 0.6 };
+  let dragging = false, prevMouse = { x: 0, y: 0 };
+
+  canvas.addEventListener('mousedown', e => { dragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('mouseup', () => dragging = false);
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    rot.y += (e.clientX - prevMouse.x) * 0.012;
+    rot.x += (e.clientY - prevMouse.y) * 0.008;
+    rot.x = Math.max(-1.0, Math.min(1.0, rot.x));
+    prevMouse = { x: e.clientX, y: e.clientY };
+  });
+  canvas.addEventListener('touchstart', e => { dragging = true; prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY }; e.preventDefault(); }, { passive: false });
+  window.addEventListener('touchend', () => dragging = false);
+  window.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    rot.y += (e.touches[0].clientX - prevMouse.x) * 0.012;
+    rot.x += (e.touches[0].clientY - prevMouse.y) * 0.008;
+    rot.x = Math.max(-1.0, Math.min(1.0, rot.x));
+    prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+
+  function camPos() {
+    const r = 14;
+    camera.position.x = r * Math.sin(rot.y) * Math.cos(rot.x);
+    camera.position.y = r * Math.sin(rot.x) + 2;
+    camera.position.z = r * Math.cos(rot.y) * Math.cos(rot.x);
+    camera.lookAt(0, 0, 0);
+  }
+
+  // Token labels (6 tokens)
+  const tokens = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
+  const N = tokens.length;
+
+  // Generate multiple "head" attention patterns
+  const heads = [
+    // Head 0: diagonal + cat-sat strong
+    [[.9,.1,.05,.05,.05,.05],[.1,.85,.7,.1,.1,.05],[.05,.7,.9,.2,.05,.05],[.05,.1,.2,.8,.3,.1],[.05,.1,.05,.3,.8,.4],[.05,.05,.05,.1,.4,.9]],
+    // Head 1: syntactic — the-cat, the-mat
+    [[.8,.6,.05,.05,.7,.05],[.6,.7,.3,.05,.05,.05],[.05,.3,.8,.4,.05,.05],[.05,.05,.4,.7,.05,.3],[.7,.05,.05,.05,.8,.5],[.05,.05,.05,.3,.5,.9]],
+    // Head 2: positional spread
+    [[.9,.3,.1,.05,.05,.02],[.3,.8,.4,.1,.05,.02],[.1,.4,.8,.5,.15,.05],[.05,.1,.5,.8,.4,.1],[.05,.05,.15,.4,.8,.5],[.02,.02,.05,.1,.5,.9]]
+  ];
+
+  let currentHead = 0;
+  const bars = [];
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const spacing = 1.6;
+  const offset = (N - 1) * spacing / 2;
+
+  function buildBars(headIdx) {
+    // Remove old bars
+    while (group.children.length) group.remove(group.children[0]);
+    bars.length = 0;
+
+    const attn = heads[headIdx];
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < N; j++) {
+        const w = attn[i][j];
+        const h = Math.max(0.05, w * 3.2);
+        const geo = new THREE.BoxGeometry(1.1, h, 1.1);
+        // Color: purple → cyan based on weight
+        const t = w;
+        const col = new THREE.Color().setHSL(0.67 - t * 0.45, 0.9, 0.25 + t * 0.4);
+        const mat = new THREE.MeshLambertMaterial({ color: col });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(i * spacing - offset, h / 2 - 1.6, j * spacing - offset);
+        mesh.userData = { targetH: h, w };
+        group.add(mesh);
+        bars.push(mesh);
+
+        // Top face highlight
+        if (w > 0.5) {
+          const glowGeo = new THREE.BoxGeometry(1.1, 0.06, 1.1);
+          const glowMat = new THREE.MeshLambertMaterial({ color: 0x00FFB2, transparent: true, opacity: w * 0.8 });
+          const glow = new THREE.Mesh(glowGeo, glowMat);
+          glow.position.set(i * spacing - offset, h - 1.6 + 0.03, j * spacing - offset);
+          group.add(glow);
+        }
+      }
+    }
+
+    // Base grid plane
+    const gridGeo = new THREE.PlaneGeometry(N * spacing + 0.5, N * spacing + 0.5, N, N);
+    const gridMat = new THREE.MeshBasicMaterial({ color: 0x2E3250, wireframe: true, transparent: true, opacity: 0.35 });
+    const grid = new THREE.Mesh(gridGeo, gridMat);
+    grid.rotation.x = -Math.PI / 2;
+    grid.position.y = -1.62;
+    group.add(grid);
+
+    // Axis labels via tiny boxes as markers
+    for (let i = 0; i < N; i++) {
+      // Row markers (Query)
+      const mq = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.25), new THREE.MeshLambertMaterial({ color: 0xFFD166 }));
+      mq.position.set(i * spacing - offset, -1.5, -offset - 1.2);
+      group.add(mq);
+      // Col markers (Key)
+      const mk = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.25), new THREE.MeshLambertMaterial({ color: 0x7C6FFF }));
+      mk.position.set(-offset - 1.2, -1.5, i * spacing - offset);
+      group.add(mk);
+    }
+  }
+
+  buildBars(currentHead);
+
+  let playing = true;
+  let animT = 0;
+
+  window.togglePlay = function () {
+    playing = !playing;
+    document.getElementById('btn-play').textContent = playing ? '⏸ 暫停自轉' : '▶ 繼續自轉';
+    document.getElementById('btn-play').classList.toggle('on', playing);
+  };
+
+  window.resetView = function () {
+    rot.x = 0.4; rot.y = 0.6;
+  };
+
+  window.cycleHead = function () {
+    currentHead = (currentHead + 1) % heads.length;
+    buildBars(currentHead);
+    document.getElementById('btn-head').textContent = `🔀 Head ${currentHead + 1}/${heads.length}`;
+  };
+
+  function animate() {
+    requestAnimationFrame(animate);
+    animT += 0.008;
+
+    if (playing) {
+      rot.y += 0.005;
+    }
+
+    // Animate bar heights with subtle pulse
+    bars.forEach((bar, idx) => {
+      const pulse = 1 + Math.sin(animT * 1.5 + idx * 0.4) * 0.035;
+      bar.scale.y = pulse;
+    });
+
+    group.rotation.y = 0;
+    camPos();
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // Responsive resize
+  window.addEventListener('resize', () => {
+    W = wrapper.clientWidth || 600;
+    canvas.width = W; canvas.height = H;
+    renderer.setSize(W, H);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>監督式 / 非監督式學習 — iPAS AI應用規劃師中級考試</title>
+<style>
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--panel2:#21253A;
+  --border:#2E3250;--text:#E8EAF6;--muted:#8892B0;
+  --accent:#00D4FF;--accent2:#00FFB2;--accent3:#7C6FFF;
+  --yellow:#FFD166;--orange:#FF9B42;--pink:#FF6B9D;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,17,23,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px 24px;}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.9rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#000;}
+.nav-title{font-size:1.05rem;}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;color:#000;}
+
+.hero{padding:60px 20px 40px;background:linear-gradient(160deg,#0F1117,#061820,#0F1117);text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,212,255,.12),transparent);}
+.hero-badge{display:inline-block;margin-bottom:16px;padding:5px 18px;border-radius:999px;background:rgba(0,212,255,.12);border:1px solid var(--accent);font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.hero-title{font-size:clamp(1.8rem,5vw,3.2rem);background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:600px;margin:0 auto 24px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+.wrap{max-width:980px;margin:0 auto;padding:16px 20px 80px;}
+
+.sec-title{font-size:1.5rem;color:var(--text);margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;background:linear-gradient(var(--accent),var(--accent2));}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;}
+.panel-title{font-weight:900;font-size:1rem;color:var(--accent2);margin-bottom:12px;}
+
+.formula{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--accent2);line-height:2.1;overflow-x:auto;}
+.formula .cm{color:var(--muted);font-style:italic;}
+.formula .hl{color:var(--yellow);}
+.formula .fn{color:var(--accent);}
+.formula .vr{color:var(--pink);}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:.87rem;}
+th{background:var(--panel2);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);color:var(--accent2);font-weight:900;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--muted);}
+td:first-child{color:var(--text);font-weight:700;}
+tr:hover td{background:rgba(0,212,255,.04);}
+
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:14px 0;}
+.kp-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:3px solid var(--accent);transition:transform .18s;}
+.kp-card:hover{transform:translateY(-4px);}
+.kp-title{font-weight:900;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.kp-body{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.kp-tag{font-size:.7rem;font-weight:900;color:var(--accent);margin-top:8px;}
+
+.c3d{background:#0a0c14;border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0;position:relative;}
+.c3d canvas{display:block;width:100%;border-radius:8px;cursor:grab;}
+.c3d canvas:active{cursor:grabbing;}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.ctrl-btn{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);font-weight:900;font-size:.82rem;cursor:pointer;color:var(--muted);background:transparent;transition:all .18s;}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.08);}
+.ctrl-btn.on{border-color:var(--accent2);color:var(--accent2);background:rgba(0,255,178,.08);}
+.c3d-lbl{font-size:.8rem;color:var(--muted);margin-top:8px;line-height:1.5;}
+
+.cm-grid{display:grid;grid-template-columns:repeat(3,auto);gap:4px;width:fit-content;margin:14px auto;}
+.cm-cell{padding:12px 16px;text-align:center;border-radius:8px;font-weight:700;font-size:.88rem;min-width:90px;}
+.cm-hdr{background:transparent;color:var(--muted);font-size:.78rem;padding:8px 16px;}
+.cm-tp{background:rgba(0,255,178,.14);border:1px solid var(--accent2);color:var(--accent2);cursor:pointer;}
+.cm-tn{background:rgba(0,255,178,.14);border:1px solid var(--accent2);color:var(--accent2);cursor:pointer;}
+.cm-fp{background:rgba(255,107,157,.1);border:1px solid var(--pink);color:var(--pink);cursor:pointer;}
+.cm-fn{background:rgba(255,107,157,.1);border:1px solid var(--pink);color:var(--pink);cursor:pointer;}
+
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0;}
+.metric-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.metric-val{font-family:'JetBrains Mono',monospace;font-size:1.35rem;font-weight:900;margin-bottom:4px;}
+.metric-lbl{font-size:.74rem;color:var(--muted);}
+.metric-fml{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#555;margin-top:4px;}
+
+.q-item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+.q-num{font-size:.75rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.q-stem{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:12px;line-height:1.65;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--border);font-size:.87rem;color:var(--muted);transition:all .18s;display:flex;align-items:flex-start;gap:8px;}
+.q-opt:hover{border-color:var(--accent);color:var(--text);background:rgba(0,212,255,.06);}
+.q-opt.correct{border-color:var(--accent2)!important;background:rgba(0,255,178,.08);color:var(--accent2);}
+.q-opt.wrong{border-color:var(--pink)!important;background:rgba(255,107,157,.07);color:var(--pink);}
+.opt-lbl{font-weight:900;min-width:18px;}
+.q-exp{margin-top:12px;padding:10px 14px;background:rgba(0,212,255,.06);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:.83rem;color:var(--accent);display:none;line-height:1.65;}
+.q-exp.show{display:block;}
+
+.progress-bar{height:6px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s;}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+#score-banner{position:fixed;bottom:20px;right:20px;z-index:300;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-weight:900;font-size:.9rem;color:var(--accent);box-shadow:0 4px 24px rgba(0,212,255,.2);}
+
+.warn-box{background:rgba(255,209,102,.07);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin:10px 0;}
+
+footer{text-align:center;padding:20px;font-size:.75rem;color:rgba(232,234,246,.2);}
+</style>
+</head>
+<body>
+
+<div id="score-banner">⭐ 答題得分：<span id="score">0</span> / <span id="total">0</span></div>
+
+<nav class="nav">
+  <a href="index.html">← 返回</a>
+  <span class="nav-title">監督式 / 非監督式學習</span>
+  <span class="nav-tag">iPAS 中級 · 科目三 L23</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">SUPERVISED / UNSUPERVISED · L23 · 機器學習技術與應用</div>
+  <div class="hero-title">監督式 / 非監督式學習完全攻略</div>
+  <div class="hero-sub">決策樹、SVM、K-Means 3D動態聚類、PCA降維、F1/Precision/Recall/ROC/AUC，對應 iPAS 中級科目三核心考點</div>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--accent);border-color:var(--accent)">決策樹</span>
+    <span class="tag" style="color:var(--accent2);border-color:var(--accent2)">SVM</span>
+    <span class="tag" style="color:var(--accent3);border-color:var(--accent3)">K-Means 3D</span>
+    <span class="tag" style="color:var(--yellow);border-color:var(--yellow)">PCA</span>
+    <span class="tag" style="color:var(--pink);border-color:var(--pink)">ROC / AUC</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. 比較總覽 ══ -->
+<div class="sec-title reveal">🎯 監督式 vs 非監督式學習</div>
+<div class="panel reveal">
+  <div class="panel-title">兩大學習典範對照表</div>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>特徵</th><th>監督式（Supervised）</th><th>非監督式（Unsupervised）</th></tr>
+      <tr><td>訓練資料</td><td style="color:var(--accent2)">有標籤（labeled）</td><td style="color:var(--yellow)">無標籤（unlabeled）</td></tr>
+      <tr><td>目標</td><td>學習輸入→輸出映射</td><td>發現資料內在結構</td></tr>
+      <tr><td>代表算法</td><td>決策樹、SVM、邏輯迴歸、隨機森林</td><td>K-Means、PCA、DBSCAN、階層聚類</td></tr>
+      <tr><td>任務類型</td><td>分類、迴歸</td><td>聚類、降維、異常偵測</td></tr>
+      <tr><td>評估方式</td><td>Accuracy、F1、AUC-ROC</td><td>輪廓係數（Silhouette）、Elbow Method</td></tr>
+      <tr><td>典型應用</td><td>垃圾郵件分類、房價預測</td><td>客戶分群、特徵壓縮</td></tr>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試重點：</strong>「K-Means、PCA 屬於監督式還是非監督式？」→ 答案：<strong>非監督式（不需標籤）</strong>；SVM、決策樹→<strong>監督式</strong></div>
+</div>
+
+<!-- ══ 2. 決策樹 ══ -->
+<div class="sec-title reveal">🌳 決策樹（Decision Tree）</div>
+<div class="panel reveal">
+  <div class="panel-title">基於資訊增益遞迴分割的白箱分類算法</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">決策樹用<strong style="color:var(--text)">基尼不純度（Gini Impurity）</strong>或<strong style="color:var(--text)">資訊增益（Information Gain）</strong>選擇最佳分割特徵，每個節點代表一個條件判斷，葉節點代表類別預測。</p>
+
+  <div class="formula">
+    <span class="cm">// 基尼不純度 (Gini Impurity) — 考試高頻公式</span><br>
+    <span class="fn">Gini</span>(<span class="vr">D</span>) = <span class="hl">1</span> − Σ <span class="vr">pᵢ²</span>&nbsp;&nbsp;&nbsp;<span class="cm">// pᵢ = 第i類的比例，範圍 [0, 0.5]</span><br><br>
+    <span class="cm">// 資訊熵 (Entropy)</span><br>
+    <span class="fn">H</span>(<span class="vr">D</span>) = − Σ <span class="vr">pᵢ</span> · <span class="fn">log₂</span>(<span class="vr">pᵢ</span>)<br><br>
+    <span class="cm">// 資訊增益 = 父節點熵 − 加權子節點熵</span><br>
+    <span class="fn">IG</span> = <span class="fn">H</span>(<span class="vr">D</span>) − Σ (<span class="vr">|Dᵥ|</span>/<span class="vr">|D|</span>) · <span class="fn">H</span>(<span class="vr">Dᵥ</span>)
+  </div>
+
+  <!-- Interactive Decision Tree SVG -->
+  <div class="c3d" style="padding:16px;">
+    <svg width="100%" viewBox="0 0 620 330" style="max-height:330px;display:block;margin:0 auto;">
+      <!-- Root -->
+      <rect x="220" y="8" width="180" height="52" rx="10" fill="#1A1D27" stroke="#00D4FF" stroke-width="2"/>
+      <text x="310" y="29" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">年齡 &lt; 30？</text>
+      <text x="310" y="50" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif">Gini = 0.48</text>
+      <!-- Branch lines -->
+      <line x1="270" y1="60" x2="155" y2="125" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="192" y="102" fill="#00FFB2" font-size="11" text-anchor="middle" font-family="Calibri,'Microsoft JhengHei',sans-serif">是 (52%)</text>
+      <line x1="350" y1="60" x2="465" y2="125" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="428" y="102" fill="#FF6B9D" font-size="11" text-anchor="middle" font-family="Calibri,'Microsoft JhengHei',sans-serif">否 (48%)</text>
+      <!-- Left node -->
+      <rect x="70" y="125" width="170" height="52" rx="10" fill="#1A1D27" stroke="#00FFB2" stroke-width="2"/>
+      <text x="155" y="146" text-anchor="middle" fill="#00FFB2" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">收入 &gt; 5萬？</text>
+      <text x="155" y="166" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif">Gini = 0.32</text>
+      <!-- Right node -->
+      <rect x="385" y="125" width="170" height="52" rx="10" fill="#1A1D27" stroke="#FFD166" stroke-width="2"/>
+      <text x="470" y="146" text-anchor="middle" fill="#FFD166" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">工作年資 &gt; 5？</text>
+      <text x="470" y="166" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif">Gini = 0.41</text>
+      <!-- Left leaves -->
+      <line x1="125" y1="177" x2="80" y2="240" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="85" y="224" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">是</text>
+      <rect x="30" y="240" width="108" height="44" rx="8" fill="rgba(0,255,178,.12)" stroke="#00FFB2" stroke-width="1.5"/>
+      <text x="84" y="258" text-anchor="middle" fill="#00FFB2" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">✓ 購買</text>
+      <text x="84" y="276" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">P = 75%</text>
+      <line x1="185" y1="177" x2="230" y2="240" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="225" y="224" fill="#FF6B9D" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">否</text>
+      <rect x="180" y="240" width="108" height="44" rx="8" fill="rgba(255,107,157,.1)" stroke="#FF6B9D" stroke-width="1.5"/>
+      <text x="234" y="258" text-anchor="middle" fill="#FF6B9D" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">✗ 不購買</text>
+      <text x="234" y="276" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">P = 68%</text>
+      <!-- Right leaves -->
+      <line x1="440" y1="177" x2="390" y2="240" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="396" y="224" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">是</text>
+      <rect x="340" y="240" width="108" height="44" rx="8" fill="rgba(0,255,178,.12)" stroke="#00FFB2" stroke-width="1.5"/>
+      <text x="394" y="258" text-anchor="middle" fill="#00FFB2" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">✓ 購買</text>
+      <text x="394" y="276" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">P = 82%</text>
+      <line x1="500" y1="177" x2="540" y2="240" stroke="#2E3250" stroke-width="1.5"/>
+      <text x="533" y="224" fill="#FF6B9D" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">否</text>
+      <rect x="490" y="240" width="108" height="44" rx="8" fill="rgba(255,107,157,.1)" stroke="#FF6B9D" stroke-width="1.5"/>
+      <text x="544" y="258" text-anchor="middle" fill="#FF6B9D" font-size="12" font-weight="bold" font-family="Calibri,'Microsoft JhengHei',sans-serif">✗ 不購買</text>
+      <text x="544" y="276" text-anchor="middle" fill="#8892B0" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">P = 71%</text>
+      <!-- Depth labels -->
+      <text x="8" y="38" fill="#555" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">深度 0</text>
+      <text x="8" y="156" fill="#555" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">深度 1</text>
+      <text x="8" y="270" fill="#555" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif">葉節點</text>
+    </svg>
+  </div>
+
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">優點</div>
+      <div class="kp-body">可解釋性高（白箱模型）、不需特徵縮放、可處理類別特徵、決策路徑可視化</div>
+      <div class="kp-tag">WHITE BOX</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">缺點</div>
+      <div class="kp-body">容易過擬合（需剪枝 Pruning）、對雜訊敏感、不穩定（微小資料變化影響大）</div>
+      <div class="kp-tag">OVERFITTING RISK</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">隨機森林（改進）</div>
+      <div class="kp-body">Bagging + 多棵決策樹多數投票，降低方差、提高泛化能力，犧牲部分可解釋性</div>
+      <div class="kp-tag">ENSEMBLE</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. SVM ══ -->
+<div class="sec-title reveal">⚡ 支援向量機（SVM）— 3D 超平面互動</div>
+<div class="panel reveal">
+  <div class="panel-title">尋找最大間隔超平面，3D 視覺化（可拖曳旋轉）</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">SVM 的核心目標是找到能<strong style="color:var(--text)">最大化間隔（Margin）</strong>的分離超平面。最靠近超平面的樣本點稱為<strong style="color:var(--yellow)">支援向量（Support Vectors）</strong>，以橙色菱形標示。</p>
+
+  <div class="formula">
+    <span class="cm">// 超平面方程式：w 為法向量，b 為偏置</span><br>
+    <span class="vr">w</span>ᵀ<span class="vr">x</span> + <span class="vr">b</span> = <span class="hl">0</span><br><br>
+    <span class="cm">// 最佳化目標：最大化間隔 Margin = 2/||w||</span><br>
+    min &nbsp;<span class="hl">½</span>||<span class="vr">w</span>||²&nbsp;&nbsp;<span class="cm">// s.t. yᵢ(wᵀxᵢ+b) ≥ 1</span><br><br>
+    <span class="cm">// 核技巧：RBF Kernel — 隱式映射至高維空間</span><br>
+    <span class="fn">K</span>(<span class="vr">xᵢ</span>,<span class="vr">xⱼ</span>) = <span class="fn">exp</span>(−<span class="vr">γ</span>||<span class="vr">xᵢ</span>−<span class="vr">xⱼ</span>||²)
+  </div>
+
+  <div class="c3d">
+    <canvas id="svm-canvas" height="360"></canvas>
+    <div class="ctrl">
+      <button class="ctrl-btn on" id="svm-btn-linear" onclick="svmKernel('linear',this)">線性核（Linear）</button>
+      <button class="ctrl-btn" id="svm-btn-rbf" onclick="svmKernel('rbf',this)">RBF 核</button>
+      <button class="ctrl-btn" id="svm-btn-margin" onclick="svmToggleMargin(this)">隱藏 Margin</button>
+    </div>
+    <div class="c3d-lbl" id="svm-lbl">🖱 拖曳旋轉視角 · 藍=正類 · 粉=負類 · 橙色菱形=支援向量 · 黃色平面=最大間隔超平面</div>
+  </div>
+
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">C 參數（正則化）</div>
+      <div class="kp-body">C 大 → 間隔窄、誤分類懲罰高（易過擬合）<br>C 小 → 間隔寬、容許更多錯誤（易欠擬合）</div>
+      <div class="kp-tag">REGULARIZATION</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">γ 參數（RBF 核）</div>
+      <div class="kp-body">γ 大 → 每個支援向量影響範圍小（過擬合）<br>γ 小 → 影響範圍大（欠擬合）</div>
+      <div class="kp-tag">KERNEL WIDTH</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">核技巧優勢</div>
+      <div class="kp-body">無需顯式計算高維映射，直接用內積 K(xᵢ,xⱼ) 代替，實現非線性分類，計算高效</div>
+      <div class="kp-tag">KERNEL TRICK</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. K-Means ══ -->
+<div class="sec-title reveal">🔵 K-Means 聚類（3D 動態展示）</div>
+<div class="panel reveal">
+  <div class="panel-title">迭代指派-更新的無監督聚類算法 — Three.js 互動</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">K-Means 反覆執行<strong style="color:var(--text)">指派（Assignment）</strong>和<strong style="color:var(--text)">更新（Update）</strong>，直到聚類中心不再移動。3D 空間中可觀察到點被分配給最近的中心後，中心向各組均值收斂。</p>
+
+  <div class="formula">
+    <span class="cm">// 目標：最小化組內平方和 WCSS（Inertia）</span><br>
+    <span class="fn">J</span> = Σₖ Σᵢ∈<span class="vr">Cₖ</span> ||<span class="vr">xᵢ</span> − <span class="fn">μₖ</span>||²<br><br>
+    <span class="cm">// Step 1 指派：每個點分配給最近的中心</span><br>
+    <span class="vr">cᵢ</span> = <span class="fn">argmin</span>ₖ ||<span class="vr">xᵢ</span> − <span class="fn">μₖ</span>||²<br><br>
+    <span class="cm">// Step 2 更新：重新計算各組均值</span><br>
+    <span class="fn">μₖ</span> = <span class="hl">1</span>/<span class="vr">|Cₖ|</span> · Σᵢ∈<span class="vr">Cₖ</span> <span class="vr">xᵢ</span>
+  </div>
+
+  <div class="c3d">
+    <canvas id="kmeans-canvas" height="400"></canvas>
+    <div class="ctrl">
+      <button class="ctrl-btn" onclick="kmReset()">🔄 重置</button>
+      <button class="ctrl-btn" onclick="kmStep()">▶ 執行一步</button>
+      <button class="ctrl-btn" onclick="kmAuto()">⚡ 自動收斂</button>
+      <button class="ctrl-btn" onclick="kmChangeK(-1)">K −</button>
+      <button class="ctrl-btn" id="km-k-btn">K = 3</button>
+      <button class="ctrl-btn" onclick="kmChangeK(1)">K +</button>
+    </div>
+    <div class="c3d-lbl" id="km-lbl">點擊「執行一步」逐步觀察聚類中心（菱形）如何向資料均值收斂 · 拖曳旋轉 3D 視角</div>
+  </div>
+
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">Elbow Method</div>
+      <div class="kp-body">繪製 K vs WCSS 折線圖，在「手肘彎折處」選最佳 K 值——該點後下降幅度明顯減緩</div>
+      <div class="kp-tag">CHOOSE K</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">K-Means 限制</div>
+      <div class="kp-body">①需預設 K 值 ②對初始中心敏感（K-Means++ 改善）③僅適合球形群組 ④對離群值敏感</div>
+      <div class="kp-tag">LIMITATIONS</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">K-Means vs DBSCAN</div>
+      <div class="kp-body">DBSCAN 不需預設 K，能偵測任意形狀群組，自動標記離群點為雜訊（Noise）</div>
+      <div class="kp-tag">DENSITY-BASED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. PCA ══ -->
+<div class="sec-title reveal">📐 主成分分析（PCA）</div>
+<div class="panel reveal">
+  <div class="panel-title">無監督降維：保留最大變異量的正交方向</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">PCA 尋找資料方差最大的正交方向（主成分）。PC1 解釋最多變異，PC2 次之，且 PC1⊥PC2。常用於<strong style="color:var(--text)">特徵壓縮、噪音去除、高維視覺化</strong>。注意：PCA 前需先做 Standardization。</p>
+
+  <div class="formula">
+    <span class="cm">// PCA 五步流程</span><br>
+    <span class="hl">1.</span> 標準化資料（均值=<span class="hl">0</span>，標準差=<span class="hl">1</span>）<br>
+    <span class="hl">2.</span> 計算協方差矩陣：<span class="vr">Σ</span> = <span class="hl">1</span>/<span class="vr">n</span> · <span class="vr">X</span>ᵀ<span class="vr">X</span><br>
+    <span class="hl">3.</span> 特徵值分解：<span class="vr">Σ</span><span class="vr">v</span> = <span class="vr">λ</span><span class="vr">v</span><br>
+    <span class="hl">4.</span> 取前 k 個最大特徵值的特徵向量組成矩陣 <span class="vr">W</span><br>
+    <span class="hl">5.</span> 投影降維：<span class="vr">Z</span> = <span class="vr">X</span> · <span class="vr">W</span><br><br>
+    <span class="cm">// 解釋變異比率（Explained Variance Ratio）</span><br>
+    EVR_i = <span class="vr">λᵢ</span> / Σ<span class="vr">λⱼ</span>
+  </div>
+
+  <div class="c3d">
+    <canvas id="pca-canvas" height="300"></canvas>
+    <div class="ctrl">
+      <button class="ctrl-btn" onclick="pcaMode('original',this)">原始 2D 資料</button>
+      <button class="ctrl-btn" onclick="pcaMode('axes',this)">主成分方向</button>
+      <button class="ctrl-btn on" onclick="pcaMode('projected',this)">投影到 PC1</button>
+    </div>
+    <div class="c3d-lbl" id="pca-lbl">降維結果：2D→1D，PC1 保留 82% 資訊 · 藍點=原始 · 亮點=投影後位置</div>
+  </div>
+
+  <div class="kp-grid">
+    <div class="kp-card">
+      <div class="kp-title">考試重點</div>
+      <div class="kp-body">①PCA 前必須 Standardization ②主成分互相正交 ③按解釋變異量由大到小排列</div>
+      <div class="kp-tag">EXAM KEY</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">PCA vs LDA</div>
+      <div class="kp-body">PCA 無監督，最大化總體方差；LDA 有監督，最大化類間/類內距離比，用於分類前處理</div>
+      <div class="kp-tag">COMPARISON</div>
+    </div>
+    <div class="kp-card">
+      <div class="kp-title">應用場景</div>
+      <div class="kp-body">人臉辨識（Eigenfaces）、基因組資料、NLP 詞向量壓縮、影像雜訊過濾</div>
+      <div class="kp-tag">USE CASES</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. 模型評估 ══ -->
+<div class="sec-title reveal">📊 模型評估指標（混淆矩陣互動）</div>
+<div class="panel reveal">
+  <div class="panel-title">點擊格子 +5，右鍵 -5，即時計算 Precision / Recall / F1</div>
+
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+    <div>
+      <p style="color:var(--muted);font-size:.8rem;margin-bottom:8px;text-align:center;">混淆矩陣（Confusion Matrix）</p>
+      <div class="cm-grid">
+        <div class="cm-cell cm-hdr"></div>
+        <div class="cm-cell cm-hdr">預測 正例</div>
+        <div class="cm-cell cm-hdr">預測 負例</div>
+        <div class="cm-cell cm-hdr">實際正例</div>
+        <div class="cm-cell cm-tp" data-key="tp" onclick="cmClick('tp')" oncontextmenu="cmRClick(event,'tp')">
+          <div style="font-size:.68rem;color:var(--muted)">TP 真正例</div>
+          <div id="v-tp" style="font-size:1.6rem;font-weight:900">50</div>
+        </div>
+        <div class="cm-cell cm-fn" data-key="fn" onclick="cmClick('fn')" oncontextmenu="cmRClick(event,'fn')">
+          <div style="font-size:.68rem;color:var(--muted)">FN 假負例</div>
+          <div id="v-fn" style="font-size:1.6rem;font-weight:900">10</div>
+        </div>
+        <div class="cm-cell cm-hdr">實際負例</div>
+        <div class="cm-cell cm-fp" data-key="fp" onclick="cmClick('fp')" oncontextmenu="cmRClick(event,'fp')">
+          <div style="font-size:.68rem;color:var(--muted)">FP 假正例</div>
+          <div id="v-fp" style="font-size:1.6rem;font-weight:900">5</div>
+        </div>
+        <div class="cm-cell cm-tn" data-key="tn" onclick="cmClick('tn')" oncontextmenu="cmRClick(event,'tn')">
+          <div style="font-size:.68rem;color:var(--muted)">TN 真負例</div>
+          <div id="v-tn" style="font-size:1.6rem;font-weight:900">35</div>
+        </div>
+      </div>
+      <p style="color:#555;font-size:.72rem;text-align:center;margin-top:4px;">左鍵 +5 · 右鍵 -5</p>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-val" id="m-acc" style="color:var(--accent)">85.0%</div>
+          <div class="metric-lbl">Accuracy</div>
+          <div class="metric-fml">(TP+TN)/N</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="m-prec" style="color:var(--accent2)">90.9%</div>
+          <div class="metric-lbl">Precision 精確率</div>
+          <div class="metric-fml">TP/(TP+FP)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="m-rec" style="color:var(--yellow)">83.3%</div>
+          <div class="metric-lbl">Recall 召回率</div>
+          <div class="metric-fml">TP/(TP+FN)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="m-f1" style="color:var(--pink)">87.0%</div>
+          <div class="metric-lbl">F1 Score</div>
+          <div class="metric-fml">2·P·R/(P+R)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula" style="margin-top:16px;">
+    <span class="cm">// Precision vs Recall 的權衡（考試情境題）</span><br>
+    <span class="cm">// 癌症篩檢 → 最大化 Recall（寧可誤報，不能漏診）→ FN 代價高</span><br>
+    <span class="cm">// 垃圾郵件 → 最大化 Precision（寧可漏掉垃圾，不誤判正常信）→ FP 代價高</span><br>
+    <span class="cm">// 兩者均衡 → 使用 F1 Score（調和平均，不受多數類影響）</span>
+  </div>
+  <div class="warn-box">📌 <strong>不平衡資料集</strong>（如詐欺偵測、罕見疾病）應使用 <strong>F1 Score 或 AUC-ROC</strong>，而非 Accuracy——因為全猜多數類即可獲得高 Accuracy</div>
+</div>
+
+<!-- ══ 7. ROC/AUC ══ -->
+<div class="sec-title reveal">📈 ROC 曲線 與 AUC</div>
+<div class="panel reveal">
+  <div class="panel-title">不同決策閾值下分類效能的全貌視覺化</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">ROC 曲線的 X 軸是<strong style="color:var(--text)">假正例率（FPR）</strong>，Y 軸是<strong style="color:var(--text)">真正例率（TPR = Recall）</strong>。曲線越靠近左上角、AUC 越接近 1.0，模型越好。</p>
+
+  <div class="formula">
+    <span class="cm">// 兩軸定義</span><br>
+    <span class="fn">TPR</span> = <span class="fn">Recall</span> = <span class="hl">TP</span>/(<span class="hl">TP</span>+<span class="vr">FN</span>)&nbsp;&nbsp;<span class="cm">// Y 軸</span><br>
+    <span class="fn">FPR</span> = <span class="vr">FP</span>/(<span class="vr">FP</span>+<span class="hl">TN</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// X 軸</span><br><br>
+    <span class="cm">// AUC 解讀（Area Under Curve）</span><br>
+    AUC = <span class="hl">1.0</span>&nbsp;&nbsp;<span class="cm">// 完美分類器</span><br>
+    AUC = <span class="hl">0.5</span>&nbsp;&nbsp;<span class="cm">// 隨機猜測（對角線）</span><br>
+    AUC ≥ <span class="hl">0.8</span>&nbsp;&nbsp;<span class="cm">// 良好模型</span>
+  </div>
+
+  <div class="c3d">
+    <canvas id="roc-canvas" height="280"></canvas>
+    <div class="ctrl">
+      <button class="ctrl-btn" onclick="rocSet('perfect',this)">完美 (1.0)</button>
+      <button class="ctrl-btn on" onclick="rocSet('good',this)">良好 (0.85)</button>
+      <button class="ctrl-btn" onclick="rocSet('ok',this)">一般 (0.70)</button>
+      <button class="ctrl-btn" onclick="rocSet('random',this)">隨機 (0.50)</button>
+    </div>
+    <div class="c3d-lbl" id="roc-lbl">當前模型 AUC = 0.85 · 陰影面積即為 AUC · 越靠近左上角越好</div>
+  </div>
+</div>
+
+<!-- ══ 8. 仿真考題 ══ -->
+<div class="sec-title reveal">🎯 仿真考題（8 題）</div>
+<div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+<div id="quiz" class="reveal"></div>
+
+</div>
+
+<footer>iPAS AI 應用規劃師中級考試學習站 · 內容依據官方評鑑範圍整理 · 實際考試以 iPAS 官網公告為準</footer>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── Reveal ── */
+const obs = new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('vis')),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── Score ── */
+let score=0; const answered=new Set();
+function addScore(correct,total){
+  if(correct)score++;
+  document.getElementById('score').textContent=score;
+  document.getElementById('total').textContent=total;
+  document.getElementById('pbar').style.width=(answered.size/total*100)+'%';
+}
+
+/* ══ Confusion Matrix ══ */
+const cm={tp:50,fn:10,fp:5,tn:35};
+function cmClick(k){cm[k]=Math.max(0,cm[k]+5);cmRefresh();}
+function cmRClick(e,k){e.preventDefault();cm[k]=Math.max(0,cm[k]-5);cmRefresh();}
+function cmRefresh(){
+  ['tp','fn','fp','tn'].forEach(k=>document.getElementById('v-'+k).textContent=cm[k]);
+  const tot=cm.tp+cm.fn+cm.fp+cm.tn; if(!tot)return;
+  const acc=(cm.tp+cm.tn)/tot*100;
+  const prec=cm.tp+cm.fp?cm.tp/(cm.tp+cm.fp)*100:0;
+  const rec=cm.tp+cm.fn?cm.tp/(cm.tp+cm.fn)*100:0;
+  const f1=prec+rec?2*prec*rec/(prec+rec):0;
+  document.getElementById('m-acc').textContent=acc.toFixed(1)+'%';
+  document.getElementById('m-prec').textContent=prec.toFixed(1)+'%';
+  document.getElementById('m-rec').textContent=rec.toFixed(1)+'%';
+  document.getElementById('m-f1').textContent=f1.toFixed(1)+'%';
+}
+
+/* ══ Three.js helpers ══ */
+function makeRenderer(canvasId,h){
+  const canvas=document.getElementById(canvasId);
+  const w=canvas.parentElement.clientWidth-24;
+  canvas.width=w; canvas.height=h;
+  const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  r.setSize(w,h); r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setClearColor(0x0a0c14,1); return r;
+}
+function addDrag(canvas,rotRef){
+  let drag=false,lx=0,ly=0;
+  canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;});
+  canvas.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('touchend',()=>drag=false);
+  canvas.addEventListener('mousemove',e=>{if(!drag)return;rotRef.y+=(e.clientX-lx)*.009;rotRef.x+=(e.clientY-ly)*.009;lx=e.clientX;ly=e.clientY;});
+  canvas.addEventListener('touchmove',e=>{if(!drag)return;rotRef.y+=(e.touches[0].clientX-lx)*.009;rotRef.x+=(e.touches[0].clientY-ly)*.009;lx=e.touches[0].clientX;ly=e.touches[0].clientY;},{passive:true});
+}
+function camPos(camera,rot,radius){
+  camera.position.x=radius*Math.sin(rot.y)*Math.cos(rot.x);
+  camera.position.y=radius*Math.sin(rot.x);
+  camera.position.z=radius*Math.cos(rot.y)*Math.cos(rot.x);
+  camera.lookAt(0,0,0);
+}
+
+/* ══ SVM Scene ══ */
+(()=>{
+  if(typeof THREE==='undefined')return;
+  const renderer=makeRenderer('svm-canvas',360);
+  const canvas=document.getElementById('svm-canvas');
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,canvas.width/360,.1,100);
+  const rot={x:.3,y:0};
+  addDrag(canvas,rot);
+  scene.add(new THREE.AxesHelper(3));
+
+  // Class A (blue)
+  const sA=[[1.2,1,.5],[1.5,.8,-.3],[.9,1.4,.2],[1.1,.5,1],[1.8,.3,.4],[2,.8,.1],[1.3,1.5,-.5],[.7,1.8,.6],[1.6,.2,.8],[1,.9,1.2],[2.2,.5,-.2],[1.4,1.2,-.8]];
+  // Class B (pink)
+  const sB=[[-1.2,-1,-.5],[-1.5,-.8,.3],[-.9,-1.4,-.2],[-1.1,-.5,-1],[-1.8,-.3,-.4],[-2,-.8,-.1],[-1.3,-1.5,.5],[-.7,-1.8,-.6],[-1.6,-.2,-.8],[-1,-.9,-1.2],[-2.2,-.5,.2],[-1.4,-1.2,.8]];
+
+  sA.forEach(p=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.1),new THREE.MeshBasicMaterial({color:0x00D4FF}));
+    m.position.set(...p); scene.add(m);
+  });
+  sB.forEach(p=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.1),new THREE.MeshBasicMaterial({color:0xFF6B9D}));
+    m.position.set(...p); scene.add(m);
+  });
+
+  // Hyperplane (x+y+z=0 normal direction)
+  const planeM=new THREE.MeshBasicMaterial({color:0xFFD166,transparent:true,opacity:.15,side:THREE.DoubleSide});
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(7,7),planeM);
+  plane.setRotationFromEuler(new THREE.Euler(Math.PI/4,0,Math.PI/4));
+  scene.add(plane);
+
+  // Margin planes
+  const mMat1=new THREE.MeshBasicMaterial({color:0x00D4FF,transparent:true,opacity:.07,side:THREE.DoubleSide});
+  const mMat2=new THREE.MeshBasicMaterial({color:0xFF6B9D,transparent:true,opacity:.07,side:THREE.DoubleSide});
+  const mp1=new THREE.Mesh(new THREE.PlaneGeometry(7,7),mMat1);
+  const mp2=new THREE.Mesh(new THREE.PlaneGeometry(7,7),mMat2);
+  mp1.setRotationFromEuler(new THREE.Euler(Math.PI/4,0,Math.PI/4));
+  mp2.setRotationFromEuler(new THREE.Euler(Math.PI/4,0,Math.PI/4));
+  const n=new THREE.Vector3(1,1,0).normalize();
+  mp1.position.copy(n.clone().multiplyScalar(.9));
+  mp2.position.copy(n.clone().multiplyScalar(-.9));
+  scene.add(mp1); scene.add(mp2);
+
+  // Support vectors (orange diamonds)
+  const svM=new THREE.MeshBasicMaterial({color:0xFF9B42});
+  [[.6,.4,.3],[-.6,-.4,-.3],[.3,.8,-.2]].forEach(p=>{
+    const m=new THREE.Mesh(new THREE.OctahedronGeometry(.18),svM.clone());
+    m.position.set(...p); scene.add(m);
+  });
+
+  let showMargin=true;
+  window.svmKernel=(k,btn)=>{
+    document.querySelectorAll('#svm-canvas~.ctrl .ctrl-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('svm-lbl').textContent=k==='rbf'?'RBF 核：映射至高維空間後線性分離，等效於原空間非線性決策邊界':'線性核：在原始特徵空間找到最大間隔超平面';
+  };
+  window.svmToggleMargin=(btn)=>{
+    showMargin=!showMargin;
+    mp1.visible=showMargin; mp2.visible=showMargin;
+    btn.textContent=showMargin?'隱藏 Margin':'顯示 Margin';
+  };
+
+  (function a(){
+    requestAnimationFrame(a);
+    rot.y+=.003;
+    camPos(camera,rot,7);
+    renderer.render(scene,camera);
+  })();
+})();
+
+/* ══ K-Means Scene ══ */
+(()=>{
+  if(typeof THREE==='undefined')return;
+  const renderer=makeRenderer('kmeans-canvas',400);
+  const canvas=document.getElementById('kmeans-canvas');
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,canvas.width/400,.1,100);
+  const rot={x:.4,y:0};
+  addDrag(canvas,rot);
+
+  const COLORS=[0x00D4FF,0x00FFB2,0xFF6B9D,0xFFD166,0xFF9B42];
+  let K=3,pts=[],ptMeshes=[],ctMeshes=[],assign=[],cents=[],stepN=0,running=false;
+
+  // Pre-cluster data
+  const clusters=[[-1.5,-1,.5],[1.5,-.5,-.5],[0,1.5,.3]];
+  clusters.forEach(c=>{
+    for(let i=0;i<20;i++)pts.push([c[0]+(Math.random()-.5)*1.6,c[1]+(Math.random()-.5)*1.6,c[2]+(Math.random()-.5)*1.6]);
+  });
+
+  function init(){
+    scene.clear();
+    scene.add(new THREE.AxesHelper(3.5));
+    ptMeshes=[]; ctMeshes=[];
+    cents=Array.from({length:K},()=>pts[Math.floor(Math.random()*pts.length)].slice());
+    assign=new Array(pts.length).fill(0);
+    pts.forEach(p=>{
+      const m=new THREE.Mesh(new THREE.SphereGeometry(.1),new THREE.MeshBasicMaterial({color:0x334455}));
+      m.position.set(...p); scene.add(m); ptMeshes.push(m);
+    });
+    cents.forEach((c,k)=>{
+      const m=new THREE.Mesh(new THREE.OctahedronGeometry(.22),new THREE.MeshBasicMaterial({color:COLORS[k]}));
+      m.position.set(...c); scene.add(m); ctMeshes.push(m);
+    });
+    stepN=0;
+    document.getElementById('km-lbl').textContent=`已初始化 K=${K} 個聚類中心（菱形）· 點擊「執行一步」開始`;
+    document.getElementById('km-k-btn').textContent=`K = ${K}`;
+  }
+
+  function step(){
+    pts.forEach((p,i)=>{
+      let best=0,minD=Infinity;
+      cents.forEach((c,k)=>{const d=Math.hypot(p[0]-c[0],p[1]-c[1],p[2]-c[2]);if(d<minD){minD=d;best=k;}});
+      assign[i]=best;
+      ptMeshes[i].material.color.setHex(COLORS[best%COLORS.length]);
+    });
+    cents.forEach((c,k)=>{
+      const g=pts.filter((_,i)=>assign[i]===k);
+      if(g.length){c[0]=g.reduce((s,p)=>s+p[0],0)/g.length;c[1]=g.reduce((s,p)=>s+p[1],0)/g.length;c[2]=g.reduce((s,p)=>s+p[2],0)/g.length;}
+      ctMeshes[k].position.set(...c);
+    });
+    stepN++;
+    document.getElementById('km-lbl').textContent=`第 ${stepN} 步 · 聚類中心向組內均值收斂`;
+  }
+
+  window.kmReset=()=>{running=false;init();};
+  window.kmStep=step;
+  window.kmAuto=async()=>{
+    if(running)return; running=true;
+    for(let i=0;i<12&&running;i++){step();await new Promise(r=>setTimeout(r,280));}
+    running=false;
+    document.getElementById('km-lbl').textContent='✅ 收斂完成！不同顏色代表不同聚類';
+  };
+  window.kmChangeK=(d)=>{K=Math.max(2,Math.min(5,K+d));running=false;init();};
+
+  init();
+
+  (function a(){
+    requestAnimationFrame(a);
+    rot.y+=.004;
+    camPos(camera,rot,8);
+    renderer.render(scene,camera);
+  })();
+})();
+
+/* ══ PCA Canvas ══ */
+(()=>{
+  const canvas=document.getElementById('pca-canvas');
+  function resize(){
+    canvas.width=canvas.parentElement.clientWidth-24;
+    canvas.height=300;
+    draw();
+  }
+  const ctx=canvas.getContext('2d');
+  let mode='projected';
+
+  // Generate correlated data
+  const data=[];
+  for(let i=0;i<65;i++){
+    const t=(Math.random()-.5)*4,n=(Math.random()-.5)*.55;
+    data.push({x:t*1.4+n*.25,y:t+n});
+  }
+  const pc1={x:.812,y:.583}, pc2={x:-.583,y:.812};
+
+  function tp(x,y){const w=canvas.width;return{cx:w/2+x*52,cy:150-y*52};}
+
+  function draw(){
+    const w=canvas.width; if(!w)return;
+    ctx.clearRect(0,0,w,300);
+    ctx.fillStyle='#0a0c14'; ctx.fillRect(0,0,w,300);
+
+    // Grid
+    ctx.strokeStyle='rgba(46,50,80,.35)'; ctx.lineWidth=1;
+    for(let i=-7;i<=7;i++){
+      const {cx}=tp(i,0),{cy:y1}=tp(0,6),{cy:y2}=tp(0,-6);
+      ctx.beginPath();ctx.moveTo(cx,y1);ctx.lineTo(cx,y2);ctx.stroke();
+    }
+    for(let i=-6;i<=6;i++){
+      const {cy,cx:x1}=tp(-7,i),{cx:x2}=tp(7,i);
+      ctx.beginPath();ctx.moveTo(x1,cy);ctx.lineTo(x2,cy);ctx.stroke();
+    }
+    // Axes
+    ctx.strokeStyle='#2E3250'; ctx.lineWidth=1.5;
+    const o=tp(0,0);
+    ctx.beginPath();ctx.moveTo(0,o.cy);ctx.lineTo(w,o.cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(o.cx,0);ctx.lineTo(o.cx,300);ctx.stroke();
+
+    if(mode==='axes'||mode==='projected'){
+      const {cx:ax1,cy:ay1}=tp(-pc1.x*7,-pc1.y*7),{cx:ax2,cy:ay2}=tp(pc1.x*7,pc1.y*7);
+      ctx.strokeStyle='#00D4FF'; ctx.lineWidth=2.5; ctx.setLineDash([7,4]);
+      ctx.beginPath();ctx.moveTo(ax1,ay1);ctx.lineTo(ax2,ay2);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#00D4FF'; ctx.font='bold 12px JetBrains Mono';
+      ctx.fillText('PC1 (82%)',ax2-68,ay2-8);
+    }
+    if(mode==='axes'){
+      const {cx:bx1,cy:by1}=tp(-pc2.x*4,-pc2.y*4),{cx:bx2,cy:by2}=tp(pc2.x*4,pc2.y*4);
+      ctx.strokeStyle='#00FFB2'; ctx.lineWidth=2; ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(bx1,by1);ctx.lineTo(bx2,by2);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#00FFB2'; ctx.font='bold 11px JetBrains Mono';
+      ctx.fillText('PC2 (18%)',bx2+6,by2);
+    }
+
+    data.forEach(p=>{
+      const {cx,cy}=tp(p.x,p.y);
+      if(mode==='projected'){
+        const proj=p.x*pc1.x+p.y*pc1.y;
+        const {cx:pcx,cy:pcy}=tp(proj*pc1.x,proj*pc1.y);
+        ctx.strokeStyle='rgba(0,212,255,.18)'; ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(pcx,pcy);ctx.stroke();
+        ctx.fillStyle='rgba(255,107,157,.55)';
+        ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#00D4FF';
+        ctx.beginPath();ctx.arc(pcx,pcy,5,0,Math.PI*2);ctx.fill();
+      }else{
+        ctx.fillStyle='rgba(0,212,255,.75)';
+        ctx.beginPath();ctx.arc(cx,cy,4.5,0,Math.PI*2);ctx.fill();
+      }
+    });
+
+    if(mode==='projected'){
+      ctx.fillStyle='#FF6B9D';ctx.beginPath();ctx.arc(18,18,5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#E8EAF6';ctx.font='11px Calibri';ctx.fillText('原始點',28,23);
+      ctx.fillStyle='#00D4FF';ctx.beginPath();ctx.arc(88,18,5,0,Math.PI*2);ctx.fill();
+      ctx.fillText('PC1投影點',98,23);
+    }
+  }
+
+  window.pcaMode=(m,btn)=>{
+    mode=m;
+    document.querySelectorAll('#pca-canvas~.ctrl .ctrl-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    const lbls={original:'原始 2D 資料分佈 · 兩個特徵有明顯相關性（沿斜線分佈）',axes:'PC1 指向最大方差方向 · PC1⊥PC2 · 兩者合計解釋 100% 變異',projected:'降維結果：2D→1D · 保留 82% 資訊 · 每個原始點投影到 PC1 軸上'};
+    document.getElementById('pca-lbl').textContent=lbls[m];
+    draw();
+  };
+  window.addEventListener('resize',resize);
+  resize();
+})();
+
+/* ══ ROC Curve ══ */
+(()=>{
+  const canvas=document.getElementById('roc-canvas');
+  const ctx=canvas.getContext('2d');
+  const PAD={l:54,r:24,t:20,b:46};
+  let curModel='good';
+  const models={
+    perfect:{auc:1.0,color:'#00FFB2',lbl:'完美分類器 AUC = 1.00'},
+    good:{auc:.85,color:'#00D4FF',lbl:'良好模型 AUC = 0.85'},
+    ok:{auc:.70,color:'#FFD166',lbl:'一般模型 AUC = 0.70'},
+    random:{auc:.5,color:'#8892B0',lbl:'隨機猜測 AUC = 0.50'}
+  };
+
+  function rocPts(auc){
+    if(auc>=.999)return[[0,0],[0,1],[1,1]];
+    if(auc<=.5)return Array.from({length:21},(_,i)=>[i/20,i/20]);
+    return[[0,0],...Array.from({length:50},(_,i)=>{const x=(i+1)/50,k=Math.log(.5)/Math.log(auc);return[x,Math.min(1,Math.pow(x,1/k))];}),[1,1]];
+  }
+
+  function draw(){
+    const w=canvas.width,h=canvas.height;
+    const cw=w-PAD.l-PAD.r,ch=h-PAD.t-PAD.b;
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle='#0a0c14';ctx.fillRect(0,0,w,h);
+
+    // Grid
+    ctx.strokeStyle='rgba(46,50,80,.5)';ctx.lineWidth=1;
+    for(let i=0;i<=10;i++){
+      ctx.beginPath();ctx.moveTo(PAD.l+i/10*cw,PAD.t);ctx.lineTo(PAD.l+i/10*cw,PAD.t+ch);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(PAD.l,PAD.t+i/10*ch);ctx.lineTo(PAD.l+cw,PAD.t+i/10*ch);ctx.stroke();
+    }
+    // Diagonal
+    ctx.strokeStyle='rgba(136,146,176,.4)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(PAD.l,PAD.t+ch);ctx.lineTo(PAD.l+cw,PAD.t);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Other models (dim)
+    Object.entries(models).forEach(([k,m])=>{
+      if(k===curModel)return;
+      ctx.strokeStyle='rgba(136,146,176,.2)';ctx.lineWidth=1;
+      const pts=rocPts(m.auc);
+      ctx.beginPath();pts.forEach(([x,y],i)=>{const px=PAD.l+x*cw,py=PAD.t+(1-y)*ch;i?ctx.lineTo(px,py):ctx.moveTo(px,py);});
+      ctx.stroke();
+    });
+
+    // Current model
+    const m=models[curModel];
+    const pts=rocPts(m.auc);
+    // AUC fill
+    ctx.fillStyle=m.color+'18';
+    ctx.beginPath();
+    ctx.moveTo(PAD.l,PAD.t+ch);
+    pts.forEach(([x,y])=>ctx.lineTo(PAD.l+x*cw,PAD.t+(1-y)*ch));
+    ctx.lineTo(PAD.l+cw,PAD.t+ch);
+    ctx.closePath();ctx.fill();
+    // Curve
+    ctx.strokeStyle=m.color;ctx.lineWidth=3;ctx.shadowColor=m.color;ctx.shadowBlur=8;
+    ctx.beginPath();pts.forEach(([x,y],i)=>{const px=PAD.l+x*cw,py=PAD.t+(1-y)*ch;i?ctx.lineTo(px,py):ctx.moveTo(px,py);});
+    ctx.stroke();ctx.shadowBlur=0;
+
+    // Labels
+    ctx.fillStyle='#8892B0';ctx.font='11px Calibri';
+    ctx.fillText('FPR →',PAD.l+cw/2-18,h-6);
+    ctx.save();ctx.translate(14,PAD.t+ch/2+30);ctx.rotate(-Math.PI/2);
+    ctx.fillText('TPR (Recall) →',0,0);ctx.restore();
+    for(let i=0;i<=5;i++){
+      ctx.fillStyle='#8892B0';ctx.font='10px Calibri';
+      ctx.fillText((i/5).toFixed(1),PAD.l+i/5*cw-6,PAD.t+ch+16);
+      ctx.fillText((i/5).toFixed(1),PAD.l-30,PAD.t+(1-i/5)*ch+4);
+    }
+    ctx.fillStyle=m.color;ctx.font='bold 13px JetBrains Mono';
+    ctx.fillText(`AUC = ${m.auc.toFixed(2)}`,PAD.l+8,PAD.t+20);
+  }
+
+  window.rocSet=(k,btn)=>{
+    curModel=k;
+    document.querySelectorAll('#roc-canvas~.ctrl .ctrl-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('roc-lbl').textContent=models[k].lbl+' · 陰影面積即為 AUC';
+    draw();
+  };
+
+  function resize(){
+    canvas.width=canvas.parentElement.clientWidth-24;
+    canvas.height=280;
+    draw();
+  }
+  window.addEventListener('resize',resize);
+  resize();
+})();
+
+/* ══ Quiz ══ */
+(()=>{
+  const qs=[
+    {
+      s:'1. 在嚴重不平衡的資料集（如詐欺偵測，正例僅佔 1%）中，下列哪個評估指標最能反映模型的真實效能？',
+      o:['A. Accuracy（準確率）','B. F1 Score','C. Mean Squared Error','D. R²（決定係數）'],
+      a:1,
+      e:'不平衡資料中，Accuracy 會因多數類主導而虛高（全猜負例可達 99%）。F1 Score 是 Precision 與 Recall 的調和平均，同時考量誤報（FP）和漏報（FN），適合不平衡情境。MSE 和 R² 屬於迴歸指標。'
+    },
+    {
+      s:'2. SVM 中的「支援向量（Support Vectors）」是指哪些樣本點？',
+      o:['A. 所有訓練資料點','B. 距離超平面最遠的點','C. 距離超平面最近、決定邊界位置的點','D. 被預測錯誤的點'],
+      a:2,
+      e:'支援向量是訓練集中距離決策超平面最近的樣本點，正是這些點決定了最大間隔超平面的位置。SVM 的目標就是最大化支援向量到超平面的距離（間隔/Margin）。移除非支援向量不影響決策邊界。'
+    },
+    {
+      s:'3. K-Means 聚類最主要的缺點是什麼？',
+      o:['A. 計算複雜度過高，無法用於大資料','B. 需預先指定 K 值，且對初始中心位置敏感','C. 只能用於連續特徵','D. 不能處理超過 3 維的資料'],
+      a:1,
+      e:'K-Means 核心缺點：①需預先指定 K 值（Elbow Method 輔助選擇）②對初始聚類中心敏感（K-Means++ 改善）③假設群組呈球形 ④對離群值敏感。DBSCAN 可解決②③④問題。'
+    },
+    {
+      s:'4. PCA（主成分分析）在降維前，通常必須先執行哪個預處理步驟？',
+      o:['A. One-Hot Encoding','B. Standardization（均值=0，標準差=1）','C. Min-Max 歸一化到 [0,1]','D. Label Encoding'],
+      a:1,
+      e:'PCA 對特徵尺度極度敏感。若不先 Standardization，方差大的特徵（如金額萬元 vs 年齡）會主導主成分方向，結果偏斜。Standardization 使每個特徵均值=0、標準差=1，讓 PCA 找到資料真正的最大方差方向。'
+    },
+    {
+      s:'5. 關於 ROC 曲線與 AUC，下列何者正確？',
+      o:['A. AUC = 0.5 代表完美分類器','B. ROC 的 X 軸是 Precision，Y 軸是 Recall','C. AUC 越接近 1.0，模型分類能力越好','D. ROC 曲線只適用於多分類問題'],
+      a:2,
+      e:'ROC 的 X 軸是 FPR（假正例率），Y 軸是 TPR（=Recall）。AUC=0.5 表示隨機猜測（對角線）；AUC=1.0 表示完美分類。ROC-AUC 主要用於二元分類（可延伸至多分類但較複雜）。'
+    },
+    {
+      s:'6. 決策樹使用基尼不純度（Gini Impurity）進行分割的目的是？',
+      o:['A. 計算模型過擬合程度','B. 衡量節點的混雜程度，選出使不純度下降最多的分割特徵','C. 計算葉節點的預測誤差','D. 決定樹的最大深度'],
+      a:1,
+      e:'Gini Impurity 衡量節點中類別混合的程度。Gini=0 表示完全純粹（單一類別），Gini=0.5 最不純。決策樹在每個節點枚舉所有特徵，選擇使分割後加權 Gini 下降最多的特徵（= 資訊增益最大），遞迴建樹。'
+    },
+    {
+      s:'7. 在醫療癌症篩檢場景中（寧可誤報也不要漏診），應優先最大化哪個指標？',
+      o:['A. Accuracy','B. Precision（精確率）','C. Recall（召回率）','D. Specificity（特異性）'],
+      a:2,
+      e:'Recall = TP/(TP+FN)，衡量實際陽性中被正確偵測的比例。漏診（FN）代價在醫療中遠高於誤報（FP），因此應最大化 Recall。即使 Precision 下降（誤報增加），患者可再做確認性檢測，但漏診可能延誤治療。'
+    },
+    {
+      s:'8. 下列關於監督式與非監督式學習的描述，何者正確？',
+      o:['A. K-Means 是監督式學習算法','B. SVM 不需要標籤即可訓練','C. PCA 是非監督式的降維方法，不需要標籤','D. 隨機森林屬於非監督式集成方法'],
+      a:2,
+      e:'PCA 分析資料的協方差矩陣找主成分，完全不需要標籤，是典型的非監督式降維方法。K-Means 是非監督式聚類；SVM 必須有標籤（y=+1/-1）訓練；隨機森林是監督式集成算法（Bagging + 決策樹）。'
+    }
+  ];
+
+  const container=document.getElementById('quiz');
+  const N=qs.length;
+  qs.forEach((q,qi)=>{
+    const div=document.createElement('div');
+    div.className='q-item reveal';
+    div.innerHTML=`
+      <div class="q-num">第 ${qi+1} 題 / 共 ${N} 題</div>
+      <div class="q-stem">${q.s}</div>
+      <div class="q-opts">
+        ${q.o.map((o,oi)=>`<div class="q-opt" data-qi="${qi}" data-oi="${oi}"><span class="opt-lbl">${['A','B','C','D'][oi]}</span><span>${o.substring(3)}</span></div>`).join('')}
+      </div>
+      <div class="q-exp" id="exp-${qi}">${q.e}</div>
+    `;
+    container.appendChild(div);
+    obs.observe(div);
+  });
+
+  document.getElementById('quiz').addEventListener('click',e=>{
+    const opt=e.target.closest('.q-opt');
+    if(!opt)return;
+    const qi=+opt.dataset.qi, oi=+opt.dataset.oi;
+    if(answered.has(qi))return;
+    answered.add(qi);
+    const all=document.querySelectorAll(`[data-qi="${qi}"]`);
+    all.forEach((o,i)=>{
+      if(i===qs[qi].a)o.classList.add('correct');
+      else if(i===oi)o.classList.add('wrong');
+      o.style.pointerEvents='none';
+    });
+    document.getElementById(`exp-${qi}`).classList.add('show');
+    addScore(oi===qs[qi].a,N);
+  });
+})();
+</script>
+</body>
+</html>

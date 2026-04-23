@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 應用規劃師 · iPAS 中級考試學習站</title>
+<style>
+/* ── 字型設定 ── */
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--border:#2E3250;
+  --text:#E8EAF6;--muted:#8892B0;
+  --accent:#7C6FFF;--accent2:#00D4FF;--green:#00FFB2;
+  --yellow:#FFD166;--orange:#FF9B42;--pink:#FF6B9D;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.hero{
+  padding:70px 20px 50px;text-align:center;
+  background:linear-gradient(160deg,#0F1117,#131928,#0F1117);
+  position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(124,111,255,.1),transparent);}
+.badge{display:inline-block;margin-bottom:16px;padding:5px 18px;border-radius:999px;
+  background:rgba(124,111,255,.12);border:1px solid var(--accent);
+  font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.h-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:clamp(1.8rem,5vw,3rem);
+  background:linear-gradient(135deg,var(--accent2),var(--accent),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;}
+.h-sub{color:var(--muted);font-size:.98rem;max-width:520px;margin:0 auto;}
+
+.wrap{max-width:960px;margin:0 auto;padding:20px 20px 80px;}
+
+.exam-info{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;margin:28px 0;
+}
+.ei-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-align:center;
+}
+.ei-val{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.6rem;color:var(--accent2);margin-bottom:4px;}
+.ei-label{font-size:.78rem;color:var(--muted);font-weight:700;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:8px;}
+
+.topic-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:24px 22px;text-decoration:none;color:inherit;display:block;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.topic-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.4);}
+.topic-card.available:hover{border-color:var(--accent);}
+.topic-card.coming{opacity:.5;cursor:default;pointer-events:none;}
+.tc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.tc-icon{font-size:2.6rem;}
+.tc-status{font-size:.7rem;font-weight:900;padding:3px 10px;border-radius:999px;}
+.tc-status.open{background:rgba(0,255,178,.12);border:1px solid var(--green);color:var(--green);}
+.tc-status.soon{background:rgba(100,100,100,.15);border:1px solid #555;color:#888;}
+.tc-subject{font-size:.72rem;font-weight:900;color:var(--muted);margin-bottom:6px;}
+.tc-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.25rem;color:var(--text);margin-bottom:6px;}
+.tc-desc{font-size:.83rem;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.tc-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tc-tag{font-size:.68rem;font-weight:900;padding:2px 8px;border-radius:999px;border:1px solid;}
+
+.sec-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.35rem;color:var(--text);
+  margin:36px 0 14px;display:flex;align-items:center;gap:8px;}
+.sec-title::before{content:'';width:3px;height:20px;border-radius:2px;
+  background:linear-gradient(var(--accent),var(--accent2));}
+
+.tip-box{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.25);
+  border-radius:10px;padding:14px 16px;font-size:.87rem;color:var(--muted);
+  line-height:1.65;margin-bottom:14px;}
+.tip-box strong{color:var(--accent2);}
+
+footer{text-align:center;padding:20px;font-size:.75rem;color:rgba(232,234,246,.25);}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">iPAS AI 應用規劃師 · 中級考試</div>
+  <div class="h-title">AI 中級考試學習站</div>
+  <div class="h-sub">科目一 · 科目二 · 科目三 — 系統化學習，精準備考</div>
+</div>
+
+<div class="wrap">
+
+  <!-- 考試資訊 -->
+  <div class="exam-info">
+    <div class="ei-card">
+      <div class="ei-val">3 科</div>
+      <div class="ei-label">考試科目</div>
+    </div>
+    <div class="ei-card">
+      <div class="ei-val">150 題</div>
+      <div class="ei-label">總題數（每科50題）</div>
+    </div>
+    <div class="ei-card">
+      <div class="ei-val">70 分</div>
+      <div class="ei-label">及格標準</div>
+    </div>
+    <div class="ei-card">
+      <div class="ei-val">75 分鐘</div>
+      <div class="ei-label">每科考試時間</div>
+    </div>
+  </div>
+
+  <!-- ── 科目一 ── -->
+  <div class="sec-title">🤖 科目一：人工智慧技術應用規劃（L21）</div>
+  <div class="grid">
+
+    <!-- 生成式AI -->
+    <a href="generative-ai.html" class="topic-card available" style="border-top:3px solid #7C6FFF">
+      <div class="tc-top"><span class="tc-icon">✨</span><span class="tc-status open">✅ 已開放</span></div>
+      <div class="tc-subject">科目一 L21103 · AI 相關技術應用</div>
+      <div class="tc-title">生成式 AI 與 LLM</div>
+      <div class="tc-desc">Transformer 架構、Self-Attention 3D視覺化、RAG 檢索增強生成、Prompt Engineering技巧、GAN/VAE/Diffusion模型，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#7C6FFF;border-color:#7C6FFF">RAG</span>
+        <span class="tc-tag" style="color:#00D4FF;border-color:#00D4FF">Attention 3D</span>
+        <span class="tc-tag" style="color:#FF6B9D;border-color:#FF6B9D">Prompt</span>
+      </div>
+    </a>
+
+    <!-- NLP -->
+    <a href="nlp.html" class="topic-card available" style="border-top:3px solid #00D4FF">
+      <div class="tc-top"><span class="tc-icon">💬</span><span class="tc-status open">✅ 已開放</span></div>
+      <div class="tc-subject">科目一 L21101 · AI 相關技術應用</div>
+      <div class="tc-title">自然語言處理（NLP）</div>
+      <div class="tc-desc">詞嵌入（Word2Vec/GloVe/TF-IDF）、BERT雙向理解、GPT自迴歸生成、NER命名實體辨識、情感分析、機器翻譯，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#00D4FF;border-color:#00D4FF">Word2Vec</span>
+        <span class="tc-tag" style="color:#7C6FFF;border-color:#7C6FFF">BERT</span>
+        <span class="tc-tag" style="color:#00FFB2;border-color:#00FFB2">NER</span>
+      </div>
+    </a>
+
+    <!-- 電腦視覺 -->
+    <div class="topic-card coming" style="border-top:3px solid #FF6B9D">
+      <div class="tc-top"><span class="tc-icon">👁️</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目一 L21102 · AI 相關技術應用</div>
+      <div class="tc-title">電腦視覺（Computer Vision）</div>
+      <div class="tc-desc">CNN→ResNet→YOLO架構演進、影像分類/物件偵測/語義分割、Vision Transformer（ViT）、3D卷積核動畫，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">ResNet</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">YOLO</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">ViT</span>
+      </div>
+    </div>
+
+    <!-- 多模態 -->
+    <a href="multimodal.html" class="topic-card available" style="border-top:3px solid var(--accent)">
+      <div class="tc-top"><span class="tc-icon">🔗</span><span class="tc-status open">✅ 已開放</span></div>
+      <div class="tc-subject">科目一 L21104 · 科目三 L23</div>
+      <div class="tc-title">多模態模型</div>
+      <div class="tc-desc">Early/Late Fusion、CLIP 對比學習、Cross-Attention、CNN/Transformer 架構圖，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:var(--accent);border-color:var(--accent)">Early Fusion</span>
+        <span class="tc-tag" style="color:var(--accent2);border-color:var(--accent2)">CLIP</span>
+        <span class="tc-tag" style="color:var(--pink);border-color:var(--pink)">Transformer</span>
+      </div>
+    </a>
+
+    <!-- AI導入評估規劃 -->
+    <div class="topic-card coming" style="border-top:3px solid #FFD166">
+      <div class="tc-top"><span class="tc-icon">📋</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目一 L21201/202/203 · AI 導入評估規劃</div>
+      <div class="tc-title">AI 導入評估規劃與風險管理</div>
+      <div class="tc-desc">AI導入流程（評估→規劃→POC→部署）、數位成熟度評估、AI專案角色分工、偏見類型（歷史/標註/演算法）、GDPR/法規合規，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">風險矩陣</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">POC</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">GDPR</span>
+      </div>
+    </div>
+
+    <!-- AI系統部署 -->
+    <div class="topic-card coming" style="border-top:3px solid #FF6B9D">
+      <div class="tc-top"><span class="tc-icon">🚀</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目一 L21301/302 · AI 技術應用與系統部署</div>
+      <div class="tc-title">AI 系統集成與部署</div>
+      <div class="tc-desc">模型壓縮（剪枝/量化/知識蒸餾）、邊緣運算 vs 雲端、MLOps流水線、差分隱私、API集成策略，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">MLOps</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">量化 INT8</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">邊緣運算</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 科目三 ── -->
+  <div class="sec-title">📐 科目三：機器學習技術與應用（L23）</div>
+  <div class="grid">
+
+    <!-- 機器學習基礎數學 -->
+    <div class="topic-card coming" style="border-top:3px solid #9B5DE5">
+      <div class="tc-top"><span class="tc-icon">🔢</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目三 L231 · 機器學習基礎數學</div>
+      <div class="tc-title">機器學習基礎數學</div>
+      <div class="tc-desc">機率分佈（常態/指數/卡方/貝氏）、特徵值分解、SVD奇異值分解、梯度下降動態3D展示、Adam/Adagrad最佳化器，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">貝氏定理</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">SVD 3D</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">Adam</span>
+      </div>
+    </div>
+
+    <!-- 神經網路 -->
+    <a href="neural-network.html" class="topic-card available" style="border-top:3px solid var(--orange)">
+      <div class="tc-top"><span class="tc-icon">🧠</span><span class="tc-status open">✅ 已開放</span></div>
+      <div class="tc-subject">科目三 L23203 · 深度學習原理與框架</div>
+      <div class="tc-title">神經網路與深度學習</div>
+      <div class="tc-desc">前向傳播矩陣乘法、激活函數互動圖、反向傳播步驟、CNN架構、過擬合/正則化、Adagrad，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:var(--orange);border-color:var(--orange)">反向傳播</span>
+        <span class="tc-tag" style="color:var(--green);border-color:var(--green)">CNN</span>
+        <span class="tc-tag" style="color:var(--yellow);border-color:var(--yellow)">過擬合</span>
+      </div>
+    </a>
+
+    <!-- 監督/非監督 -->
+    <a href="supervised-unsupervised.html" class="topic-card available" style="border-top:3px solid var(--accent2)">
+      <div class="tc-top"><span class="tc-icon">📊</span><span class="tc-status open">✅ 已開放</span></div>
+      <div class="tc-subject">科目三 L23201/202 · 常見機器學習演算法</div>
+      <div class="tc-title">監督式 / 非監督式學習</div>
+      <div class="tc-desc">決策樹 Gini/Entropy、SVM 3D超平面、K-Means 3D動態聚類、PCA降維、混淆矩陣互動、ROC/AUC，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:var(--accent2);border-color:var(--accent2)">SVM 3D</span>
+        <span class="tc-tag" style="color:var(--green);border-color:var(--green)">K-Means</span>
+        <span class="tc-tag" style="color:var(--yellow);border-color:var(--yellow)">ROC/AUC</span>
+      </div>
+    </a>
+
+    <!-- 特徵工程 -->
+    <div class="topic-card coming" style="border-top:3px solid #00D4FF">
+      <div class="tc-top"><span class="tc-icon">⚙️</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目三 L232 建模 · 科目一 L21301</div>
+      <div class="tc-title">特徵工程與資料前處理</div>
+      <div class="tc-desc">缺失值處理（刪除/填補/KNN）、特徵縮放（Z-score/Min-Max/Robust）、One-Hot/Label/Target Encoding、資料增強、不平衡資料策略，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">One-Hot</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">Standardization</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">SMOTE</span>
+      </div>
+    </div>
+
+    <!-- 模型調校與集成學習 -->
+    <div class="topic-card coming" style="border-top:3px solid #FF9B42">
+      <div class="tc-top"><span class="tc-icon">🎛️</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目三 L232 建模 · 模型訓練評估與驗證</div>
+      <div class="tc-title">模型調校與集成學習</div>
+      <div class="tc-desc">Bias-Variance Tradeoff 3D展示、k-fold交叉驗證、L1/L2/Dropout正則化、Grid/Random Search超參數調校、Bagging/Boosting/XGBoost，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">XGBoost</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">k-fold</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">Dropout</span>
+      </div>
+    </div>
+
+    <!-- 機器學習治理 -->
+    <div class="topic-card coming" style="border-top:3px solid #FF6B9D">
+      <div class="tc-top"><span class="tc-icon">⚖️</span><span class="tc-status soon">🔜 即將開放</span></div>
+      <div class="tc-subject">科目三 L234 · 科目一 L21203</div>
+      <div class="tc-title">機器學習治理與 AI 倫理</div>
+      <div class="tc-desc">差分隱私（Differential Privacy）、資料匿名化技術、演算法偏見類型（歷史/標註/演算法）、公平性指標（Disparate Impact 80%原則）、GDPR合規，仿真考題8題</div>
+      <div class="tc-tags">
+        <span class="tc-tag" style="color:#555;border-color:#555">差分隱私</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">AI偏見</span>
+        <span class="tc-tag" style="color:#555;border-color:#555">GDPR</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 備考提示 -->
+  <div class="sec-title">💡 備考策略（科目一 + 科目三）</div>
+  <div class="tip-box">
+    <strong>科目一 高頻考點：</strong>BERT（雙向上下文）vs GPT（單向自迴歸）、CLIP（對比學習跨模態）、ResNet殘差連結、影像分割→醫療邊界、RAG解決LLM幻覺、Early Fusion vs Late Fusion容錯、AI導入POC驗證流程。
+  </div>
+  <div class="tip-box">
+    <strong>科目三 高頻考點：</strong>矩陣乘法（前向傳播）、Adagrad（稀疏資料累積梯度）、Standardization（標準差=1）、SVM支援向量=邊界最近點、K-Means需預設K值、不平衡資料→F1 Score、AUC越近1越好、k-fold交叉驗證減少切分偏差。
+  </div>
+  <div class="tip-box">
+    <strong>情境題關鍵字對應：</strong>即時監控→串流處理 · 低延遲部署→邊緣運算 · 容錯系統→Late Fusion · 高維資料壓縮→PCA · 癌症篩檢→最大化Recall · 詐欺偵測→F1 Score · 非線性分類→SVM RBF核 · 任意形狀群組→DBSCAN。
+  </div>
+  <div class="tip-box">
+    <strong>科目一 L21203 AI風險管理：</strong>偏見分三類——歷史偏見（訓練資料反映歷史不公平）、標註偏見（標註者主觀）、演算法偏見（優化目標犧牲特定群體）。GDPR違規最高罰款為全球年營業額 4% 或 2000 萬歐元取其高。
+  </div>
+
+</div>
+
+<footer>iPAS AI 應用規劃師中級考試學習站 · 內容依據官方評鑑範圍整理 · 實際考試以 iPAS 官網公告為準</footer>
+
+</body>
+</html>

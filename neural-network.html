@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>神經網路 — iPAS AI應用規劃師中級考試</title>
+<style>
+/* ── 字型設定 ── */
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--panel2:#21253A;
+  --border:#2E3250;--text:#E8EAF6;--muted:#8892B0;
+  --accent:#FF9B42;--accent2:#00FFB2;--accent3:#FF6B9D;
+  --blue:#00D4FF;--purple:#9B5DE5;--yellow:#FFD166;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,17,23,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px 24px;}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.9rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#fff;}
+.nav-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.05rem;}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent3));padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:900;color:#fff;}
+
+.hero{padding:60px 20px 40px;background:linear-gradient(160deg,#0F1117,#1a1206,#0F1117);text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(255,155,66,.12),transparent);}
+.hero-badge{display:inline-block;margin-bottom:16px;padding:5px 18px;border-radius:999px;background:rgba(255,155,66,.12);border:1px solid var(--accent);font-size:.8rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.hero-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:clamp(1.8rem,5vw,3.2rem);background:linear-gradient(135deg,var(--yellow),var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:600px;margin:0 auto 24px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+.wrap{max-width:980px;margin:0 auto;padding:16px 20px 80px;}
+
+.sec-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.5rem;color:var(--text);margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;background:linear-gradient(var(--accent),var(--yellow));}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;}
+.panel-title{font-weight:900;font-size:1rem;color:var(--accent2);margin-bottom:12px;}
+
+.formula{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--accent2);line-height:2;overflow-x:auto;}
+.formula .comment{color:var(--muted);font-style:italic;}
+.formula .hl{color:var(--yellow);}
+.formula .fn{color:var(--blue);}
+.formula .vr{color:var(--accent3);}
+
+.arch-wrap{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0;overflow-x:auto;}
+.arch-wrap svg{display:block;margin:0 auto;}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:var(--panel2);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);color:var(--accent2);font-weight:900;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--muted);}
+td:first-child{color:var(--text);font-weight:700;}
+tr:hover td{background:rgba(255,155,66,.04);}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:900;}
+
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0;}
+.kp-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:3px solid var(--accent);transition:transform .18s,border-color .18s;}
+.kp-card:hover{transform:translateY(-4px);border-left-color:var(--accent2);}
+.kp-card .kp-title{font-weight:900;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.kp-card .kp-body{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.kp-card .kp-tag{font-size:.7rem;font-weight:900;color:var(--accent);margin-top:8px;}
+
+/* Interactive activation visualizer */
+.activate-demo{background:#0a0c14;border:1px solid var(--border);border-radius:12px;padding:20px;margin:12px 0;}
+.activate-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:14px;}
+.act-btn{padding:8px 18px;border-radius:999px;border:1.5px solid var(--border);font-weight:900;font-size:.83rem;cursor:pointer;color:var(--muted);background:transparent;transition:all .18s;}
+.act-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(255,155,66,.1);}
+#act-formula{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--accent2);background:rgba(0,0,0,.3);padding:10px 14px;border-radius:8px;margin-bottom:10px;min-height:48px;}
+#act-chart-wrap{height:160px;position:relative;}
+#act-canvas{width:100%;height:160px;display:block;}
+#act-desc{font-size:.83rem;color:var(--muted);margin-top:8px;line-height:1.5;}
+
+/* Backprop step-by-step */
+.bp-steps{display:flex;flex-direction:column;gap:12px;}
+.bp-step{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:transform .18s;}
+.bp-step:hover{transform:translateX(5px);}
+.bp-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1rem;color:#fff;flex-shrink:0;}
+.bp-content .bp-title{font-weight:900;color:var(--text);margin-bottom:4px;}
+.bp-content .bp-body{font-size:.85rem;color:var(--muted);line-height:1.6;}
+.bp-content .bp-formula{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent2);margin-top:6px;background:rgba(0,0,0,.3);padding:4px 10px;border-radius:6px;display:inline-block;}
+
+.quiz-wrap{margin:12px 0;}
+.q-item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+.q-num{font-size:.75rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.q-stem{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:12px;line-height:1.6;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--border);font-size:.88rem;color:var(--muted);transition:all .18s;display:flex;align-items:flex-start;gap:8px;}
+.q-opt:hover{border-color:var(--accent);color:var(--text);background:rgba(255,155,66,.07);}
+.q-opt.correct{border-color:var(--accent2);background:rgba(0,255,178,.07);color:var(--accent2);}
+.q-opt.wrong{border-color:var(--accent3);background:rgba(255,107,157,.07);color:var(--accent3);}
+.q-opt .opt-label{font-weight:900;min-width:18px;}
+.q-explain{margin-top:12px;padding:10px 14px;background:rgba(0,212,255,.06);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:.84rem;color:var(--blue);display:none;line-height:1.65;}
+.q-explain.show{display:block;}
+
+.progress-bar{height:6px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--yellow));transition:width .5s;}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+#score-banner{position:fixed;bottom:20px;right:20px;z-index:300;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-weight:900;font-size:.9rem;color:var(--accent);box-shadow:0 4px 20px rgba(255,155,66,.25);}
+
+.warn-box{background:rgba(255,209,102,.07);border:1px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--yellow);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div id="score-banner">⭐ 答題得分：<span id="score">0</span> / <span id="total">0</span></div>
+
+<nav class="nav">
+  <a href="index.html">← 返回</a>
+  <span class="nav-title">神經網路</span>
+  <span class="nav-tag">iPAS 中級 · 科目三 L23</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">NEURAL NETWORK · L23 · 機器學習技術與應用</div>
+  <div class="hero-title">神經網路完全攻略</div>
+  <div class="hero-sub">前向傳播、反向傳播、激活函數、CNN 架構到過擬合防治，對應 iPAS 中級科目三重點</div>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--yellow);border-color:var(--yellow)">矩陣乘法</span>
+    <span class="tag" style="color:var(--accent);border-color:var(--accent)">梯度下降</span>
+    <span class="tag" style="color:var(--accent3);border-color:var(--accent3)">反向傳播</span>
+    <span class="tag" style="color:var(--accent2);border-color:var(--accent2)">CNN</span>
+    <span class="tag" style="color:var(--blue);border-color:var(--blue)">過擬合 / 正則化</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. 前向傳播 ══ -->
+<div class="sec-title reveal">⚡ 前向傳播（Forward Propagation）</div>
+<div class="panel reveal">
+  <div class="panel-title">神經網路的核心計算：矩陣乘法＋激活函數</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">前向傳播就是資料從輸入層流向輸出層的過程，每一層都做：<strong style="color:var(--text)">線性變換（矩陣乘法） → 非線性變換（激活函數）</strong></p>
+
+  <div class="formula">
+    <span class="comment">// 單層神經元計算（前向傳播核心）</span><br>
+    <span class="vr">z</span> = <span class="hl">W</span> · <span class="vr">x</span> + <span class="hl">b</span>&nbsp;&nbsp;&nbsp;<span class="comment">// 線性變換：W=權重矩陣, x=輸入, b=偏置</span><br>
+    <span class="vr">a</span> = <span class="fn">σ</span>(<span class="vr">z</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 非線性變換：σ 為激活函數</span><br><br>
+    <span class="comment">// 多層堆疊（L 層網路）</span><br>
+    <span class="vr">a<sup>[l]</sup></span> = <span class="fn">σ</span>( <span class="hl">W<sup>[l]</sup></span> · <span class="vr">a<sup>[l-1]</sup></span> + <span class="hl">b<sup>[l]</sup></span> )<br><br>
+    <span class="comment">// 考試考點：前向傳播主要依賴「矩陣乘法與向量內積」</span>
+  </div>
+
+  <div class="arch-wrap">
+    <svg width="580" height="170" viewBox="0 0 580 170">
+      <defs>
+        <marker id="a1" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#FF9B42"/>
+        </marker>
+      </defs>
+      <!-- Layer labels -->
+      <text x="60" y="18" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">輸入層 x</text>
+      <text x="210" y="18" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">隱藏層 1</text>
+      <text x="360" y="18" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">隱藏層 2</text>
+      <text x="510" y="18" text-anchor="middle" fill="#8892B0" font-size="11" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">輸出層 ŷ</text>
+      <!-- Input neurons -->
+      <circle cx="60" cy="55" r="18" fill="#1A1D27" stroke="#FF9B42" stroke-width="2"/>
+      <text x="60" y="59" text-anchor="middle" fill="#FF9B42" font-size="11" font-family="JetBrains Mono">x₁</text>
+      <circle cx="60" cy="100" r="18" fill="#1A1D27" stroke="#FF9B42" stroke-width="2"/>
+      <text x="60" y="104" text-anchor="middle" fill="#FF9B42" font-size="11" font-family="JetBrains Mono">x₂</text>
+      <circle cx="60" cy="145" r="18" fill="#1A1D27" stroke="#FF9B42" stroke-width="2"/>
+      <text x="60" y="149" text-anchor="middle" fill="#FF9B42" font-size="11" font-family="JetBrains Mono">x₃</text>
+      <!-- Hidden 1 -->
+      <circle cx="210" cy="45" r="18" fill="#1A1D27" stroke="#9B5DE5" stroke-width="2"/>
+      <text x="210" y="49" text-anchor="middle" fill="#9B5DE5" font-size="10" font-family="JetBrains Mono">h₁</text>
+      <circle cx="210" cy="90" r="18" fill="#1A1D27" stroke="#9B5DE5" stroke-width="2"/>
+      <text x="210" y="94" text-anchor="middle" fill="#9B5DE5" font-size="10" font-family="JetBrains Mono">h₂</text>
+      <circle cx="210" cy="135" r="18" fill="#1A1D27" stroke="#9B5DE5" stroke-width="2"/>
+      <text x="210" y="139" text-anchor="middle" fill="#9B5DE5" font-size="10" font-family="JetBrains Mono">h₃</text>
+      <!-- Wires x->h1 (sample) -->
+      <line x1="78" y1="55" x2="192" y2="45" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="55" x2="192" y2="90" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="100" x2="192" y2="45" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="100" x2="192" y2="90" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="100" x2="192" y2="135" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="145" x2="192" y2="90" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <line x1="78" y1="145" x2="192" y2="135" stroke="#FF9B42" stroke-width=".8" opacity=".4"/>
+      <!-- W label -->
+      <text x="135" y="68" text-anchor="middle" fill="#FFD166" font-size="11" font-family="JetBrains Mono" font-weight="700">W¹</text>
+      <!-- Hidden 2 -->
+      <circle cx="360" cy="55" r="18" fill="#1A1D27" stroke="#00D4FF" stroke-width="2"/>
+      <text x="360" y="59" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="JetBrains Mono">h₁</text>
+      <circle cx="360" cy="100" r="18" fill="#1A1D27" stroke="#00D4FF" stroke-width="2"/>
+      <text x="360" y="104" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="JetBrains Mono">h₂</text>
+      <circle cx="360" cy="145" r="18" fill="#1A1D27" stroke="#00D4FF" stroke-width="2"/>
+      <text x="360" y="149" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="JetBrains Mono">h₃</text>
+      <!-- Wires h1->h2 -->
+      <line x1="228" y1="45" x2="342" y2="55" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="45" x2="342" y2="100" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="90" x2="342" y2="55" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="90" x2="342" y2="100" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="90" x2="342" y2="145" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="135" x2="342" y2="100" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <line x1="228" y1="135" x2="342" y2="145" stroke="#9B5DE5" stroke-width=".8" opacity=".4"/>
+      <text x="285" y="68" text-anchor="middle" fill="#FFD166" font-size="11" font-family="JetBrains Mono" font-weight="700">W²</text>
+      <!-- Output -->
+      <circle cx="510" cy="77" r="18" fill="#1A1D27" stroke="#00FFB2" stroke-width="2"/>
+      <text x="510" y="81" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="JetBrains Mono">ŷ₁</text>
+      <circle cx="510" cy="122" r="18" fill="#1A1D27" stroke="#00FFB2" stroke-width="2"/>
+      <text x="510" y="126" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="JetBrains Mono">ŷ₂</text>
+      <line x1="378" y1="55" x2="492" y2="77" stroke="#00D4FF" stroke-width=".8" opacity=".4"/>
+      <line x1="378" y1="100" x2="492" y2="77" stroke="#00D4FF" stroke-width=".8" opacity=".4"/>
+      <line x1="378" y1="100" x2="492" y2="122" stroke="#00D4FF" stroke-width=".8" opacity=".4"/>
+      <line x1="378" y1="145" x2="492" y2="122" stroke="#00D4FF" stroke-width=".8" opacity=".4"/>
+      <text x="435" y="80" text-anchor="middle" fill="#FFD166" font-size="11" font-family="JetBrains Mono" font-weight="700">W³</text>
+    </svg>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點（重要）：</strong>「在神經網路中，前向傳播主要依賴哪種數學操作？」→ 答案：<strong>矩陣乘法與向量內積</strong></div>
+</div>
+
+<!-- ══ 2. 激活函數 ══ -->
+<div class="sec-title reveal">🔥 激活函數（Activation Functions）</div>
+<div class="panel reveal">
+  <div class="panel-title">為什麼需要激活函數？</div>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">
+    若沒有激活函數，多層神經網路等同於單層線性模型，無法學習非線性規律。激活函數引入<strong style="color:var(--text)">非線性</strong>，讓網路能擬合複雜函數。
+  </p>
+
+  <div class="activate-demo">
+    <div class="activate-row" id="act-btns">
+      <button class="act-btn active" onclick="showAct(this,'sigmoid')">Sigmoid</button>
+      <button class="act-btn" onclick="showAct(this,'tanh')">Tanh</button>
+      <button class="act-btn" onclick="showAct(this,'relu')">ReLU</button>
+      <button class="act-btn" onclick="showAct(this,'leaky')">Leaky ReLU</button>
+      <button class="act-btn" onclick="showAct(this,'softmax')">Softmax</button>
+    </div>
+    <div id="act-formula"></div>
+    <canvas id="act-canvas" width="500" height="160"></canvas>
+    <div id="act-desc"></div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>激活函數</th><th>公式</th><th>輸出範圍</th><th>常見用途</th><th>缺點</th></tr></thead>
+      <tbody>
+        <tr><td>Sigmoid</td><td style="font-family:monospace">1/(1+e⁻ˣ)</td><td>(0, 1)</td><td>二元分類輸出層</td><td>梯度消失</td></tr>
+        <tr><td>Tanh</td><td style="font-family:monospace">eˣ-e⁻ˣ / eˣ+e⁻ˣ</td><td>(-1, 1)</td><td>RNN 隱藏層</td><td>梯度消失</td></tr>
+        <tr><td>ReLU</td><td style="font-family:monospace">max(0, x)</td><td>[0, ∞)</td><td>CNN / 深度網路隱藏層</td><td>Dead Neuron</td></tr>
+        <tr><td>Leaky ReLU</td><td style="font-family:monospace">max(0.01x, x)</td><td>(-∞, ∞)</td><td>改善 Dead Neuron</td><td>α 需調整</td></tr>
+        <tr><td>Softmax</td><td style="font-family:monospace">eˣⁱ / Σeˣʲ</td><td>(0,1) 且和=1</td><td>多類別分類輸出層</td><td>計算量大</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>隱藏層首選 <strong>ReLU</strong>（計算快、緩解梯度消失）；多類別輸出用 <strong>Softmax</strong>；二元分類輸出用 <strong>Sigmoid</strong>。</div>
+</div>
+
+<!-- ══ 3. 反向傳播 ══ -->
+<div class="sec-title reveal">🔄 反向傳播（Backpropagation）</div>
+<div class="panel reveal">
+  <div class="panel-title">梯度下降更新權重的完整流程</div>
+  <div class="formula">
+    <span class="comment">// 損失函數（以 MSE 為例）</span><br>
+    <span class="fn">L</span> = (1/n) · Σ( <span class="vr">ŷᵢ</span> - <span class="vr">yᵢ</span> )²<br><br>
+    <span class="comment">// 梯度下降：用偏微分計算每個權重對損失的影響</span><br>
+    ∂<span class="fn">L</span>/∂<span class="hl">W</span> = <span class="comment">（損失函數對權重的偏微分）</span><br><br>
+    <span class="comment">// 權重更新規則</span><br>
+    <span class="hl">W</span> ← <span class="hl">W</span> - <span class="vr">η</span> · ∂<span class="fn">L</span>/∂<span class="hl">W</span>&nbsp;&nbsp;<span class="comment">// η = 學習率（Learning Rate）</span>
+  </div>
+  <div class="bp-steps">
+    <div class="bp-step">
+      <div class="bp-num" style="background:#FF9B42">1</div>
+      <div class="bp-content">
+        <div class="bp-title">前向傳播 — 計算輸出與損失</div>
+        <div class="bp-body">資料從輸入層流向輸出層，得到預測值 ŷ，再計算損失 L（預測值與真實值的差距）。</div>
+        <div class="bp-formula">ŷ = f(W,x)　→　L = loss(ŷ, y)</div>
+      </div>
+    </div>
+    <div class="bp-step">
+      <div class="bp-num" style="background:#9B5DE5">2</div>
+      <div class="bp-content">
+        <div class="bp-title">反向傳播 — 鏈式法則計算梯度</div>
+        <div class="bp-body">從輸出層往回，用「鏈式法則（Chain Rule）」計算每個權重對損失的偏微分（梯度）。告訴每個權重「你需要增加還是減少」。</div>
+        <div class="bp-formula">∂L/∂W¹ = ∂L/∂a² · ∂a²/∂z² · ∂z²/∂W¹</div>
+      </div>
+    </div>
+    <div class="bp-step">
+      <div class="bp-num" style="background:#00D4FF">3</div>
+      <div class="bp-content">
+        <div class="bp-title">梯度下降 — 更新所有權重</div>
+        <div class="bp-body">用計算出的梯度，按學習率 η 更新權重。學習率太大會震盪，太小收斂太慢。</div>
+        <div class="bp-formula">W ← W - η · ∂L/∂W</div>
+      </div>
+    </div>
+    <div class="bp-step">
+      <div class="bp-num" style="background:#00FFB2">4</div>
+      <div class="bp-content">
+        <div class="bp-title">重複迭代直到收斂</div>
+        <div class="bp-body">重複以上步驟 N 個 Epoch，每次看一批資料（Mini-batch），直到損失函數不再下降。</div>
+        <div class="bp-formula">for epoch in range(N): forward → loss → backward → update</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. CNN 架構 ══ -->
+<div class="sec-title reveal">🖼️ CNN 卷積神經網路架構</div>
+<div class="panel reveal">
+  <div class="panel-title">CNN 核心操作：捲積 → 激活 → 池化 → 全連接</div>
+  <div class="arch-wrap">
+    <svg width="620" height="110" viewBox="0 0 620 110">
+      <defs>
+        <marker id="a2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#FF9B42"/>
+        </marker>
+      </defs>
+      <!-- Input -->
+      <rect x="5" y="35" width="60" height="42" rx="6" fill="#21253A" stroke="#00D4FF" stroke-width="1.5"/>
+      <text x="35" y="54" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">輸入圖片</text>
+      <text x="35" y="68" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">224×224×3</text>
+      <line x1="65" y1="56" x2="88" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- Conv -->
+      <rect x="92" y="28" width="70" height="56" rx="6" fill="#21253A" stroke="#9B5DE5" stroke-width="2"/>
+      <text x="127" y="52" text-anchor="middle" fill="#9B5DE5" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Convolution</text>
+      <text x="127" y="64" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">3×3 Kernel</text>
+      <text x="127" y="76" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">特徵提取</text>
+      <line x1="162" y1="56" x2="185" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- ReLU -->
+      <rect x="188" y="36" width="55" height="40" rx="6" fill="#21253A" stroke="#FF9B42" stroke-width="2"/>
+      <text x="215" y="54" text-anchor="middle" fill="#FF9B42" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">ReLU</text>
+      <text x="215" y="68" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">激活</text>
+      <line x1="243" y1="56" x2="265" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- Pooling -->
+      <rect x="268" y="28" width="65" height="56" rx="6" fill="#21253A" stroke="#00FFB2" stroke-width="2"/>
+      <text x="300" y="50" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Max Pooling</text>
+      <text x="300" y="63" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">2×2 stride 2</text>
+      <text x="300" y="76" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">降維壓縮</text>
+      <line x1="333" y1="56" x2="355" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- Repeat -->
+      <rect x="358" y="36" width="60" height="40" rx="6" fill="#21253A" stroke="#FFD166" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="388" y="55" text-anchor="middle" fill="#FFD166" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">重複 N 次</text>
+      <text x="388" y="68" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">深層特徵</text>
+      <line x1="418" y1="56" x2="440" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- Flatten -->
+      <rect x="443" y="36" width="55" height="40" rx="6" fill="#21253A" stroke="#FF6B9D" stroke-width="1.5"/>
+      <text x="470" y="55" text-anchor="middle" fill="#FF6B9D" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">Flatten</text>
+      <text x="470" y="68" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">攤平成向量</text>
+      <line x1="498" y1="56" x2="520" y2="56" stroke="#FF9B42" stroke-width="1.5" marker-end="url(#a2)"/>
+      <!-- FC -->
+      <rect x="523" y="28" width="80" height="56" rx="6" fill="#21253A" stroke="#00D4FF" stroke-width="2"/>
+      <text x="563" y="50" text-anchor="middle" fill="#00D4FF" font-size="10" font-family="Calibri,'Microsoft JhengHei',sans-serif" font-weight="700">全連接層</text>
+      <text x="563" y="63" text-anchor="middle" fill="#8892B0" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">+ Softmax</text>
+      <text x="563" y="76" text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Calibri,'Microsoft JhengHei',sans-serif">分類輸出</text>
+    </svg>
+  </div>
+  <div class="kp-grid">
+    <div class="kp-card" style="border-left-color:var(--purple)">
+      <div class="kp-title">捲積層（Convolution）</div>
+      <div class="kp-body">用小型濾波器（Kernel）在圖片上滑動，提取局部特徵（邊緣、紋理等）。參數共享大幅減少參數量。</div>
+      <div class="kp-tag">▶ 考點：特徵圖（Feature Map）</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent2)">
+      <div class="kp-title">池化層（Pooling）</div>
+      <div class="kp-body">Max Pooling 取局部最大值，降低特徵圖尺寸，減少計算量並增強平移不變性。</div>
+      <div class="kp-tag">▶ 考點：降維、防止過擬合</div>
+    </div>
+    <div class="kp-card" style="border-left-color:var(--accent3)">
+      <div class="kp-title">知名 CNN 架構</div>
+      <div class="kp-body">VGG（深層3×3）、ResNet（殘差連結）、Inception（並行多尺度）。考試常問 Inception 架構特點。</div>
+      <div class="kp-tag">▶ 考點：Inception / ResNet</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. 過擬合與正則化 ══ -->
+<div class="sec-title reveal">⚠️ 過擬合 vs 欠擬合（高頻考點）</div>
+<div class="panel reveal">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>問題</th><th>表現</th><th>原因</th><th>解法</th><th>考試關鍵字</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>過擬合<br>Overfitting</td>
+          <td>訓練準確率高<br>測試準確率低</td>
+          <td>模型太複雜<br>訓練資料太少</td>
+          <td>Dropout、L1/L2正則化<br>增加資料、早停法</td>
+          <td><span class="pill" style="background:rgba(255,107,157,.2);color:var(--accent3)">泛化能力差</span></td>
+        </tr>
+        <tr>
+          <td>欠擬合<br>Underfitting</td>
+          <td>訓練和測試<br>準確率都低</td>
+          <td>模型太簡單<br>訓練不夠</td>
+          <td>增加神經元/層數<br>訓練更多 Epoch</td>
+          <td><span class="pill" style="background:rgba(255,155,66,.2);color:var(--accent)">高偏差（Bias）</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="formula">
+    <span class="comment">// L2 正則化（Weight Decay）— 加入懲罰項防止權重過大</span><br>
+    <span class="fn">L_reg</span> = <span class="fn">L</span> + <span class="hl">λ</span> · Σ<span class="hl">W²</span><br><br>
+    <span class="comment">// Dropout — 訓練時隨機關閉部分神經元，防止過度依賴特定路徑</span><br>
+    <span class="vr">mask</span> ~ <span class="fn">Bernoulli</span>(<span class="hl">p</span>)&nbsp;&nbsp;<span class="comment">// p = 保留機率（通常 0.5）</span><br>
+    <span class="vr">a_drop</span> = <span class="vr">a</span> ⊙ <span class="vr">mask</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// ⊙ 為逐元素相乘</span>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點（必考）：</strong>「過擬合」= 模型「背答案」，換個題目就不會 → 解法：Dropout、L1/L2正則化、增加資料量、Early Stopping。</div>
+</div>
+
+<!-- ══ 6. 最佳化器 ══ -->
+<div class="sec-title reveal">🎯 最佳化器（Optimizer）</div>
+<div class="panel reveal">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>最佳化器</th><th>特點</th><th>適用情境</th></tr></thead>
+      <tbody>
+        <tr><td>SGD<br>隨機梯度下降</td><td>每次用一筆資料更新，計算快但震盪大</td><td>大規模資料集基礎訓練</td></tr>
+        <tr><td>Mini-batch SGD</td><td>每次用一小批（32/64筆）資料，平衡速度與穩定性</td><td>最常見的訓練方式</td></tr>
+        <tr><td>Adam</td><td>自動調整學習率，結合動量與 RMSProp</td><td>最廣泛使用，適合大多數任務</td></tr>
+        <tr><td>Adagrad</td><td>自動調整每個參數的學習率</td><td><strong style="color:var(--yellow)">稀疏資料（考試考點！）</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box">📌 <strong>考試考點：</strong>「哪個最佳化器特別適合稀疏資料？」→ 答案：<strong>Adagrad</strong>（自動調整各參數學習率）</div>
+</div>
+
+<!-- ══ 7. 模擬考題 ══ -->
+<div class="sec-title reveal">📝 模擬考題（仿 iPAS 中級題型）</div>
+<div class="progress-bar reveal"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="quiz-wrap reveal" id="quiz-wrap"></div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── ACTIVATION FUNCTIONS ──
+const acts={
+  sigmoid:{
+    formula:'σ(x) = 1 / (1 + e⁻ˣ)　　輸出範圍：(0, 1)',
+    desc:'S形曲線，輸出可解釋為機率。缺點：x很大或很小時梯度接近0（梯度消失問題）。常用於二元分類輸出層。',
+    fn:x=>1/(1+Math.exp(-x)),
+    color:'#00D4FF', range:[-6,6]
+  },
+  tanh:{
+    formula:'tanh(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ)　　輸出範圍：(-1, 1)',
+    desc:'比 Sigmoid 以0為中心，梯度更大，但同樣有梯度消失問題。常用於 RNN 隱藏層。',
+    fn:x=>Math.tanh(x),
+    color:'#9B5DE5', range:[-6,6]
+  },
+  relu:{
+    formula:'ReLU(x) = max(0, x)　　輸出範圍：[0, ∞)',
+    desc:'計算極簡，梯度不消失（x>0時梯度=1）。缺點：x<0時梯度=0（Dead Neuron問題）。CNN隱藏層首選。',
+    fn:x=>Math.max(0,x),
+    color:'#FF9B42', range:[-6,6]
+  },
+  leaky:{
+    formula:'LeakyReLU(x) = max(0.01x, x)　　α = 0.01',
+    desc:'解決 ReLU 的 Dead Neuron 問題，x<0 時仍有小梯度(0.01)。適合深層網路。',
+    fn:x=>x>0?x:0.01*x,
+    color:'#00FFB2', range:[-6,6]
+  },
+  softmax:{
+    formula:'Softmax(xᵢ) = eˣⁱ / Σⱼ eˣʲ　　輸出和 = 1',
+    desc:'多類別分類輸出層。將多個值轉換為加總為1的機率分布。配合 Cross-Entropy 損失使用。',
+    fn:x=>1/(1+Math.exp(-x*0.5))*0.8+0.1,
+    color:'#FF6B9D', range:[-4,4]
+  }
+};
+let curAct='sigmoid';
+function showAct(el,key){
+  document.querySelectorAll('.act-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  curAct=key;
+  drawAct();
+}
+function drawAct(){
+  const a=acts[curAct];
+  document.getElementById('act-formula').textContent=a.formula;
+  document.getElementById('act-desc').textContent=a.desc;
+  const canvas=document.getElementById('act-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  // Background
+  ctx.fillStyle='#0a0c14'; ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.07)'; ctx.lineWidth=1;
+  [0.25,0.5,0.75].forEach(r=>{
+    ctx.beginPath(); ctx.moveTo(W*r,0); ctx.lineTo(W*r,H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,H*r); ctx.lineTo(W,H*r); ctx.stroke();
+  });
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  // Curve
+  const [xmin,xmax]=a.range;
+  ctx.strokeStyle=a.color; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let px=0;px<W;px++){
+    const x=xmin+(xmax-xmin)*px/W;
+    const y=a.fn(x);
+    const py=H/2-y*(H*0.36);
+    if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+  // Labels
+  ctx.fillStyle='rgba(255,255,255,.4)'; ctx.font='10px Calibri';
+  ctx.fillText('x',W-14,H/2-6);
+  ctx.fillText('y',W/2+6,10);
+}
+drawAct();
+
+// ── QUIZ DATA ──
+const QS=[
+  {
+    stem:'在神經網路中，前向傳播（Forward Propagation）主要依賴下列哪一種數學操作？',
+    opts:['A. 機率積分','B. 矩陣乘法與向量內積','C. 對數變換','D. 條件機率推論'],
+    ans:1,
+    explain:'前向傳播的核心公式是 z = W·x + b，每一層都是矩陣乘法（W·x）加上偏置向量（b），再通過激活函數。這是iPAS中級的實際考題。'
+  },
+  {
+    stem:'ReLU 激活函數可能導致哪種問題？',
+    opts:['A. 輸出超過1','B. Dead Neuron（神經元永久失活）','C. 計算速度太慢','D. 只能用於輸出層'],
+    ans:1,
+    explain:'ReLU 在 x<0 時梯度=0，一旦神經元輸入長期為負，權重永遠無法更新，稱為 Dead Neuron。Leaky ReLU 透過給 x<0 時一個小梯度(0.01)來解決此問題。'
+  },
+  {
+    stem:'模型在訓練集準確率高，但在測試集準確率明顯較低，此現象稱為？',
+    opts:['A. 欠擬合（Underfitting）','B. 梯度爆炸','C. 過擬合（Overfitting）','D. 梯度消失'],
+    ans:2,
+    explain:'過擬合代表模型「記住」了訓練資料但失去泛化能力，就像背答案卻不懂概念。解法包括：Dropout、L1/L2正則化、增加訓練資料、Early Stopping。'
+  },
+  {
+    stem:'CNN 中「池化層（Pooling Layer）」的主要目的為何？',
+    opts:['A. 增加特徵圖的解析度','B. 新增更多神經元','C. 降低特徵圖尺寸，減少計算量並增強容忍度','D. 計算分類機率'],
+    ans:2,
+    explain:'Max Pooling 在局部區域取最大值，縮小特徵圖尺寸，降低後續層的計算量，同時增強模型對小幅平移的容忍度（平移不變性）。'
+  },
+  {
+    stem:'在最佳化器中，哪一種方法會自動調整每個參數的學習率，特別適用於稀疏資料？',
+    opts:['A. SGD（隨機梯度下降）','B. Mini-batch SGD','C. Momentum','D. Adagrad'],
+    ans:3,
+    explain:'Adagrad 會累積每個參數的歷史梯度平方，讓更新頻繁的參數學習率變小、更新少的參數學習率變大，特別適合稀疏特徵（如 NLP 詞嵌入）。這是iPAS中級的實際考題。'
+  },
+  {
+    stem:'特徵縮放（Feature Scaling）中，標準化（Standardization）的主要作用為何？',
+    opts:['A. 將資料限制在0到1之間','B. 使資料平均值為0，標準差為1','C. 移除資料中的異常值','D. 增加特徵間的相關性'],
+    ans:1,
+    explain:'Standardization（z-score 標準化）：z = (x - μ) / σ，讓每個特徵的均值=0、標準差=1，使不同量級的特徵能在相同尺度上進行梯度更新，加速訓練收斂。'
+  },
+  {
+    stem:'Dropout 技術在神經網路訓練時的作用為何？',
+    opts:['A. 加速前向傳播速度','B. 隨機關閉部分神經元，防止過度依賴特定路徑，減少過擬合','C. 自動調整學習率','D. 增加神經元的數量'],
+    ans:1,
+    explain:'Dropout 在訓練時按機率 p 隨機將部分神經元輸出設為0，強迫網路學習更加分散且穩健的特徵表示，是防止過擬合的有效正則化技術。'
+  },
+  {
+    stem:'ResNet（殘差網路）相較於傳統 CNN 的主要創新為何？',
+    opts:['A. 使用更小的卷積核（1×1）','B. 加入殘差連結（Skip Connection），解決深層網路梯度消失問題','C. 完全不使用激活函數','D. 只能處理黑白圖片'],
+    ans:1,
+    explain:'ResNet 的殘差連結（Skip Connection）讓梯度可以直接跳過若干層傳遞到前面，有效解決深層網路中的梯度消失問題，使訓練上百層的深度網路成為可能。'
+  }
+];
+
+let score=0,answered=0;
+const total=QS.length;
+document.getElementById('total').textContent=total;
+
+function buildQuiz(){
+  const wrap=document.getElementById('quiz-wrap');
+  QS.forEach((q,qi)=>{
+    const div=document.createElement('div');div.className='q-item';
+    div.innerHTML=`
+      <div class="q-num">第 ${qi+1} 題 / 共 ${total} 題　｜　仿 iPAS 中級科目三單選題</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="q-opts" id="opts-${qi}">
+        ${q.opts.map((o,oi)=>`
+          <div class="q-opt" onclick="answer(${qi},${oi})">
+            <span class="opt-label">${['A','B','C','D'][oi]}.</span>
+            <span>${o.slice(3)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="q-explain" id="exp-${qi}">💡 解析：${q.explain}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function answer(qi,oi){
+  const opts=document.querySelectorAll(`#opts-${qi} .q-opt`);
+  opts.forEach(o=>o.style.pointerEvents='none');
+  const q=QS[qi];
+  opts[q.ans].classList.add('correct');
+  if(oi!==q.ans) opts[oi].classList.add('wrong');
+  document.getElementById('exp-'+qi).classList.add('show');
+  if(oi===q.ans) score++;
+  answered++;
+  document.getElementById('score').textContent=score;
+  document.getElementById('prog').style.width=(answered/total*100)+'%';
+}
+
+buildQuiz();
+
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('vis'),60);});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
+
+<!-- ═══════════════════════════════════════════
+     神經網路 3D 互動視覺化教學區塊
+═══════════════════════════════════════════ -->
+<style>
+/* ── 字型設定 ── */
+* { font-family: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif; }
+code, .formula, .tp-formula { font-family: 'JetBrains Mono', 'Consolas', monospace !important; }
+.viz-section{max-width:980px;margin:0 auto;padding:0 20px 80px;}
+.viz-sec-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.5rem;color:var(--text);margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.viz-sec-title::before{content:'';display:inline-block;width:4px;height:24px;border-radius:2px;background:linear-gradient(var(--accent),var(--yellow));}
+.scene-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.scene-tab{padding:8px 18px;border-radius:999px;border:1.5px solid var(--border);font-size:.83rem;font-weight:900;cursor:pointer;color:var(--muted);background:transparent;transition:all .2s;}
+.scene-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(255,155,66,.1);}
+.split-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:460px;}
+@media(max-width:640px){.split-panel{grid-template-columns:1fr;}}
+.teach-panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;max-height:520px;}
+.tp-badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:.72rem;font-weight:900;margin-bottom:2px;}
+.tp-title{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;font-size:1.25rem;color:var(--text);}
+.tp-body{font-size:.87rem;color:var(--muted);line-height:1.7;}
+.tp-formula{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:#0a0c14;border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:#00FFB2;line-height:1.8;}
+.tp-keypoints{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.tp-kp{background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:8px 12px;font-size:.83rem;color:var(--muted);}
+.tp-kp strong{color:var(--text);}
+.tp-exam{background:rgba(255,209,102,.07);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:.82rem;color:var(--yellow);}
+.canvas-panel{background:#0a0c14;border:1px solid var(--border);border-radius:var(--r);position:relative;overflow:hidden;min-height:420px;}
+.viz-canvas{display:block;width:100%;height:100%;min-height:420px;}
+.canvas-overlay{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 10px;}
+.ov-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);font-size:.72rem;font-weight:900;color:rgba(255,255,255,.6);background:rgba(0,0,0,.5);cursor:pointer;transition:all .18s;backdrop-filter:blur(4px);}
+.ov-btn:hover,.ov-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(255,155,66,.15);}
+.canvas-label{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:900;color:var(--accent2);border:1px solid rgba(0,212,255,.3);}
+</style>
+
+<div class="viz-section">
+  <div class="viz-sec-title">🎮 3D 互動視覺化教學</div>
+  <div class="scene-tabs">
+    <button class="scene-tab active" onclick="switchNNScene(this,0)">① CNN Feature Map</button>
+    <button class="scene-tab" onclick="switchNNScene(this,1)">② 神經元激活 / Dead Neuron</button>
+    <button class="scene-tab" onclick="switchNNScene(this,2)">③ 反向傳播梯度流動</button>
+  </div>
+  <div class="split-panel">
+    <div class="teach-panel" id="nn-teach-panel"></div>
+    <div class="canvas-panel">
+      <div class="canvas-label" id="nn-canvas-label">Three.js 即時渲染</div>
+      <canvas class="viz-canvas" id="nn-viz-canvas"></canvas>
+      <div class="canvas-overlay">
+        <button class="ov-btn active" id="nn-ov-play" onclick="nnToggleAnim()">⏸ 暫停</button>
+        <button class="ov-btn" onclick="nnResetCam()">🔄 重置視角</button>
+        <button class="ov-btn" id="nn-ov-speed" onclick="nnToggleSpeed()">🐢 慢速</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+//  NEURAL NETWORK 3D VIZ ENGINE
+// ═══════════════════════════════════════
+const NNVIZ = (() => {
+  const canvas = document.getElementById('nn-viz-canvas');
+  const panel  = canvas.parentElement;
+  let W = panel.clientWidth, H = Math.max(panel.clientHeight, 420);
+  canvas.width = W; canvas.height = H;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+  camera.position.set(0, 2, 11);
+  camera.lookAt(0, 0, 0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+  const dir = new THREE.DirectionalLight(0xffe8cc, 1.2);
+  dir.position.set(5, 8, 5); scene.add(dir);
+
+  let drag=false, prev={x:0,y:0};
+  let sph={theta:0,phi:Math.PI/3.5,r:11};
+  canvas.addEventListener('mousedown',e=>{drag=true;prev={x:e.clientX,y:e.clientY};});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    sph.theta-=(e.clientX-prev.x)*.01;
+    sph.phi=Math.max(.3,Math.min(1.4,sph.phi+(e.clientY-prev.y)*.007));
+    prev={x:e.clientX,y:e.clientY};
+  });
+  canvas.addEventListener('wheel',e=>{sph.r=Math.max(5,Math.min(18,sph.r+e.deltaY*.02));});
+
+  let objects=[], particles=[], animT=0, playing=true, speedMult=1, currentScene=0;
+
+  function clearScene(){[...objects,...particles].forEach(o=>scene.remove(o));objects=[];particles=[];}
+  function sphere(r,col,op=1){const m=new THREE.MeshLambertMaterial({color:col,transparent:op<1,opacity:op});return new THREE.Mesh(new THREE.SphereGeometry(r,14,14),m);}
+  function box(w,h,d,col){return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:col}));}
+  function makeLine(p1,p2,col,op=1){const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...p1),new THREE.Vector3(...p2)]);return new THREE.Line(g,new THREE.LineBasicMaterial({color:col,transparent:true,opacity:op}));}
+  function addObj(o){scene.add(o);objects.push(o);return o;}
+
+  // ══════════════════════════════════════
+  //  SCENE 0: CNN Feature Maps
+  // ══════════════════════════════════════
+  function buildCNNScene(){
+    clearScene();
+    // Input image grid (5x5 pixels)
+    for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+      const b=box(.38,.38,.08,[0x1155aa,0x2266bb,0x33aacc,0x1188cc,0x0055aa][Math.floor(Math.random()*5)]);
+      b.position.set(-4.8+c*.42,-1+r*.42,0);
+      b.userData={type:'pixel',base:b.position.clone()};
+      addObj(b);
+    }
+    // Convolution kernel
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++){
+      const b=box(.38,.38,.12,0xFFD166);
+      b.position.set(-1.8+c*.45,-0.5+r*.45,0.3);
+      b.userData={type:'kernel'};
+      addObj(b);
+    }
+    // Arrow
+    const arr=addObj(makeLine([-0.5,0,0],[0.3,0,0],0xffffff,.7));
+    // Feature map 1 (3x3)
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++){
+      const v=Math.random();
+      const col=new THREE.Color().setHSL(.55+v*.3,1,.4+v*.3);
+      const b=box(.45,.45,.15,col);
+      b.position.set(1.2+c*.5,-0.5+r*.5,0);
+      b.userData={type:'fmap',val:v,base:b.position.clone()};
+      addObj(b);
+    }
+    // Feature map 2 (different filter)
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++){
+      const v=Math.random();
+      const col=new THREE.Color().setHSL(.0+v*.15,1,.4+v*.35);
+      const b=box(.45,.45,.15,col);
+      b.position.set(1.2+c*.5,-0.5+r*.5,-0.6);
+      addObj(b);
+    }
+    addObj(makeLine([0.3,0,0],[0.85,0,0],0xFFD166,.6));
+    document.getElementById('nn-canvas-label').textContent='CNN — 卷積核掃描生成 Feature Map';
+    // Kernel scan particle
+    const p=sphere(.18,0xFFD166);
+    p.userData={type:'scan',progress:0,speed:.003};
+    scene.add(p); particles.push(p);
+  }
+
+  function animCNN(t){
+    objects.forEach(o=>{
+      if(o.userData.type==='fmap'){
+        o.position.z=o.userData.base?.z+(Math.sin(t*2+o.userData.val*6)*.06)||0;
+      }
+      if(o.userData.type==='kernel'){o.rotation.z=Math.sin(t*.8)*.04;}
+    });
+    particles.forEach(p=>{
+      p.userData.progress+=p.userData.speed*speedMult;
+      if(p.userData.progress>1)p.userData.progress=0;
+      const prog=p.userData.progress;
+      // Scan across input
+      const row=Math.floor(prog*9), r=row%3, c=Math.floor(row/3);
+      p.position.set(-4.8+c*.42*1.8,-1+r*.42*1.1,.5);
+    });
+  }
+
+  // ══════════════════════════════════════
+  //  SCENE 1: Neuron Activation & Dead Neuron
+  // ══════════════════════════════════════
+  const LAYER_X=[-4,-1.5,1.5,4];
+  const LAYER_N=[3,4,4,2];
+  let neuronMeshes=[], isDeadMode=false;
+
+  function buildActivationScene(){
+    clearScene(); neuronMeshes=[];
+    LAYER_X.forEach((lx,li)=>{
+      const col=[0xFF9B42,0x9B5DE5,0x9B5DE5,0x00FFB2][li];
+      const n=LAYER_N[li];
+      const col2=Array(n).fill(col);
+      if(li===2&&isDeadMode) col2[1]=0x333333, col2[2]=0x222222; // dead neurons
+      const arr=[];
+      for(let i=0;i<n;i++){
+        const y=(i-(n-1)/2)*1.4;
+        const sp=sphere(.42,col2[i]);
+        sp.position.set(lx,y,0);
+        sp.userData={layer:li,idx:i,baseY:y,dead:li===2&&isDeadMode&&(i===1||i===2),active:false};
+        addObj(sp); arr.push(sp);
+        // Glow
+        const gl=sphere(.58,col2[i],.12);
+        gl.position.copy(sp.position); addObj(gl);
+        gl.userData={glow:true,dead:sp.userData.dead};
+      }
+      neuronMeshes.push(arr);
+      // Wires to next layer
+      if(li<LAYER_X.length-1){
+        const nx=LAYER_N[li+1];
+        for(let i=0;i<n;i++){
+          const y=(i-(n-1)/2)*1.4;
+          for(let j=0;j<nx;j++){
+            const ny2=(j-(nx-1)/2)*1.4;
+            const dead=li===2&&isDeadMode&&(i===1||i===2);
+            addObj(makeLine([lx,y,0],[LAYER_X[li+1],ny2,0],dead?0x222222:0x334466,dead?.1:.3));
+          }
+        }
+      }
+    });
+    document.getElementById('nn-canvas-label').textContent=
+      isDeadMode?'Dead Neuron — 神經元永久失活（暗色）':'ReLU 激活 — 正值通過，負值歸零';
+  }
+
+  function animActivation(t){
+    objects.forEach(o=>{
+      if(o.userData.dead){o.scale.setScalar(1);return;}
+      if(o.userData.layer!==undefined&&!o.userData.glow){
+        const pulse=.85+Math.sin(t*2+o.userData.idx*1.2+o.userData.layer*.8)*.15;
+        o.scale.setScalar(pulse);
+      }
+    });
+    // Signal particles
+    particles.forEach(p=>{
+      p.userData.progress+=p.userData.speed*speedMult;
+      if(p.userData.progress>1)p.userData.progress=0;
+      const prog=p.userData.progress;
+      const {fromL,fromN,toL,toN}=p.userData;
+      const fx=LAYER_X[fromL], fy=(fromN-(LAYER_N[fromL]-1)/2)*1.4;
+      const tx=LAYER_X[toL],   ty=(toN-(LAYER_N[toL]-1)/2)*1.4;
+      p.position.set(fx+(tx-fx)*prog, fy+(ty-fy)*prog, 0);
+      const dead=isDeadMode&&toL===2&&(toN===1||toN===2);
+      if(dead){p.material.color.setHex(0x333333);p.material.opacity=.2;}
+    });
+  }
+
+  function spawnActivationParticles(){
+    particles.forEach(p=>scene.remove(p)); particles=[];
+    for(let l=0;l<LAYER_X.length-1;l++){
+      const fn=LAYER_N[l], tn=LAYER_N[l+1];
+      for(let i=0;i<fn;i++) for(let j=0;j<tn;j++){
+        if(Math.random()>.45)continue;
+        const col=isDeadMode&&l===2&&(j===1||j===2)?0x333333:0xFF9B42;
+        const p=sphere(.1,col);
+        p.material.transparent=true;p.material.opacity=isDeadMode&&l===2&&(j===1||j===2)?.2:1;
+        p.userData={progress:Math.random(),speed:.004+Math.random()*.003,fromL:l,fromN:i,toL:l+1,toN:j};
+        scene.add(p);particles.push(p);
+      }
+    }
+  }
+
+  // ══════════════════════════════════════
+  //  SCENE 2: Backpropagation Gradient Flow
+  // ══════════════════════════════════════
+  let bpPhase=0; // 0=forward 1=loss 2=backward
+  function buildBPScene(){
+    clearScene();
+    // Layers
+    LAYER_X.forEach((lx,li)=>{
+      const cols=[0xFF9B42,0x9B5DE5,0x9B5DE5,0x00FFB2];
+      const n=LAYER_N[li];
+      for(let i=0;i<n;i++){
+        const y=(i-(n-1)/2)*1.3;
+        const sp=sphere(.4,cols[li]);
+        sp.position.set(lx,y,0);
+        sp.userData={layer:li,idx:i,baseY:y};
+        addObj(sp);
+      }
+      if(li<LAYER_X.length-1){
+        const nx=LAYER_N[li+1];
+        for(let i=0;i<n;i++){
+          for(let j=0;j<nx;j++){
+            addObj(makeLine([lx,(i-(n-1)/2)*1.3,0],[LAYER_X[li+1],(j-(nx-1)/2)*1.3,0],0x334466,.25));
+          }
+        }
+      }
+    });
+    // Loss sphere
+    const loss=sphere(.5,0xFF4D6D);
+    loss.position.set(5.8,0,0);
+    loss.userData={type:'loss'};
+    addObj(loss);
+    addObj(makeLine([4.4,0,0],[5.3,0,0],0xFF4D6D,.7));
+    document.getElementById('nn-canvas-label').textContent=
+      ['前向傳播 → 計算損失','計算損失 L（預測 vs 真實）','反向傳播 ← 梯度回流'][bpPhase]||'反向傳播梯度流動';
+  }
+
+  function animBP(t){
+    // Neurons pulse
+    objects.forEach(o=>{
+      if(o.userData.layer!==undefined){
+        o.scale.setScalar(.85+Math.sin(t*1.5+o.userData.idx+o.userData.layer)*.12);
+      }
+      if(o.userData.type==='loss'){o.scale.setScalar(.9+Math.sin(t*3)*.2);}
+    });
+    particles.forEach(p=>{
+      p.userData.progress+=p.userData.speed*speedMult;
+      if(p.userData.progress>1)p.userData.progress=0;
+      const prog=p.userData.progress;
+      const {dir:d,fromL,fromN,toL,toN}=p.userData;
+      const fx=LAYER_X[fromL]??5.8, fy=fromN!==undefined?(fromN-(LAYER_N[fromL]-1)/2)*1.3:0;
+      const tx=LAYER_X[toL]??5.8,   ty=toN!==undefined?(toN-(LAYER_N[toL]-1)/2)*1.3:0;
+      p.position.set(fx+(tx-fx)*prog,fy+(ty-fy)*prog,0);
+    });
+  }
+
+  function spawnBPParticles(){
+    particles.forEach(p=>scene.remove(p)); particles=[];
+    if(bpPhase===0){
+      // Forward: left→right orange
+      for(let l=0;l<LAYER_X.length-1;l++){
+        for(let i=0;i<5;i++){
+          const fn=LAYER_N[l],tn=LAYER_N[l+1];
+          const fi=Math.floor(Math.random()*fn),ti=Math.floor(Math.random()*tn);
+          const p=sphere(.12,0xFF9B42);
+          p.userData={progress:Math.random(),speed:.005,dir:'fwd',fromL:l,fromN:fi,toL:l+1,toN:ti};
+          scene.add(p);particles.push(p);
+        }
+      }
+      // To loss
+      for(let i=0;i<4;i++){
+        const p=sphere(.12,0xFF9B42);
+        p.userData={progress:Math.random(),speed:.005,dir:'fwd',fromL:3,fromN:Math.floor(Math.random()*2),toL:99,toN:undefined};
+        p.userData.toL=99;
+        scene.add(p);particles.push(p);
+      }
+    } else if(bpPhase===2){
+      // Backward: right→left red gradient
+      for(let l=LAYER_X.length-1;l>0;l--){
+        for(let i=0;i<5;i++){
+          const fn=LAYER_N[l],tn=LAYER_N[l-1];
+          const fi=Math.floor(Math.random()*fn),ti=Math.floor(Math.random()*tn);
+          const p=sphere(.12,0xFF4D6D);
+          p.userData={progress:Math.random(),speed:.005,dir:'bwd',fromL:l,fromN:fi,toL:l-1,toN:ti};
+          scene.add(p);particles.push(p);
+        }
+      }
+    }
+  }
+
+  // SCENE TABLE
+  const SCENES_NN=[
+    {build:()=>{buildCNNScene();}, anim:animCNN},
+    {build:()=>{buildActivationScene();spawnActivationParticles();}, anim:animActivation},
+    {build:()=>{buildBPScene();spawnBPParticles();}, anim:animBP},
+  ];
+
+  function loadScene(idx){currentScene=idx;SCENES_NN[idx].build();}
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!playing)return;
+    animT+=.016*speedMult;
+    SCENES_NN[currentScene].anim(animT);
+    camera.position.x=sph.r*Math.sin(sph.phi)*Math.sin(sph.theta);
+    camera.position.y=sph.r*Math.cos(sph.phi);
+    camera.position.z=sph.r*Math.sin(sph.phi)*Math.cos(sph.theta);
+    camera.lookAt(0,0,0);
+    renderer.render(scene,camera);
+  })();
+
+  window.addEventListener('resize',()=>{
+    W=panel.clientWidth;H=Math.max(panel.clientHeight,420);
+    renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();
+  });
+
+  loadScene(0);
+
+  return {
+    loadScene,
+    toggleAnim:()=>playing=!playing,
+    resetCam:()=>{sph={theta:0,phi:Math.PI/3.5,r:11};},
+    toggleSpeed:()=>{speedMult=speedMult===1?.3:1;},
+    setDeadMode:(v)=>{isDeadMode=v;buildActivationScene();spawnActivationParticles();},
+    setBPPhase:(v)=>{bpPhase=v;buildBPScene();spawnBPParticles();},
+  };
+})();
+
+// ── Teaching content ──
+const NN_TEACH=[
+  {
+    badge:'CNN · Feature Map',badgeCol:'#00FFB2',
+    title:'CNN 特徵圖生成過程',
+    body:'卷積核（Kernel）像一個放大鏡，在輸入圖片上滑動掃描，每個位置做點積運算，得出一個數值，最後形成 Feature Map（特徵圖）。不同的 Kernel 偵測不同特徵（邊緣、紋理、顏色等）。',
+    formula:`// 卷積運算
+output[i,j] = Σ Σ input[i+m, j+n] × kernel[m,n] + b
+// Feature Map 尺寸
+out_size = (in_size - kernel_size) / stride + 1
+// 例：28×28 輸入，3×3 kernel → 26×26 Feature Map`,
+    kps:[
+      {title:'參數共享',body:'同一個 Kernel 掃描整張圖，大幅減少參數量，相比全連接層。'},
+      {title:'多個 Kernel',body:'通常用 32、64、128 個 Kernel，每個偵測不同視覺特徵，堆疊成深度維度。'},
+      {title:'池化層',body:'Max Pooling 在 2×2 區域取最大值，把 Feature Map 縮小一半，保留最重要的特徵。'},
+    ],
+    exam:'📌 考試考點：CNN 最主要應用於圖像處理；池化層主要目的是降低尺寸、減少計算量、增強平移不變性。',
+    controls:[]
+  },
+  {
+    badge:'ReLU · Dead Neuron',badgeCol:'#FF9B42',
+    title:'神經元激活與 Dead Neuron',
+    body:'ReLU 激活函數讓正值通過、負值歸零。優點是計算快、梯度不消失；缺點是若神經元輸入長期為負，梯度永遠=0，稱為 Dead Neuron（永久失活）。切換下方按鈕觀察差異。',
+    formula:`// ReLU
+f(x) = max(0, x)
+∂f/∂x = 1 if x>0 else 0  // x<0 梯度=0!
+
+// Dead Neuron 條件
+if neuron input always < 0:
+    gradient = 0 → weight never updates
+    
+// 解法：Leaky ReLU
+f(x) = max(0.01x, x)  // x<0 仍有小梯度`,
+    kps:[
+      {title:'ReLU 優點',body:'x>0 時梯度=1，不會梯度消失；計算只需 max(0,x)，速度極快。'},
+      {title:'Dead Neuron',body:'x<0 時梯度=0，若學習率過大或初始化不當，神經元可能永遠不更新。3D 右側暗色節點即 Dead Neuron。'},
+      {title:'解法',body:'改用 Leaky ReLU（小斜率0.01）或 ELU，讓負值區域仍有梯度流通。'},
+    ],
+    exam:'📌 考試考點：ReLU 缺點是 Dead Neuron；Leaky ReLU 透過 max(0.01x, x) 解決此問題。',
+    controls:[
+      {label:'ReLU 正常',action:"NNVIZ.setDeadMode(false);document.querySelectorAll('.nn-ctrl').forEach(b=>b.classList.remove('active'));this.classList.add('active')"},
+      {label:'Dead Neuron',action:"NNVIZ.setDeadMode(true);document.querySelectorAll('.nn-ctrl').forEach(b=>b.classList.remove('active'));this.classList.add('active')"},
+    ]
+  },
+  {
+    badge:'反向傳播 · 梯度流動',badgeCol:'#FF4D6D',
+    title:'反向傳播梯度流動',
+    body:'訓練神經網路的核心：先前向傳播算出損失，再從輸出層往回用「鏈式法則」計算每個權重的梯度，最後更新權重。橙色粒子=前向訊號，紅色粒子=梯度回流。',
+    formula:`// 鏈式法則（Chain Rule）
+∂L/∂W¹ = ∂L/∂a³ · ∂a³/∂z³ · ∂z³/∂a² · ∂a²/∂W¹
+
+// 梯度消失問題（Sigmoid/Tanh 深層）
+∂L/∂W¹ ≈ 0  // 多個 <1 的梯度相乘趨近0
+
+// 梯度爆炸（權重初始化不當）
+∂L/∂W¹ → ∞  // 解法：梯度裁剪 Gradient Clipping`,
+    kps:[
+      {title:'前向傳播',body:'橙色粒子從左到右，計算每層輸出，最後得到損失 L。'},
+      {title:'反向傳播',body:'紅色粒子從右到左，用鏈式法則把梯度從損失層傳回每個權重。'},
+      {title:'梯度消失',body:'Sigmoid/Tanh 的梯度<1，多層相乘後接近0，前面的層幾乎學不到東西。ReLU 能緩解此問題。'},
+    ],
+    exam:'📌 考試考點：反向傳播使用鏈式法則（Chain Rule）；梯度消失主因是 Sigmoid/Tanh 激活函數；解法是改用 ReLU 或殘差連結。',
+    controls:[
+      {label:'▶ 前向傳播',action:"NNVIZ.setBPPhase(0);document.querySelectorAll('.nn-ctrl').forEach(b=>b.classList.remove('active'));this.classList.add('active')"},
+      {label:'◀ 反向傳播',action:"NNVIZ.setBPPhase(2);document.querySelectorAll('.nn-ctrl').forEach(b=>b.classList.remove('active'));this.classList.add('active')"},
+    ]
+  },
+];
+
+function renderNNTeachPanel(idx){
+  const d=NN_TEACH[idx];
+  const ctrlHtml=d.controls.length?`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${d.controls.map((c,i)=>`<button class="nn-ctrl ov-btn${i===0?' active':''}" onclick="${c.action}">${c.label}</button>`).join('')}
+    </div>`:'';
+  document.getElementById('nn-teach-panel').innerHTML=`
+    <div>
+      <span class="tp-badge" style="background:${d.badgeCol}22;border:1px solid ${d.badgeCol};color:${d.badgeCol}">${d.badge}</span>
+      <div class="tp-title" style="margin-top:6px">${d.title}</div>
+    </div>
+    <div class="tp-body">${d.body}</div>
+    <div class="tp-formula">${d.formula}</div>
+    <div class="tp-keypoints">
+      ${d.kps.map(k=>`<div class="tp-kp"><strong>${k.title}：</strong>${k.body}</div>`).join('')}
+    </div>
+    <div class="tp-exam">${d.exam}</div>
+    ${ctrlHtml}
+  `;
+}
+
+function switchNNScene(btn,idx){
+  document.querySelectorAll('.scene-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  NNVIZ.loadScene(idx);
+  renderNNTeachPanel(idx);
+}
+function nnToggleAnim(){
+  NNVIZ.toggleAnim();
+  const btn=document.getElementById('nn-ov-play');
+  btn.textContent=btn.textContent.includes('暫停')?'▶ 播放':'⏸ 暫停';
+}
+function nnResetCam(){NNVIZ.resetCam();}
+function nnToggleSpeed(){
+  NNVIZ.toggleSpeed();
+  const btn=document.getElementById('nn-ov-speed');
+  btn.textContent=btn.textContent.includes('慢速')?'🐇 快速':'🐢 慢速';
+}
+
+renderNNTeachPanel(0);
+</script>
+</body>
+</html>

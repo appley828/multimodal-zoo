@@ -9,6 +9,9 @@
       "Bash(ls)",
       "Bash(test -f *)",
       "Bash(python3 *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
       "mcp__scheduled-tasks__*"
     ]
   }

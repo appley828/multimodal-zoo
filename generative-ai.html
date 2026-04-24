@@ -515,7 +515,91 @@ footer{text-align:center;padding:28px;font-size:.75rem;color:rgba(232,234,246,.2
   </div>
 </div>
 
-<!-- ══ 9. 仿真考題 ══ -->
+<!-- ══ 9. 程式碼考點 ══ -->
+<div class="sec-title reveal">💻 程式碼考點（Transformers · OpenAI API · LangChain）</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🤗 Hugging Face Transformers — 載入預訓練模型</div>
+  <div class="formula">
+    <span class="fn">from</span> transformers <span class="fn">import</span> pipeline, AutoTokenizer, AutoModelForCausalLM<br><br>
+    <span class="cm"># 一行載入文字生成 pipeline（考點：task 參數）</span><br>
+    <span class="vr">generator</span> = <span class="fn">pipeline</span>(<span class="hl">'text-generation'</span>, model=<span class="hl">'gpt2'</span>)<br>
+    <span class="vr">result</span> = <span class="vr">generator</span>(<span class="hl">'AI的未來是'</span>, max_new_tokens=<span class="hl">50</span>)<br><br>
+    <span class="cm"># 情感分析（zero-shot 分類）</span><br>
+    <span class="vr">classifier</span> = <span class="fn">pipeline</span>(<span class="hl">'zero-shot-classification'</span>)<br>
+    <span class="vr">classifier</span>(<span class="hl">'這個產品很棒'</span>, candidate_labels=[<span class="hl">'正面'</span>, <span class="hl">'負面'</span>, <span class="hl">'中性'</span>])
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--accent)">pipeline('task')</strong><br><span style="color:var(--muted);font-size:.85rem">快速載入任務模型，無需手動處理</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">max_new_tokens</strong><br><span style="color:var(--muted);font-size:.85rem">控制生成長度，非 max_length</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">zero-shot-classification</strong><br><span style="color:var(--muted);font-size:.85rem">無需標記資料即可分類</span></div>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🔑 OpenAI API — 呼叫 GPT 模型</div>
+  <div class="formula">
+    <span class="fn">from</span> openai <span class="fn">import</span> OpenAI<br><br>
+    <span class="vr">client</span> = <span class="fn">OpenAI</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 讀取環境變數 OPENAI_API_KEY</span><br><br>
+    <span class="vr">response</span> = <span class="vr">client</span>.chat.completions.<span class="fn">create</span>(<br>
+    &nbsp;&nbsp;model=<span class="hl">'gpt-4o'</span>,<br>
+    &nbsp;&nbsp;messages=[<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;{<span class="hl">'role'</span>: <span class="hl">'system'</span>, <span class="hl">'content'</span>: <span class="hl">'你是專業的 AI 助理'</span>},<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;{<span class="hl">'role'</span>: <span class="hl">'user'</span>, <span class="hl">'content'</span>: <span class="hl">'請解釋 RAG 技術'</span>}<br>
+    &nbsp;&nbsp;],<br>
+    &nbsp;&nbsp;temperature=<span class="hl">0.7</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 考點：0=確定性，1+=創意</span><br>
+    &nbsp;&nbsp;max_tokens=<span class="hl">500</span><br>
+    )<br>
+    <span class="fn">print</span>(<span class="vr">response</span>.choices[<span class="hl">0</span>].message.content)
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🔗 RAG 實作流程（LangChain 概念）</div>
+  <div class="formula">
+    <span class="cm"># Step 1：文件向量化存入向量資料庫</span><br>
+    <span class="fn">from</span> langchain.vectorstores <span class="fn">import</span> FAISS<br>
+    <span class="fn">from</span> langchain.embeddings <span class="fn">import</span> OpenAIEmbeddings<br><br>
+    <span class="vr">embeddings</span> = <span class="fn">OpenAIEmbeddings</span>()<br>
+    <span class="vr">vectorstore</span> = FAISS.<span class="fn">from_documents</span>(<span class="vr">docs</span>, <span class="vr">embeddings</span>)<br><br>
+    <span class="cm"># Step 2：相似度搜尋（考點：k=最近鄰數量）</span><br>
+    <span class="vr">retriever</span> = <span class="vr">vectorstore</span>.<span class="fn">as_retriever</span>(search_kwargs={<span class="hl">'k'</span>: <span class="hl">3</span>})<br><br>
+    <span class="cm"># Step 3：組合 Prompt 送給 LLM</span><br>
+    <span class="fn">from</span> langchain.chains <span class="fn">import</span> RetrievalQA<br>
+    <span class="vr">qa_chain</span> = RetrievalQA.<span class="fn">from_chain_type</span>(llm=<span class="vr">llm</span>, retriever=<span class="vr">retriever</span>)
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--pink)">Embedding</strong><br><span style="color:var(--muted);font-size:.85rem">文字→向量，供相似度搜尋</span></div>
+    <div class="kp-card"><strong style="color:var(--pink)">FAISS</strong><br><span style="color:var(--muted);font-size:.85rem">本地向量資料庫，快速近鄰搜尋</span></div>
+    <div class="kp-card"><strong style="color:var(--pink)">RetrievalQA</strong><br><span style="color:var(--muted);font-size:.85rem">檢索→生成，解決幻覺問題</span></div>
+  </div>
+</div>
+
+<div class="panel reveal" style="border-left:3px solid var(--yellow);">
+  <div class="panel-title" style="color:var(--yellow);">🧪 歷屆考題程式題型（選擇題）</div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: 呼叫 OpenAI API 時，temperature=0 代表？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div style="color:var(--accent2);font-weight:900;">(A) 輸出最確定、重複性最高 ✓</div>
+        <div>(B) 隨機性最高</div>
+        <div>(C) 生成速度最快</div>
+        <div>(D) 停止生成</div>
+      </div>
+    </div>
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: RAG 架構中，向量資料庫的主要用途為？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) 訓練 LLM 參數</div>
+        <div>(B) 儲存原始 PDF</div>
+        <div style="color:var(--accent2);font-weight:900;">(C) 相似度搜尋，找出相關文件段落 ✓</div>
+        <div>(D) 壓縮模型大小</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 10. 仿真考題 ══ -->
 <div class="sec-title reveal">🎯 仿真考題（8 題）</div>
 <div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
 <div id="quiz" class="reveal"></div>

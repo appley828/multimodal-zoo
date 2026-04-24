@@ -531,7 +531,86 @@ footer{text-align:center;padding:28px;font-size:.75rem;color:rgba(232,234,246,.2
   </div>
 </div>
 
-<!-- ══ 9. 仿真考題 ══ -->
+<!-- ══ 9. 程式碼考點 ══ -->
+<div class="sec-title reveal">💻 程式碼考點（pandas · seaborn · scikit-learn NLP）</div>
+
+<div class="panel reveal">
+  <div class="panel-title">📦 文字資料讀取與前處理（pandas）</div>
+  <div class="formula">
+    <span class="fn">import</span> pandas <span class="fn">as</span> <span class="vr">pd</span><br>
+    <span class="vr">df</span> = pd.<span class="fn">read_csv</span>(<span class="hl">'text_data.csv'</span>)<br><br>
+    <span class="cm"># 文字欄位基本操作</span><br>
+    <span class="vr">df</span>[<span class="hl">'text'</span>] = <span class="vr">df</span>[<span class="hl">'text'</span>].<span class="fn">str.lower</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 轉小寫</span><br>
+    <span class="vr">df</span>[<span class="hl">'text'</span>] = <span class="vr">df</span>[<span class="hl">'text'</span>].<span class="fn">str.strip</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 去首尾空白</span><br>
+    <span class="vr">df</span>[<span class="hl">'length'</span>] = <span class="vr">df</span>[<span class="hl">'text'</span>].<span class="fn">str.len</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 計算文字長度</span><br>
+    <span class="vr">df</span>.<span class="fn">dropna</span>(subset=[<span class="hl">'text'</span>])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 移除空值</span>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🤖 TF-IDF 向量化與情感分析（scikit-learn）</div>
+  <div class="formula">
+    <span class="fn">from</span> sklearn.feature_extraction.text <span class="fn">import</span> TfidfVectorizer<br>
+    <span class="fn">from</span> sklearn.linear_model <span class="fn">import</span> LogisticRegression<br>
+    <span class="fn">from</span> sklearn.model_selection <span class="fn">import</span> train_test_split<br>
+    <span class="fn">from</span> sklearn.metrics <span class="fn">import</span> accuracy_score, classification_report<br><br>
+    <span class="cm"># TF-IDF 特徵提取（考點：max_features 控制詞彙量）</span><br>
+    <span class="vr">vectorizer</span> = <span class="fn">TfidfVectorizer</span>(max_features=<span class="hl">5000</span>)<br>
+    <span class="vr">X</span> = <span class="vr">vectorizer</span>.<span class="fn">fit_transform</span>(<span class="vr">df</span>[<span class="hl">'text'</span>])<br>
+    <span class="vr">y</span> = <span class="vr">df</span>[<span class="hl">'sentiment'</span>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 正/負面標籤</span><br><br>
+    <span class="cm"># 訓練情感分類器</span><br>
+    <span class="vr">X_train</span>, <span class="vr">X_test</span>, <span class="vr">y_train</span>, <span class="vr">y_test</span> = <span class="fn">train_test_split</span>(<span class="vr">X</span>, <span class="vr">y</span>, test_size=<span class="hl">0.2</span>)<br>
+    <span class="vr">model</span> = <span class="fn">LogisticRegression</span>().<span class="fn">fit</span>(<span class="vr">X_train</span>, <span class="vr">y_train</span>)<br>
+    <span class="fn">print</span>(<span class="fn">accuracy_score</span>(<span class="vr">y_test</span>, <span class="vr">model</span>.<span class="fn">predict</span>(<span class="vr">X_test</span>)))
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--accent)">TfidfVectorizer</strong><br><span style="color:var(--muted);font-size:.85rem">文字→TF-IDF稀疏矩陣</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">fit_transform()</strong><br><span style="color:var(--muted);font-size:.85rem">學習詞彙表並轉換</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">max_features</strong><br><span style="color:var(--muted);font-size:.85rem">限制詞彙量防止高維</span></div>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🎨 NLP 資料視覺化（seaborn）</div>
+  <div class="formula">
+    <span class="fn">import</span> seaborn <span class="fn">as</span> <span class="vr">sns</span><br>
+    <span class="fn">import</span> matplotlib.pyplot <span class="fn">as</span> <span class="vr">plt</span><br><br>
+    <span class="cm"># 情感分布</span><br>
+    sns.<span class="fn">countplot</span>(data=<span class="vr">df</span>, x=<span class="hl">'sentiment'</span>)&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 類別數量</span><br>
+    <span class="cm"># 文字長度分布</span><br>
+    sns.<span class="fn">histplot</span>(data=<span class="vr">df</span>, x=<span class="hl">'length'</span>, bins=<span class="hl">50</span>)<span class="cm"># 長度直方圖</span><br>
+    <span class="cm"># 混淆矩陣熱力圖</span><br>
+    <span class="fn">from</span> sklearn.metrics <span class="fn">import</span> confusion_matrix<br>
+    sns.<span class="fn">heatmap</span>(<span class="fn">confusion_matrix</span>(<span class="vr">y_test</span>, <span class="vr">y_pred</span>), annot=<span class="hl">True</span>, fmt=<span class="hl">'d'</span>)<br>
+    plt.<span class="fn">show</span>()
+  </div>
+</div>
+
+<div class="panel reveal" style="border-left:3px solid var(--yellow);">
+  <div class="panel-title" style="color:var(--yellow);">🧪 歷屆考題程式題型（選擇題）</div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: 使用 seaborn 繪製類別數量長條圖的函式為？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) sns.histplot()</div>
+        <div style="color:var(--accent2);font-weight:900;">(B) sns.countplot() ✓</div>
+        <div>(C) sns.scatterplot()</div>
+        <div>(D) sns.heatmap()</div>
+      </div>
+    </div>
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: TF-IDF 中 max_features=5000 的意義為？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) 最多處理 5000 筆文件</div>
+        <div>(B) 詞向量維度為 5000</div>
+        <div style="color:var(--accent2);font-weight:900;">(C) 只保留頻率最高的 5000 個詞 ✓</div>
+        <div>(D) 訓練迭代 5000 次</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 10. 仿真考題 ══ -->
 <div class="sec-title reveal">🎯 仿真考題（8 題）</div>
 <div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
 <div id="quiz" class="reveal"></div>

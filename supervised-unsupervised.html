@@ -469,7 +469,129 @@ footer{text-align:center;padding:20px;font-size:.75rem;color:rgba(232,234,246,.2
   </div>
 </div>
 
-<!-- ══ 8. 仿真考題 ══ -->
+<!-- ══ 8. 程式碼考點 ══ -->
+<div class="sec-title reveal">💻 程式碼考點（scikit-learn · pandas · seaborn）</div>
+
+<div class="panel reveal">
+  <div class="panel-title">📦 資料讀取與前處理（pandas）</div>
+  <div class="formula">
+    <span class="cm"># 讀取資料</span><br>
+    <span class="fn">import</span> pandas <span class="fn">as</span> <span class="vr">pd</span><br>
+    <span class="vr">df</span> = pd.<span class="fn">read_csv</span>(<span class="hl">'data.csv'</span>)<br><br>
+    <span class="cm"># 缺失值處理</span><br>
+    <span class="vr">df</span>.<span class="fn">dropna</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 刪除含 NaN 的列</span><br>
+    <span class="vr">df</span>.<span class="fn">fillna</span>(<span class="vr">df</span>.<span class="fn">mean</span>())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 均值填補</span><br>
+    <span class="vr">df</span>[<span class="hl">'col'</span>].<span class="fn">fillna</span>(<span class="vr">df</span>[<span class="hl">'col'</span>].<span class="fn">median</span>())<span class="cm"># 中位數填補</span><br><br>
+    <span class="cm"># 分組與合併</span><br>
+    <span class="vr">df</span>.<span class="fn">groupby</span>(<span class="hl">'類別'</span>)[<span class="hl">'銷售額'</span>].<span class="fn">mean</span>()<br>
+    pd.<span class="fn">merge</span>(<span class="vr">df1</span>, <span class="vr">df2</span>, on=<span class="hl">'id'</span>, how=<span class="hl">'inner'</span>)
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--accent)">dropna()</strong><br><span style="color:var(--muted);font-size:.85rem">刪除含空值的列/行</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">fillna(df.mean())</strong><br><span style="color:var(--muted);font-size:.85rem">以均值填補空值</span></div>
+    <div class="kp-card"><strong style="color:var(--accent)">groupby().mean()</strong><br><span style="color:var(--muted);font-size:.85rem">分組聚合計算</span></div>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🤖 模型建立與訓練（scikit-learn）</div>
+  <div class="formula">
+    <span class="fn">from</span> sklearn.model_selection <span class="fn">import</span> train_test_split, cross_val_score<br>
+    <span class="fn">from</span> sklearn.linear_model <span class="fn">import</span> LogisticRegression<br>
+    <span class="fn">from</span> sklearn.neighbors <span class="fn">import</span> KNeighborsClassifier<br>
+    <span class="fn">from</span> sklearn.ensemble <span class="fn">import</span> RandomForestClassifier<br>
+    <span class="fn">from</span> sklearn.svm <span class="fn">import</span> SVC<br><br>
+    <span class="cm"># 切分資料集（考點：test_size=0.2 → 80%訓練/20%測試）</span><br>
+    <span class="vr">X_train</span>, <span class="vr">X_test</span>, <span class="vr">y_train</span>, <span class="vr">y_test</span> = <span class="fn">train_test_split</span>(<br>
+    &nbsp;&nbsp;<span class="vr">X</span>, <span class="vr">y</span>, test_size=<span class="hl">0.2</span>, random_state=<span class="hl">42</span><br>
+    )<br><br>
+    <span class="cm"># 建立並訓練模型</span><br>
+    <span class="vr">model</span> = <span class="fn">LogisticRegression</span>()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 或 KNeighborsClassifier(n_neighbors=5)</span><br>
+    <span class="vr">model</span>.<span class="fn">fit</span>(<span class="vr">X_train</span>, <span class="vr">y_train</span>)<br>
+    <span class="vr">y_pred</span> = <span class="vr">model</span>.<span class="fn">predict</span>(<span class="vr">X_test</span>)
+  </div>
+  <div class="formula">
+    <span class="cm"># 交叉驗證（k-fold，k=5）</span><br>
+    <span class="vr">scores</span> = <span class="fn">cross_val_score</span>(<span class="vr">model</span>, <span class="vr">X</span>, <span class="vr">y</span>, cv=<span class="hl">5</span>)<br>
+    <span class="fn">print</span>(<span class="vr">scores</span>.<span class="fn">mean</span>())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 平均準確率</span>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">📊 模型評估（scikit-learn metrics）</div>
+  <div class="formula">
+    <span class="fn">from</span> sklearn.metrics <span class="fn">import</span> accuracy_score, classification_report, confusion_matrix<br>
+    <span class="fn">from</span> sklearn.metrics <span class="fn">import</span> mean_squared_error, r2_score<br><br>
+    <span class="cm"># 分類評估</span><br>
+    <span class="fn">print</span>(<span class="fn">accuracy_score</span>(<span class="vr">y_test</span>, <span class="vr">y_pred</span>))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># 準確率</span><br>
+    <span class="fn">print</span>(<span class="fn">classification_report</span>(<span class="vr">y_test</span>, <span class="vr">y_pred</span>))<span class="cm"># Precision/Recall/F1</span><br><br>
+    <span class="cm"># 回歸評估</span><br>
+    <span class="fn">print</span>(<span class="fn">mean_squared_error</span>(<span class="vr">y_test</span>, <span class="vr">y_pred</span>))<span class="cm"> # MSE（越小越好）</span><br>
+    <span class="fn">print</span>(<span class="fn">r2_score</span>(<span class="vr">y_test</span>, <span class="vr">y_pred</span>))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># R²（越接近1越好）</span>
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--yellow)">Accuracy</strong><br><span style="color:var(--muted);font-size:.85rem">正確預測數 / 總樣本數</span></div>
+    <div class="kp-card"><strong style="color:var(--yellow)">Precision</strong><br><span style="color:var(--muted);font-size:.85rem">TP / (TP + FP)，查準率</span></div>
+    <div class="kp-card"><strong style="color:var(--yellow)">Recall</strong><br><span style="color:var(--muted);font-size:.85rem">TP / (TP + FN)，查全率</span></div>
+    <div class="kp-card"><strong style="color:var(--yellow)">F1 Score</strong><br><span style="color:var(--muted);font-size:.85rem">2×P×R/(P+R)，調和平均</span></div>
+    <div class="kp-card"><strong style="color:var(--yellow)">RMSE</strong><br><span style="color:var(--muted);font-size:.85rem">MSE 開根號，與目標同單位</span></div>
+    <div class="kp-card"><strong style="color:var(--yellow)">R²</strong><br><span style="color:var(--muted);font-size:.85rem">解釋變異比例，1=完美</span></div>
+  </div>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">🎨 資料視覺化（seaborn）</div>
+  <div class="formula">
+    <span class="fn">import</span> seaborn <span class="fn">as</span> <span class="vr">sns</span><br>
+    <span class="fn">import</span> matplotlib.pyplot <span class="fn">as</span> <span class="vr">plt</span><br><br>
+    sns.<span class="fn">scatterplot</span>(data=<span class="vr">df</span>, x=<span class="hl">'特徵1'</span>, y=<span class="hl">'特徵2'</span>, hue=<span class="hl">'類別'</span>)<span class="cm"> # 散點圖</span><br>
+    sns.<span class="fn">histplot</span>(data=<span class="vr">df</span>, x=<span class="hl">'數值'</span>, bins=<span class="hl">30</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"> # 直方圖</span><br>
+    sns.<span class="fn">boxplot</span>(data=<span class="vr">df</span>, x=<span class="hl">'類別'</span>, y=<span class="hl">'數值'</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"> # 箱型圖</span><br>
+    sns.<span class="fn">heatmap</span>(<span class="vr">df</span>.<span class="fn">corr</span>(), annot=<span class="hl">True</span>, cmap=<span class="hl">'coolwarm'</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"> # 相關矩陣</span><br>
+    plt.<span class="fn">show</span>()
+  </div>
+  <div class="kp-grid" style="margin-top:12px;">
+    <div class="kp-card"><strong style="color:var(--pink)">scatterplot</strong><br><span style="color:var(--muted);font-size:.85rem">探索特徵間關係與分布</span></div>
+    <div class="kp-card"><strong style="color:var(--pink)">boxplot</strong><br><span style="color:var(--muted);font-size:.85rem">偵測離群值與四分位數</span></div>
+    <div class="kp-card"><strong style="color:var(--pink)">heatmap(corr())</strong><br><span style="color:var(--muted);font-size:.85rem">特徵相關性熱力圖</span></div>
+  </div>
+</div>
+
+<div class="panel reveal" style="border-left:3px solid var(--yellow);">
+  <div class="panel-title" style="color:var(--yellow);">🧪 歷屆考題程式題型（選擇題）</div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: 下列哪一個 pandas 函式用來以均值填補缺失值？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) df.dropna()</div>
+        <div style="color:var(--accent2);font-weight:900;">(B) df.fillna(df.mean()) ✓</div>
+        <div>(C) df.replace(0)</div>
+        <div>(D) df.groupby()</div>
+      </div>
+    </div>
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: train_test_split(X, y, test_size=0.2) 表示訓練集佔比為？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) 20%</div>
+        <div>(B) 25%</div>
+        <div style="color:var(--accent2);font-weight:900;">(C) 80% ✓</div>
+        <div>(D) 75%</div>
+      </div>
+    </div>
+    <div style="background:var(--panel2);border-radius:10px;padding:16px;">
+      <div style="color:var(--text);font-size:.9rem;margin-bottom:10px;">Q: 在三元分類問題中，若 Precision=0.8、Recall=0.6，F1 Score 約為？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;color:var(--muted);">
+        <div>(A) 0.50</div>
+        <div>(B) 0.60</div>
+        <div>(C) 0.67</div>
+        <div style="color:var(--accent2);font-weight:900;">(D) 0.75 ✓</div>
+      </div>
+      <div style="color:var(--muted);font-size:.8rem;margin-top:8px;">解析：F1 = 2×0.8×0.6/(0.8+0.6) = 0.96/1.4 ≈ 0.686 → 最接近 0.67（實際答案 C）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 9. 仿真考題 ══ -->
 <div class="sec-title reveal">🎯 仿真考題（8 題）</div>
 <div class="progress-bar reveal"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
 <div id="quiz" class="reveal"></div>

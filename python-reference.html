@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 程式速查手冊 — iPAS AI應用規劃師中級</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+*{font-family:'Calibri','Microsoft JhengHei','微軟正黑體',sans-serif;margin:0;padding:0;box-sizing:border-box;}
+code,.mono{font-family:'JetBrains Mono','Consolas',monospace!important;}
+:root{
+  --bg:#0F1117;--panel:#1A1D27;--panel2:#21253A;
+  --border:#2E3250;--text:#E8EAF6;--muted:#8892B0;
+  --accent:#00FFB2;--accent2:#00D4FF;--accent3:#7C6FFF;
+  --yellow:#FFD166;--orange:#FF9B42;--pink:#FF6B9D;--red:#FF4D6D;
+  --r:14px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.7;overflow-x:hidden;}
+
+/* ── Nav ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,17,23,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px 24px;flex-wrap:wrap;}
+.nav a{color:var(--accent);text-decoration:none;font-weight:700;font-size:.88rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--accent);transition:all .18s;}
+.nav a:hover{background:var(--accent);color:#000;}
+.nav-title{font-size:1rem;color:var(--text);font-weight:700;}
+.nav-tag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:4px 14px;border-radius:999px;font-size:.75rem;font-weight:900;color:#000;}
+
+/* ── Hero ── */
+.hero{padding:56px 20px 40px;background:linear-gradient(160deg,#0F1117,#091510,#0F1117);text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,255,178,.1),transparent);}
+.hero-badge{display:inline-block;margin-bottom:14px;padding:5px 18px;border-radius:999px;background:rgba(0,255,178,.1);border:1px solid var(--accent);font-size:.78rem;font-weight:900;color:var(--accent);letter-spacing:1px;}
+.hero-title{font-size:clamp(1.8rem,5vw,3rem);background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.hero-sub{color:var(--muted);font-size:.95rem;max-width:640px;margin:0 auto 20px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.tag{padding:4px 14px;border-radius:999px;font-size:.75rem;font-weight:900;border:1px solid;}
+
+/* ── TOC ── */
+.toc{max-width:980px;margin:24px auto 0;padding:0 20px;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
+.toc-btn{display:block;padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--muted);font-size:.82rem;font-weight:700;transition:all .18s;text-align:center;}
+.toc-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,255,178,.05);}
+.toc-num{font-size:1.1rem;display:block;margin-bottom:3px;}
+
+/* ── Layout ── */
+.wrap{max-width:980px;margin:0 auto;padding:8px 20px 100px;}
+.sec{margin-top:56px;}
+.sec-title{font-size:1.4rem;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{content:'';display:inline-block;width:4px;height:22px;border-radius:2px;background:linear-gradient(var(--accent),var(--accent2));}
+.sec-badge{font-size:.72rem;padding:3px 10px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-weight:900;margin-left:6px;}
+
+/* ── Panel ── */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px;}
+.panel-title{font-weight:900;font-size:.96rem;color:var(--accent);margin-bottom:12px;}
+
+/* ── Code box ── */
+.cbox{background:#060a0d;border:1.5px solid var(--border);border-radius:12px;padding:18px 22px;margin:12px 0;font-family:'JetBrains Mono','Consolas',monospace;font-size:.88rem;line-height:2.0;overflow-x:auto;position:relative;}
+.cbox .cm{color:#4a5568;font-style:italic;}
+.cbox .kw{color:var(--pink);}
+.cbox .fn{color:var(--accent2);}
+.cbox .st{color:var(--yellow);}
+.cbox .nm{color:var(--orange);}
+.cbox .hl{color:var(--accent);font-weight:900;}
+.cbox .label{position:absolute;top:8px;right:12px;font-size:.68rem;font-weight:900;color:var(--muted);font-family:inherit;}
+
+/* ── Table ── */
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem;margin:12px 0;}
+.tbl th{background:var(--panel2);color:var(--accent);font-weight:900;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;}
+.tbl tr:hover td{background:rgba(0,255,178,.03);}
+.tbl code{font-family:'JetBrains Mono','Consolas',monospace;color:var(--accent2);font-size:.85rem;background:rgba(0,212,255,.08);padding:1px 6px;border-radius:4px;}
+
+/* ── Alert box ── */
+.alert{border-radius:10px;padding:14px 18px;font-size:.87rem;line-height:1.7;margin:12px 0;}
+.alert.green{background:rgba(0,255,178,.07);border:1px solid rgba(0,255,178,.3);color:var(--accent);}
+.alert.blue{background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.3);color:var(--accent2);}
+.alert.yellow{background:rgba(255,209,102,.07);border:1px solid rgba(255,209,102,.3);color:var(--yellow);}
+.alert.red{background:rgba(255,77,109,.07);border:1px solid rgba(255,77,109,.3);color:var(--red);}
+.alert strong{font-weight:900;}
+
+/* ── Grid ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+
+/* ── Pill ── */
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:900;border:1px solid;}
+.pill-g{color:var(--accent);border-color:var(--accent);}
+.pill-b{color:var(--accent2);border-color:var(--accent2);}
+.pill-y{color:var(--yellow);border-color:var(--yellow);}
+.pill-p{color:var(--accent3);border-color:var(--accent3);}
+.pill-r{color:var(--red);border-color:var(--red);}
+
+footer{text-align:center;padding:24px;font-size:.75rem;color:rgba(232,234,246,.2);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">← 首頁</a>
+  <span class="nav-title">Python 程式速查手冊</span>
+  <span class="nav-tag">科目三 必備</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">科目三 · 程式題速查 · 考前必讀</div>
+  <div class="hero-title">Python 程式速查手冊</div>
+  <div class="hero-sub">NumPy · Pandas · Sklearn · Keras · Matplotlib<br>常見名詞 · 語法 · 考試陷阱 全整理</div>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--accent);border-color:var(--accent)">NumPy</span>
+    <span class="tag" style="color:var(--accent2);border-color:var(--accent2)">Pandas</span>
+    <span class="tag" style="color:var(--yellow);border-color:var(--yellow)">Sklearn</span>
+    <span class="tag" style="color:var(--pink);border-color:var(--pink)">Keras</span>
+    <span class="tag" style="color:var(--orange);border-color:var(--orange)">Matplotlib</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-grid">
+    <a href="#sec1" class="toc-btn"><span class="toc-num">①</span>基礎資料型別</a>
+    <a href="#sec2" class="toc-btn"><span class="toc-num">②</span>NumPy</a>
+    <a href="#sec3" class="toc-btn"><span class="toc-num">③</span>Pandas</a>
+    <a href="#sec4" class="toc-btn"><span class="toc-num">④</span>Sklearn 前處理</a>
+    <a href="#sec5" class="toc-btn"><span class="toc-num">⑤</span>Sklearn 模型</a>
+    <a href="#sec6" class="toc-btn"><span class="toc-num">⑥</span>評估指標</a>
+    <a href="#sec7" class="toc-btn"><span class="toc-num">⑦</span>交叉驗證</a>
+    <a href="#sec8" class="toc-btn"><span class="toc-num">⑧</span>Keras 神經網路</a>
+    <a href="#sec9" class="toc-btn"><span class="toc-num">⑨</span>Matplotlib</a>
+    <a href="#sec10" class="toc-btn"><span class="toc-num">⑩</span>中英名詞對照</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════
+     ① 基礎資料型別
+══════════════════════════════════════ -->
+<div class="sec" id="sec1">
+  <div class="sec-title">基礎資料型別 <span class="sec-badge">Python Built-in</span></div>
+
+  <table class="tbl">
+    <tr><th>型別</th><th>說明</th><th>範例</th><th>特性</th></tr>
+    <tr><td><code>int</code></td><td>整數</td><td><code>42</code></td><td>—</td></tr>
+    <tr><td><code>float</code></td><td>浮點數</td><td><code>3.14</code></td><td>—</td></tr>
+    <tr><td><code>str</code></td><td>字串</td><td><code>"hello"</code></td><td>不可變</td></tr>
+    <tr><td><code>bool</code></td><td>布林值</td><td><code>True / False</code></td><td>—</td></tr>
+    <tr><td><code>list</code></td><td>有序可變序列</td><td><code>[1, 2, 3]</code></td><td>可增刪改</td></tr>
+    <tr><td><code>tuple</code></td><td>有序不可變序列</td><td><code>(1, 2, 3)</code></td><td>不可修改</td></tr>
+    <tr><td><code>dict</code></td><td>鍵值對</td><td><code>{"a": 1}</code></td><td>key 不重複</td></tr>
+    <tr><td><code>set</code></td><td>無序不重複集合</td><td><code>{1, 2, 3}</code></td><td>自動去重</td></tr>
+  </table>
+
+  <div class="alert green"><strong>考試常見：</strong>切片語法 <code>arr[1:5]</code> 取第 1 到第 4 個（不含 5）；<code>arr[:, 0:9]</code> 取所有列的第 0~8 欄。</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ② NumPy
+══════════════════════════════════════ -->
+<div class="sec" id="sec2">
+  <div class="sec-title">NumPy <span class="sec-badge">數值運算</span></div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">建立陣列</div>
+      <div class="cbox">
+np.array([1, 2, 3])
+np.zeros((3, 4))     <span class="cm"># 全0</span>
+np.ones((3, 4))      <span class="cm"># 全1</span>
+np.random.rand(3, 4) <span class="cm"># 隨機 0~1</span>
+np.random.normal(0, 1, (3,4)) <span class="cm"># 常態分布</span>
+np.random.seed(42)   <span class="cm"># 固定隨機種子</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">形狀與統計</div>
+      <div class="cbox">
+arr.shape       <span class="cm"># (列數, 欄數)</span>
+arr.reshape(2, 6)
+arr.T           <span class="cm"># 轉置</span>
+
+arr.mean()      <span class="cm"># 平均</span>
+arr.std()       <span class="cm"># 標準差</span>
+arr.max()       <span class="cm"># 最大值</span>
+arr.sum(axis=0) <span class="cm"># 沿列方向加總</span>
+arr.sum(axis=1) <span class="cm"># 沿欄方向加總</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert blue"><strong>axis 記憶法：</strong>axis=0 往「下」計算（跨列）；axis=1 往「右」計算（跨欄）。<code>mean(axis=0)</code> = 每欄的平均。</div>
+
+  <div class="panel">
+    <div class="panel-title">切片語法（常考）</div>
+    <div class="cbox">
+arr[0, :]      <span class="cm"># 第0列，全部欄</span>
+arr[:, 0]      <span class="cm"># 全部列，第0欄</span>
+arr[:, 0:9]    <span class="cm"># 全部列，第0~8欄（不含9）</span>
+arr[:, 9]      <span class="cm"># 全部列，第9欄（通常是 y 標籤）</span>
+
+<span class="cm"># 複合賦值運算子</span>
+X -= X.mean(axis=0)  <span class="cm"># 等同 X = X - X.mean(axis=0)</span>
+X /= X.std(axis=0)   <span class="cm"># 等同 X = X / X.std(axis=0)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ③ Pandas
+══════════════════════════════════════ -->
+<div class="sec" id="sec3">
+  <div class="sec-title">Pandas <span class="sec-badge">資料處理</span></div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">讀取與查看</div>
+      <div class="cbox">
+df = pd.read_csv("file.csv")
+df.head()       <span class="cm"># 前5筆</span>
+df.tail()       <span class="cm"># 後5筆</span>
+df.shape        <span class="cm"># (列數, 欄數)</span>
+df.info()       <span class="cm"># 欄位型別與缺失</span>
+df.describe()   <span class="cm"># 統計摘要</span>
+df.dtypes       <span class="cm"># 每欄資料型別</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">選取資料</div>
+      <div class="cbox">
+df["欄位名"]       <span class="cm"># 選一欄（Series）</span>
+df[["A", "B"]]    <span class="cm"># 選多欄（DataFrame）</span>
+df.iloc[0, :]     <span class="cm"># 第0列，用位置索引</span>
+df.iloc[:, 0:9]   <span class="cm"># 所有列，第0~8欄</span>
+df.loc[0, "年齡"] <span class="cm"># 用標籤索引</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">缺失值處理</div>
+    <div class="cbox">
+df.isnull().sum()    <span class="cm"># 各欄缺失數量</span>
+df.dropna()          <span class="cm"># 刪除有缺失的列</span>
+df.fillna(0)         <span class="cm"># 填入固定值</span>
+df.fillna(df.mean()) <span class="cm"># 填入平均值</span>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">常用操作</div>
+      <div class="cbox">
+df["欄位"].value_counts()
+df.groupby("欄位").mean()
+df.sort_values("欄位")
+df.drop("欄位", axis=1)  <span class="cm"># 刪除欄</span>
+df.rename(columns={"舊":"新"})
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">類別編碼</div>
+      <div class="cbox">
+<span class="cm"># One-Hot（無順序類別）</span>
+pd.get_dummies(df["城市"])
+
+<span class="cm"># 轉換為 numpy</span>
+df.values.astype('float32')
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ④ Sklearn 前處理
+══════════════════════════════════════ -->
+<div class="sec" id="sec4">
+  <div class="sec-title">Sklearn 資料前處理 <span class="sec-badge">Preprocessing</span></div>
+
+  <div class="panel">
+    <div class="panel-title">train_test_split — 切分資料</div>
+    <div class="cbox">
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,    <span class="cm"># 20% 當測試集</span>
+    random_state=42,  <span class="cm"># 固定隨機種子</span>
+    stratify=y        <span class="cm"># 依標籤比例分層抽樣</span>
+)
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">StandardScaler（Z-score）</div>
+      <div class="cbox">
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+<span class="hl">X_train = scaler.fit_transform(X_train)</span>
+<span class="hl">X_test  = scaler.transform(X_test)</span>
+
+<span class="cm"># 結果：平均=0，標準差=1</span>
+<span class="cm"># 適用：有離群值、SVM、迴歸</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">MinMaxScaler（正規化）</div>
+      <div class="cbox">
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
+X_train = scaler.fit_transform(X_train)
+X_test  = scaler.transform(X_test)
+
+<span class="cm"># 結果：壓縮到 0~1 之間</span>
+<span class="cm"># 適用：無離群值、神經網路</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert red"><strong>最常考的陷阱：</strong>StandardScaler 只能在 <code>X_train</code> 上 <code>fit</code>，<code>X_test</code> 只能 <code>transform</code>。若對 X_test 也 fit，就發生「資料洩漏」，test 的資訊混入 train。</div>
+
+  <div class="panel">
+    <div class="panel-title">類別編碼</div>
+    <div class="cbox">
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+<span class="cm"># LabelEncoder：有順序的類別（低/中/高）</span>
+le = LabelEncoder()
+y = le.fit_transform(['低','高','中'])  <span class="cm"># → [0, 2, 1]</span>
+
+<span class="cm"># OneHotEncoder：無順序（城市、顏色）</span>
+<span class="cm"># 避免模型誤以為數字大小有意義</span>
+enc = OneHotEncoder()
+enc.fit_transform(df[["城市"]])
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">SimpleImputer — 缺失值填補</div>
+    <div class="cbox">
+from sklearn.impute import SimpleImputer
+
+imputer = SimpleImputer(strategy='mean')    <span class="cm"># 也可用 'median', 'most_frequent'</span>
+X_train = imputer.fit_transform(X_train)
+X_test  = imputer.transform(X_test)
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑤ Sklearn 模型
+══════════════════════════════════════ -->
+<div class="sec" id="sec5">
+  <div class="sec-title">Sklearn 模型 <span class="sec-badge">Models</span></div>
+
+  <table class="tbl">
+    <tr><th>演算法</th><th>import</th><th>關鍵參數</th><th>適用場景</th></tr>
+    <tr>
+      <td>邏輯迴歸</td>
+      <td><code>LogisticRegression</code></td>
+      <td><code>C</code>（越大越複雜）</td>
+      <td>二分類</td>
+    </tr>
+    <tr>
+      <td>決策樹</td>
+      <td><code>DecisionTreeClassifier</code></td>
+      <td><code>max_depth</code></td>
+      <td>可解釋性高</td>
+    </tr>
+    <tr>
+      <td>隨機森林</td>
+      <td><code>RandomForestClassifier</code></td>
+      <td><code>n_estimators, max_depth</code></td>
+      <td>防過擬合</td>
+    </tr>
+    <tr>
+      <td>GradientBoosting</td>
+      <td><code>GradientBoostingClassifier</code></td>
+      <td><code>n_estimators, learning_rate</code></td>
+      <td>高準確率</td>
+    </tr>
+    <tr>
+      <td>SVM</td>
+      <td><code>SVC</code></td>
+      <td><code>C, kernel</code></td>
+      <td>高維、小資料</td>
+    </tr>
+    <tr>
+      <td>KNN</td>
+      <td><code>KNeighborsClassifier</code></td>
+      <td><code>n_neighbors</code></td>
+      <td>無參數模型</td>
+    </tr>
+    <tr>
+      <td>線性迴歸</td>
+      <td><code>LinearRegression</code></td>
+      <td>—</td>
+      <td>連續值預測</td>
+    </tr>
+    <tr>
+      <td>Ridge</td>
+      <td><code>Ridge</code></td>
+      <td><code>alpha</code></td>
+      <td>L2 正則化</td>
+    </tr>
+    <tr>
+      <td>Lasso</td>
+      <td><code>Lasso</code></td>
+      <td><code>alpha</code></td>
+      <td>L1 特徵選擇</td>
+    </tr>
+    <tr>
+      <td>K-Means</td>
+      <td><code>KMeans</code></td>
+      <td><code>n_clusters</code></td>
+      <td>分群（非監督）</td>
+    </tr>
+    <tr>
+      <td>PCA</td>
+      <td><code>PCA</code></td>
+      <td><code>n_components</code></td>
+      <td>降維、降噪</td>
+    </tr>
+  </table>
+
+  <div class="panel">
+    <div class="panel-title">通用訓練流程（所有模型相同）</div>
+    <div class="cbox">
+model.fit(X_train, y_train)       <span class="cm"># 訓練</span>
+y_pred = model.predict(X_test)    <span class="cm"># 預測</span>
+model.score(X_test, y_test)       <span class="cm"># 內建評分（通常是 accuracy）</span>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">PCA 降維 / 降噪</div>
+      <div class="cbox">
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=20)   <span class="cm"># 保留前20主成分</span>
+<span class="cm"># 或</span>
+pca = PCA(n_components=0.95) <span class="cm"># 保留95%變異</span>
+
+X_pca = pca.fit_transform(X)
+pca.explained_variance_ratio_ <span class="cm"># 各主成分解釋比例</span>
+
+<span class="cm"># 降噪流程</span>
+comp = pca.transform(noisy)
+filtered = pca.inverse_transform(comp)
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">K-Means 聚類</div>
+      <div class="cbox">
+from sklearn.cluster import KMeans
+
+km = KMeans(n_clusters=3, random_state=42)
+labels = km.fit_predict(X)
+km.cluster_centers_   <span class="cm"># 各群中心</span>
+km.inertia_           <span class="cm"># 組內平方和（肘部法則用）</span>
+
+<span class="cm"># 肘部法則選 K</span>
+inertia = []
+for k in range(1, 10):
+    km = KMeans(n_clusters=k).fit(X)
+    inertia.append(km.inertia_)
+      </div>
+    </div>
+  </div>
+
+  <div class="alert yellow"><strong>Ridge vs Lasso：</strong>Ridge（L2）係數縮小但不為0，防過擬合；Lasso（L1）係數可歸零，自動特徵選擇。<code>alpha</code> 越大，懲罰越重。</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑥ 評估指標
+══════════════════════════════════════ -->
+<div class="sec" id="sec6">
+  <div class="sec-title">評估指標 <span class="sec-badge">Metrics</span></div>
+
+  <div class="panel">
+    <div class="panel-title">混淆矩陣 — 四格定義</div>
+    <div class="cbox">
+<span class="cm">#              預測：正       預測：負</span>
+<span class="cm"># 實際：正    TP（對的正）  FN（漏掉了）</span>
+<span class="cm"># 實際：負    FP（誤報了）  TN（對的負）</span>
+
+Accuracy  = (TP + TN) / 全部
+Precision = TP / (TP + FP)          <span class="cm"># 預測為正，真的正的比例</span>
+Recall    = TP / (TP + FN)          <span class="cm"># 實際為正，有抓到的比例</span>
+F1        = 2 × P × R / (P + R)    <span class="cm"># 調和平均</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">程式碼</div>
+    <div class="cbox">
+from sklearn.metrics import (
+    accuracy_score, precision_score,
+    recall_score, f1_score,
+    confusion_matrix, roc_auc_score,
+    mean_squared_error, r2_score
+)
+
+accuracy_score(y_test, y_pred)
+f1_score(y_test, y_pred, average='macro')   <span class="cm"># 多分類要加 average</span>
+confusion_matrix(y_test, y_pred)
+mean_squared_error(y_test, y_pred)
+mean_squared_error(y_test, y_pred) ** 0.5   <span class="cm"># RMSE</span>
+r2_score(y_test, y_pred)
+    </div>
+  </div>
+
+  <table class="tbl">
+    <tr><th>情境</th><th>用哪個指標</th><th>原因</th></tr>
+    <tr><td>癌症篩檢</td><td><code>Recall</code></td><td>絕對不能漏診</td></tr>
+    <tr><td>垃圾郵件</td><td><code>Precision</code></td><td>不能把正常信誤判</td></tr>
+    <tr><td>詐欺偵測</td><td><code>F1 Score</code></td><td>平衡兩者</td></tr>
+    <tr><td>不平衡資料</td><td><code>F1 / AUC</code></td><td>Accuracy 會失真</td></tr>
+    <tr><td>房價預測</td><td><code>MSE / RMSE / R²</code></td><td>迴歸任務</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑦ 交叉驗證
+══════════════════════════════════════ -->
+<div class="sec" id="sec7">
+  <div class="sec-title">交叉驗證 <span class="sec-badge">Cross Validation</span></div>
+
+  <div class="panel">
+    <div class="panel-title">cross_val_score — 最常考</div>
+    <div class="cbox">
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+
+<span class="cm"># 方法一：直接給整數（推薦，自動使用 StratifiedKFold）</span>
+scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
+print(scores)        <span class="cm"># [0.82, 0.85, 0.80, 0.83, 0.84]</span>
+print(scores.mean()) <span class="cm"># 0.828 ← 真實模型能力</span>
+
+<span class="cm"># 方法二：明確建立 StratifiedKFold（效果相同）</span>
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">GridSearchCV — 超參數搜尋</div>
+    <div class="cbox">
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {
+    'max_depth': [3, 5, 7],
+    'n_estimators': [50, 100, 200]
+}
+<span class="cm"># 3×3=9種組合，每種做5-fold CV → 跑45次</span>
+grid = GridSearchCV(RandomForestClassifier(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+
+grid.best_params_  <span class="cm"># {'max_depth': 5, 'n_estimators': 100}</span>
+grid.best_score_   <span class="cm"># 最佳交叉驗證分數</span>
+    </div>
+  </div>
+
+  <div class="alert blue">
+    <strong>scoring 參數速查：</strong><br>
+    <code>"accuracy"</code> → 準確率 &nbsp;|&nbsp;
+    <code>"f1"</code> → F1（二分類）&nbsp;|&nbsp;
+    <code>"f1_macro"</code> → F1（多分類）&nbsp;|&nbsp;
+    <code>"roc_auc"</code> → AUC
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑧ Keras 神經網路
+══════════════════════════════════════ -->
+<div class="sec" id="sec8">
+  <div class="sec-title">Keras 神經網路 <span class="sec-badge">Deep Learning</span></div>
+
+  <div class="panel">
+    <div class="panel-title">Activation 選哪個？</div>
+    <table class="tbl">
+      <tr><th>位置</th><th>任務</th><th>選這個</th><th>數學式</th></tr>
+      <tr><td>隱藏層</td><td>學習特徵</td><td><code>relu</code></td><td>max(0, x)</td></tr>
+      <tr><td>輸出層</td><td>二分類</td><td><code>sigmoid</code></td><td>1 / (1 + e⁻ˣ)</td></tr>
+      <tr><td>輸出層</td><td>多分類</td><td><code>softmax</code></td><td>各類機率和=1</td></tr>
+      <tr><td>輸出層</td><td>迴歸</td><td>不加（linear）</td><td>直接輸出數字</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Loss 選哪個？</div>
+    <table class="tbl">
+      <tr><th>任務</th><th>標籤格式</th><th>Loss</th></tr>
+      <tr><td>二分類</td><td>0 或 1</td><td><code>binary_crossentropy</code></td></tr>
+      <tr><td>多分類</td><td>[0,0,1,0] one-hot</td><td><code>categorical_crossentropy</code></td></tr>
+      <tr><td>多分類</td><td>2（整數）</td><td><code>sparse_categorical_crossentropy</code></td></tr>
+      <tr><td>迴歸</td><td>連續數字</td><td><code>mse</code></td></tr>
+    </table>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">二分類完整範例</div>
+      <div class="cbox">
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Input
+
+model = Sequential([
+    Input(shape=(9,)),
+    Dense(64, activation='relu'),
+    Dropout(0.3),
+    Dense(1, activation='sigmoid')
+])
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">訓練與評估</div>
+      <div class="cbox">
+history = model.fit(
+    X_train, y_train,
+    epochs=100,
+    batch_size=32,
+    validation_split=0.2
+)
+model.evaluate(X_test, y_test)
+model.predict(X_test)
+model.summary()    <span class="cm"># 查看架構與參數量</span>
+
+<span class="cm"># 訓練歷程</span>
+history.history["loss"]
+history.history["val_loss"]
+history.history["accuracy"]
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">參數量計算公式（常考）</div>
+    <div class="cbox">
+<span class="cm"># 公式：(上層神經元數 × 本層神經元數) + 本層神經元數（bias）</span>
+
+<span class="cm"># 範例：輸入9個特徵 → Dense(10)</span>
+params = (9 × 10) + 10 = 100
+
+<span class="cm"># Dense(10) → Dense(10)</span>
+params = (10 × 10) + 10 = 110
+
+<span class="cm"># Dense(10) → Dense(1)</span>
+params = (10 × 1) + 1 = 11
+    </div>
+  </div>
+
+  <div class="alert red"><strong>常見考試陷阱：</strong>多分類要用 <code>softmax</code>，不是 <code>sigmoid</code>；sigmoid 的數學式是 1/(1+e⁻ˣ)，不是 relu；Dropout 隨機關掉神經元是防過擬合，不是特徵選擇。</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑨ Matplotlib
+══════════════════════════════════════ -->
+<div class="sec" id="sec9">
+  <div class="sec-title">Matplotlib <span class="sec-badge">視覺化</span></div>
+
+  <div class="panel">
+    <div class="panel-title">基本折線圖</div>
+    <div class="cbox">
+import matplotlib.pyplot as plt
+
+plt.plot(x, y, "b-",  label="Training Loss")   <span class="cm"># 藍色實線</span>
+plt.plot(x, y, "r--", label="Validation Loss") <span class="cm"># 紅色虛線</span>
+plt.title("Training and Validation Loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+    </div>
+  </div>
+
+  <table class="tbl">
+    <tr><th>符號</th><th>顏色/線型</th><th>範例</th></tr>
+    <tr><td><code>b</code></td><td>藍色</td><td><code>"b-"</code> 藍色實線</td></tr>
+    <tr><td><code>r</code></td><td>紅色</td><td><code>"r--"</code> 紅色虛線</td></tr>
+    <tr><td><code>g</code></td><td>綠色</td><td><code>"g:"</code> 綠色點線</td></tr>
+    <tr><td><code>k</code></td><td>黑色</td><td><code>"k-."</code> 黑色點線</td></tr>
+    <tr><td><code>-</code></td><td>實線</td><td>—</td></tr>
+    <tr><td><code>--</code></td><td>虛線</td><td>—</td></tr>
+    <tr><td><code>:</code></td><td>點線</td><td>—</td></tr>
+  </table>
+
+  <div class="alert green"><strong>考試技巧：</strong>看到 Training Loss 是藍色實線 → <code>"b-"</code>；Validation Loss 是紅色虛線 → <code>"r--"</code>。記住「訓練藍實、驗證紅虛」。</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ⑩ 中英名詞對照
+══════════════════════════════════════ -->
+<div class="sec" id="sec10">
+  <div class="sec-title">中英名詞對照 <span class="sec-badge">術語</span></div>
+
+  <div class="two-col">
+    <table class="tbl">
+      <tr><th>中文</th><th>英文</th></tr>
+      <tr><td>訓練集</td><td>Training set</td></tr>
+      <tr><td>測試集</td><td>Test set</td></tr>
+      <tr><td>驗證集</td><td>Validation set</td></tr>
+      <tr><td>過擬合</td><td>Overfitting</td></tr>
+      <tr><td>欠擬合</td><td>Underfitting</td></tr>
+      <tr><td>超參數</td><td>Hyperparameter</td></tr>
+      <tr><td>損失函數</td><td>Loss function</td></tr>
+      <tr><td>梯度下降</td><td>Gradient descent</td></tr>
+      <tr><td>正則化</td><td>Regularization</td></tr>
+      <tr><td>激活函數</td><td>Activation function</td></tr>
+    </table>
+    <table class="tbl">
+      <tr><th>中文</th><th>英文</th></tr>
+      <tr><td>特徵</td><td>Feature</td></tr>
+      <tr><td>標籤 / 目標</td><td>Label / Target</td></tr>
+      <tr><td>批次</td><td>Batch</td></tr>
+      <tr><td>週期</td><td>Epoch</td></tr>
+      <tr><td>推論</td><td>Inference</td></tr>
+      <tr><td>資料洩漏</td><td>Data leakage</td></tr>
+      <tr><td>特徵選擇</td><td>Feature selection</td></tr>
+      <tr><td>降維</td><td>Dimensionality reduction</td></tr>
+      <tr><td>混淆矩陣</td><td>Confusion matrix</td></tr>
+      <tr><td>交叉驗證</td><td>Cross validation</td></tr>
+    </table>
+  </div>
+
+  <div class="panel" style="margin-top:20px;">
+    <div class="panel-title">考前速記卡</div>
+    <div class="cbox">
+<span class="hl">fit</span>     = 學習（只在 train 做）
+<span class="hl">transform</span> = 套用（train 和 test 都做）
+<span class="hl">fit_transform</span> = 合併（只在 train 用）
+
+<span class="hl">axis=0</span>  = 沿列方向（往下）→ 算每欄的統計值
+<span class="hl">axis=1</span>  = 沿欄方向（往右）→ 算每列的統計值
+
+<span class="hl">relu</span>    = max(0, x)           隱藏層
+<span class="hl">sigmoid</span> = 1/(1+e⁻ˣ)          輸出層（二分類）
+<span class="hl">softmax</span> = 各類機率和=1        輸出層（多分類）
+
+<span class="hl">Bagging</span>  = 獨立平行，投票   → 降 Variance（Random Forest）
+<span class="hl">Boosting</span> = 串行修錯，加權   → 降 Bias（XGBoost）
+
+<span class="hl">Ridge</span> = L2，係數縮小不歸零
+<span class="hl">Lasso</span> = L1，係數可歸零（特徵選擇）
+
+<span class="hl">cv=5</span> 整數 = 自動用 StratifiedKFold（與明確建立效果相同）
+<span class="hl">scoring="accuracy"</span> ≠ <span class="hl">scoring="f1"</span>（注意題目要哪個）
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>iPAS AI 應用規劃師中級 · Python 程式速查手冊 · 考前必讀</footer>
+
+</body>
+</html>
